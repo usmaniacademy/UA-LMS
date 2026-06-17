@@ -1,0 +1,288 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum Role {
+  admin
+  instructor
+  student
+}
+
+enum CourseLevel {
+  beginner
+  intermediate
+  advanced
+}
+
+enum CourseStatus {
+  draft
+  published
+  archived
+}
+
+enum ContentType {
+  video
+  text
+  zoom
+}
+
+enum MeetingStatus {
+  scheduled
+  live
+  completed
+  cancelled
+}
+
+enum SubscriptionStatus {
+  active
+  cancelled
+  past_due
+  trialing
+}
+
+enum NotificationType {
+  zoom_starting
+  payment_failed
+  subscription_cancelled
+  course_approved
+  general
+}
+
+// ─── Users ───────────────────────────────────────────────────────────────────
+
+model User {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  passwordHash      String
+  role              Role     @default(student)
+  firstName         String
+  lastName          String
+  avatarUrl         String?
+  bio               String?
+  isActive          Boolean  @default(true)
+  emailVerified     Boolean  @default(false)
+  stripeCustomerId  String?
+  refreshTokenHash  String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  courses       Course[]       @relation("InstructorCourses")
+  enrollments   Enrollment[]
+  subscriptions Subscription[]
+  zoomMeetings  ZoomMeeting[]
+  quizAttempts  QuizAttempt[]
+  reviews       Review[]
+  notifications Notification[]
+
+  @@map("users")
+}
+
+// ─── Courses ─────────────────────────────────────────────────────────────────
+
+model Course {
+  id             String       @id @default(uuid())
+  instructorId   String
+  title          String
+  slug           String       @unique
+  description    String?
+  thumbnailUrl   String?
+  category       String?
+  level          CourseLevel  @default(beginner)
+  isFree         Boolean      @default(false)
+  stripePriceId  String?
+  isPublished    Boolean      @default(false)
+  status         CourseStatus @default(draft)
+  totalStudents  Int          @default(0)
+  ratingAvg      Decimal?     @db.Decimal(3, 2)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  // Relations
+  instructor    User           @relation("InstructorCourses", fields: [instructorId], references: [id])
+  sections      CourseSection[]
+  enrollments   Enrollment[]
+  subscriptions Subscription[]
+  zoomMeetings  ZoomMeeting[]
+  quizzes       Quiz[]
+  reviews       Review[]
+
+  @@map("courses")
+}
+
+// ─── Course Sections & Lessons ───────────────────────────────────────────────
+
+model CourseSection {
+  id         String   @id @default(uuid())
+  courseId   String
+  title      String
+  orderIndex Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  course  Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+
+  @@map("course_sections")
+}
+
+model Lesson {
+  id          String      @id @default(uuid())
+  sectionId   String
+  title       String
+  contentType ContentType @default(video)
+  contentUrl  String?
+  duration    Int?        // in seconds
+  orderIndex  Int         @default(0)
+  isFree      Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+
+  section CourseSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@map("lessons")
+}
+
+// ─── Enrollments ─────────────────────────────────────────────────────────────
+
+model Enrollment {
+  id              String    @id @default(uuid())
+  studentId       String
+  courseId        String
+  enrolledAt      DateTime  @default(now())
+  accessExpiresAt DateTime?
+
+  student User   @relation(fields: [studentId], references: [id])
+  course  Course @relation(fields: [courseId], references: [id])
+
+  @@unique([studentId, courseId])
+  @@map("enrollments")
+}
+
+// ─── Zoom Meetings ────────────────────────────────────────────────────────────
+
+model ZoomMeeting {
+  id            String        @id @default(uuid())
+  courseId      String
+  instructorId  String
+  zoomMeetingId String        @unique
+  topic         String
+  startTime     DateTime
+  duration      Int           // in minutes
+  timezone      String
+  joinUrl       String
+  startUrl      String
+  password      String?
+  status        MeetingStatus @default(scheduled)
+  recordingUrl  String?
+  agenda        String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  course     Course @relation(fields: [courseId], references: [id])
+  instructor User   @relation(fields: [instructorId], references: [id])
+
+  @@map("zoom_meetings")
+}
+
+// ─── Subscriptions ────────────────────────────────────────────────────────────
+
+model Subscription {
+  id                   String             @id @default(uuid())
+  studentId            String
+  courseId             String
+  stripeCustomerId     String
+  stripeSubscriptionId String             @unique
+  stripePriceId        String
+  status               SubscriptionStatus @default(active)
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelledAt          DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  student User   @relation(fields: [studentId], references: [id])
+  course  Course @relation(fields: [courseId], references: [id])
+
+  @@map("subscriptions")
+}
+
+// ─── Quizzes ─────────────────────────────────────────────────────────────────
+
+model Quiz {
+  id             String   @id @default(uuid())
+  courseId       String
+  title          String
+  passPercentage Int      @default(70)
+  createdAt      DateTime @default(now())
+
+  course    Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  questions QuizQuestion[]
+  attempts  QuizAttempt[]
+
+  @@map("quizzes")
+}
+
+model QuizQuestion {
+  id            String   @id @default(uuid())
+  quizId        String
+  questionText  String
+  options       Json     // array of answer options
+  correctAnswer String
+  createdAt     DateTime @default(now())
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@map("quiz_questions")
+}
+
+model QuizAttempt {
+  id        String   @id @default(uuid())
+  studentId String
+  quizId    String
+  score     Int
+  passed    Boolean
+  takenAt   DateTime @default(now())
+
+  student User @relation(fields: [studentId], references: [id])
+  quiz    Quiz @relation(fields: [quizId], references: [id])
+
+  @@map("quiz_attempts")
+}
+
+// ─── Reviews ─────────────────────────────────────────────────────────────────
+
+model Review {
+  id        String   @id @default(uuid())
+  studentId String
+  courseId  String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  student User   @relation(fields: [studentId], references: [id])
+  course  Course @relation(fields: [courseId], references: [id])
+
+  @@unique([studentId, courseId])
+  @@map("reviews")
+}
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType @default(general)
+  message   String
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
