@@ -7,7 +7,7 @@ import { BootstrapVueNextResolver } from 'bootstrap-vue-next';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/eduport_v/",
+  base: "/",
   plugins: [
     vue(),
     Components({
