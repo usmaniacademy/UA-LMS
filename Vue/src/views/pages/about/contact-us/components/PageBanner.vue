@@ -13,20 +13,20 @@
           <b-card no-body class="card-body shadow py-5 text-center h-100" :class="!idx && 'bg-primary'">
             <h5 class="mb-3" :class="!idx && 'text-white'">{{ item.name }}</h5>
             <ul class="list-inline mb-0">
-              <li class="list-item mb-3 h6 fw-light">
-                <a href="#" :class="!idx && 'text-white'">
+              <li v-if="item.address" class="list-item mb-3 h6 fw-light">
+                <a href="https://maps.google.com/?q=555+N+Woodlawn+St+Suite+220+Wichita+KS+67208" target="_blank" :class="!idx && 'text-white'">
                   <font-awesome-icon :icon="faMapMarkerAlt" class="fa-fw me-2 mt-1" />
                   {{ item.address }}
                 </a>
               </li>
-              <li class="list-item mb-3 h6 fw-light">
-                <a href="#" :class="!idx && 'text-white'">
+              <li v-if="item.phone" class="list-item mb-3 h6 fw-light">
+                <a :href="`tel:${item.phone}`" :class="!idx && 'text-white'">
                   <font-awesome-icon :icon="faPhone" class="fa-fw me-2" />
                   {{ item.phone }}
                 </a>
               </li>
-              <li class="list-item mb-0 h6 fw-light">
-                <a href="#" :class="!idx && 'text-white'">
+              <li v-if="item.email" class="list-item mb-0 h6 fw-light">
+                <a :href="`mailto:${item.email}`" :class="!idx && 'text-white'">
                   <font-awesome-icon :icon="faEnvelope" class="fa-fw me-2" />
                   {{ item.email }}
                 </a>
