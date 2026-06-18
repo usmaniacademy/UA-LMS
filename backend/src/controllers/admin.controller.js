@@ -26,6 +26,13 @@ export async function toggleUserActive(req, res, next) {
   } catch (e) { next(e) }
 }
 
+export async function changeUserRole(req, res, next) {
+  try {
+    const data = await adminService.changeUserRole(req.params.userId, req.body.role)
+    res.json(data)
+  } catch (e) { next(e) }
+}
+
 export async function listCourses(req, res, next) {
   try {
     const { status, search, page, limit } = req.query

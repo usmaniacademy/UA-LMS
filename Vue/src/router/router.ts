@@ -761,6 +761,15 @@ const accountsRoutes = [
   }
 ];
 
+const catchAllRoutes = [
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    meta: { title: setTitle('Page Not Found') },
+    component: () => import('@/views/pages/specialty/error-404.vue')
+  }
+]
+
 export const allRoutes = [
-  ...demoRoutes, ...pagesRoutes, ...accountsRoutes, ...adminRoutes
+  ...demoRoutes, ...pagesRoutes, ...accountsRoutes, ...adminRoutes, ...catchAllRoutes
 ];

@@ -5,7 +5,10 @@ export const registerSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
-  role: z.enum(['student', 'instructor']).default('student')
+  role: z.enum(['student', 'instructor', 'admin']).default('student').refine(
+    r => r !== 'admin',
+    { message: 'Cannot self-register as admin' }
+  )
 })
 
 export const loginSchema = z.object({

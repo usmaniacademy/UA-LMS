@@ -59,6 +59,18 @@ export async function toggleUserActive(userId) {
   })
 }
 
+export async function changeUserRole(userId, role) {
+  const validRoles = ['student', 'instructor', 'admin']
+  if (!validRoles.includes(role)) throw Object.assign(new Error('Invalid role'), { status: 400 })
+  const user = await prisma.user.findUnique({ where: { id: userId } })
+  if (!user) throw Object.assign(new Error('User not found'), { status: 404 })
+  return prisma.user.update({
+    where: { id: userId },
+    data: { role },
+    select: { id: true, role: true }
+  })
+}
+
 export async function listCourses({ status, search, page = 1, limit = 20 }) {
   const where = {}
   if (status) where.status = status
