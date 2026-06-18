@@ -98,6 +98,23 @@
                     </b-form-group>
                   </div>
 
+                  <!-- Role selection -->
+                  <div class="mb-4">
+                    <label class="form-label">I want to join as *</label>
+                    <div class="d-flex gap-3">
+                      <div
+                        v-for="option in roleOptions"
+                        :key="option.value"
+                        class="role-card flex-fill text-center p-3 border rounded-3 cursor-pointer"
+                        :class="{ 'border-primary bg-primary bg-opacity-10': form.role === option.value }"
+                        @click="form.role = option.value"
+                      >
+                        <div class="fs-3">{{ option.icon }}</div>
+                        <div class="fw-semibold mt-1">{{ option.label }}</div>
+                        <div class="text-muted small">{{ option.desc }}</div>
+                      </div>
+                    </div>
+                  </div>
 
                   <div class="mb-4">
                     <div class="form-check">
@@ -148,12 +165,17 @@ const form = reactive({
   lastName: '',
   email: '',
   password: '',
-  role: 'student' as 'student'
+  role: 'student' as 'student' | 'instructor'
 })
 const agreedToTerms = ref(false)
 const loading = ref(false)
 const errorMsg = ref('')
 const successMsg = ref('')
+
+const roleOptions = [
+  { value: 'student', label: 'Student', icon: '🎓', desc: 'I want to learn' },
+  { value: 'instructor', label: 'Instructor', icon: '👨‍🏫', desc: 'I want to teach' }
+]
 
 async function handleSignUp() {
   errorMsg.value = ''
