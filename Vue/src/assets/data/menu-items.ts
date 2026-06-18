@@ -5,6 +5,30 @@ import { faCommentDots, faChartBar } from '@fortawesome/free-regular-svg-icons';
 
 export const APP_MENU_ITEMS: MenuItemType[] = [
   {
+    key: 'home',
+    label: 'Home',
+    route: { name: 'demos.default' }
+  },
+  {
+    key: 'courses',
+    label: 'Courses',
+    route: { name: 'course.grid.classic' }
+  },
+  {
+    key: 'about',
+    label: 'About Us',
+    route: { name: 'about' }
+  },
+  {
+    key: 'contact',
+    label: 'Contact',
+    route: { name: 'about.contact.us' }
+  }
+];
+
+// kept for legacy references — not used in public nav
+const _unused_pages_menu: MenuItemType[] = [
+  {
     key: 'pages',
     label: 'Pages',
     icon: BIconJournals,
