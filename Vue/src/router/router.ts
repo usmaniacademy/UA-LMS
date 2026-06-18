@@ -610,6 +610,12 @@ const accountsRoutes = [
     component: () => import("@/views/accounts/instructor/create-course/index.vue"),
   },
   {
+    path: "/instructor/zoom",
+    name: "instructor.zoom",
+    meta: { title: setTitle("Zoom Classes"), authRequired: true, role: 'instructor' },
+    component: () => import("@/views/accounts/instructor/zoom/index.vue"),
+  },
+  {
     path: "/instructor/course-added",
     name: "instructor.course.added",
     meta: {

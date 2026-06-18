@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import authRoutes from './auth.routes.js'
 import courseRoutes from './course.routes.js'
+import zoomRoutes from './zoom.routes.js'
 
 const router = Router()
 
@@ -10,9 +11,8 @@ router.get('/health', (req, res) => {
 
 router.use('/auth', authRoutes)
 router.use('/courses', courseRoutes)
+router.use('/zoom', zoomRoutes)
 
-// router.use('/zoom', zoomRoutes)            // M4 — Zoom Integration
-// router.use('/zoom', zoomRoutes)            // M4 — Zoom Integration
 // router.use('/stripe', stripeRoutes)        // M5 — Stripe Subscriptions
 // router.use('/subscriptions', subscriptionRoutes)
 // router.use('/admin', adminRoutes)          // M6 — Admin Panel

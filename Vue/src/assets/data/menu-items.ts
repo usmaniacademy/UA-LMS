@@ -438,6 +438,13 @@ export const APP_MENU_ITEMS: MenuItemType[] = [
             icon: BIconFileCheckFill
           },
           {
+            key: 'instructor.zoom',
+            label: 'Zoom Classes',
+            route: { name: 'instructor.zoom' },
+            parentKey: 'accounts-instructor',
+            icon: BIconCreditCard2Front
+          },
+          {
             key: 'instructor.quiz',
             label: 'Quiz',
             route: { name: 'instructor.quiz' },

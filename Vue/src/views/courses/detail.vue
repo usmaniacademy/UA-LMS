@@ -94,6 +94,9 @@
                 </b-accordion-item>
               </b-accordion>
 
+              <!-- Zoom Classes -->
+              <ZoomClasses :courseId="course.id" :isEnrolled="course.isEnrolled ?? false" />
+
               <!-- Reviews -->
               <div v-if="course.reviews?.length" class="mt-5">
                 <h4 class="mb-4">Student Reviews</h4>
@@ -134,6 +137,7 @@ import { useRoute } from 'vue-router'
 import PagesLayout from '@/layouts/PagesLayout.vue'
 import { useCourseStore } from '@/stores/course'
 import { api } from '@/helpers/api'
+import ZoomClasses from './ZoomClasses.vue'
 import defaultThumb from '@/assets/images/courses/4by3/08.jpg'
 import defaultAvatar from '@/assets/images/avatar/01.jpg'
 
