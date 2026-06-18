@@ -1,41 +1,19 @@
 import type { MenuItemType } from '@/helpers/menu';
-import { BIconHouse, BIconJournals, BIconPersonFill, BIconInfoCircle, BIconEnvelope } from 'bootstrap-icons-vue';
-
-export const APP_MENU_ITEMS: MenuItemType[] = [
-  {
-    key: 'home',
-    label: 'Home',
-    icon: BIconHouse,
-    route: { name: 'courses.list' }
-  },
-  {
-    key: 'courses',
-    label: 'Courses',
-    icon: BIconJournals,
-    route: { name: 'courses.list' }
-  },
-  {
-    key: 'about',
-    label: 'About Us',
-    icon: BIconInfoCircle,
-    route: { name: 'about' }
-  },
-  {
-    key: 'contact',
-    label: 'Contact',
-    icon: BIconEnvelope,
-    route: { name: 'about.contact.us' }
-  }
-];
-
-// Instructor / student account menu items (used in sidebar layouts)
 import {
-  BIconGridFill, BIconFileEarmarkPlusFill, BIconFileCheckFill,
+  BIconHouse, BIconJournals, BIconInfoCircle, BIconEnvelope,
+  BIconFileEarmarkPlusFill, BIconFileCheckFill,
   BIconStarFill, BIconCardChecklist, BIconCreditCard2FrontFill,
-  BIconPeople, BIconGraphUp, BIconGearFill, BIconBoxArrowRight,
-  BIconMortarboardFill, BIconWallet2, BIconPersonFillGear, BIconSpeedometer2,
+  BIconPeople, BIconGraphUp, BIconGearFill,
+  BIconMortarboardFill, BIconPersonFillGear, BIconSpeedometer2,
   BIconCameraVideo
 } from 'bootstrap-icons-vue';
+
+export const APP_MENU_ITEMS: MenuItemType[] = [
+  { key: 'home', label: 'Home', icon: BIconHouse, route: { name: 'home' } },
+  { key: 'courses', label: 'Courses', icon: BIconJournals, route: { name: 'courses.list' } },
+  { key: 'about', label: 'About Us', icon: BIconInfoCircle, route: { name: 'about' } },
+  { key: 'contact', label: 'Contact', icon: BIconEnvelope, route: { name: 'about.contact.us' } },
+];
 
 export const INSTRUCTOR_MENU_ITEMS: MenuItemType[] = [
   { key: 'instructor.dashboard', label: 'Dashboard', icon: BIconSpeedometer2, route: { name: 'instructor.dashboard' } },
@@ -55,4 +33,18 @@ export const STUDENT_MENU_ITEMS: MenuItemType[] = [
   { key: 'student.subscription', label: 'Subscriptions', icon: BIconCreditCard2FrontFill, route: { name: 'student.subscription' } },
   { key: 'student.quiz', label: 'My Quizzes', icon: BIconCardChecklist, route: { name: 'student.quiz' } },
   { key: 'student.edit-profile', label: 'Edit Profile', icon: BIconPersonFillGear, route: { name: 'student.edit-profile' } },
+];
+
+export const ADMIN_MENU_ITEMS: MenuItemType[] = [
+  { key: 'admin.dashboard', label: 'Dashboard', icon: BIconSpeedometer2, route: { name: 'admin.dashboard' } },
+  { key: 'admin.course-list', label: 'Courses', icon: BIconFileCheckFill, route: { name: 'admin.course-list' } },
+  { key: 'admin.student.list', label: 'Users', icon: BIconPeople, route: { name: 'admin.student.list' } },
+  { key: 'admin.earning', label: 'Revenue', icon: BIconGraphUp, route: { name: 'admin.earning' } },
+  { key: 'admin.setting', label: 'Settings', icon: BIconGearFill, route: { name: 'admin.setting' } },
+];
+
+export const CATEGORY_MENU_ITEMS: MenuItemType[] = [
+  { key: 'cat-islamic', label: 'Islamic Studies', route: { name: 'courses.list' } },
+  { key: 'cat-astronomy', label: 'Astronomy', route: { name: 'courses.list' } },
+  { key: 'cat-technology', label: 'Technology', route: { name: 'courses.list' } },
 ];
