@@ -1,4 +1,4 @@
-import prisma from '../config/database.js'
+import prisma from '../config/prisma.js'
 
 export async function getStats() {
   const [totalStudents, totalInstructors, totalCourses, activeSubs] = await Promise.all([
