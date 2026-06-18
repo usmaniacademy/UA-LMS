@@ -5,7 +5,14 @@
     <slot name="collapseMenuHeader" />
     <ul class="navbar-nav navbar-nav-scroll" :class="ulClass">
       <template v-for="(item, idx) in menuItems">
-        <DropDown is="li" class="nav-item">
+        <li v-if="!item.children" class="nav-item">
+          <router-link class="nav-link" :to="{ name: item.route?.name }"
+            :class="{ active: item.route?.name === currentRouteName }">
+            <component :is="item.icon" class="me-1 mb-1" v-if="showIcon" />
+            {{ item.label }}
+          </router-link>
+        </li>
+        <DropDown v-else is="li" class="nav-item">
           <a class="nav-link dropdown-toggle arrow-none d-flex justify-content-between align-items-center w-100"
             :class="menuItemActive(menuItems, item.key, currentRouteName) && 'active'" href="#">
             <span>
