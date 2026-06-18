@@ -7,24 +7,14 @@
           <div class="d-sm-flex align-items-center justify-content-center mt-2 mt-sm-4">
             <h5 class="mb-0">Follow us on:</h5>
             <ul class="list-inline mb-0 ms-sm-2">
-              <li class="list-inline-item"> <a class="fs-5 me-1 text-facebook" href="#">
+              <li class="list-inline-item"> <a class="fs-5 me-1 text-facebook" href="https://www.facebook.com/share/192DmY1b1t/" target="_blank">
                   <font-awesome-icon :icon="faFacebookSquare" class="fa-fw" />
                 </a> </li>
-              <li class="list-inline-item"> <a class="fs-5 me-1 text-instagram" href="#">
+              <li class="list-inline-item"> <a class="fs-5 me-1 text-instagram" href="https://www.instagram.com/usmani_academy?igsh=MW9qNXgwZjNzM3A0ZA%3D%3D&utm_source=qr" target="_blank">
                   <font-awesome-icon :icon="faInstagram" class="fa-fw" />
                 </a> </li>
-              <li class="list-inline-item"> <a class="fs-5 me-1 text-twitter" href="#">
-                  <font-awesome-icon :icon="faTwitter" class="fa-fw" />
-                </a> </li>
-              <li class="list-inline-item"> <a class="fs-5 me-1 text-linkedin" href="#">
+              <li class="list-inline-item"> <a class="fs-5 me-1 text-linkedin" href="https://www.linkedin.com/company/usmani-academy-llc/" target="_blank">
                   <font-awesome-icon :icon="faLinkedinIn" class="fa-fw" />
-                </a> </li>
-              <li class="list-inline-item"> <a class="fs-5 me-1 text-dribbble" href="#">
-                  <font-awesome-icon :icon="faBasketballBall" class="fa-fw" />
-                </a>
-              </li>
-              <li class="list-inline-item"> <a class="fs-5 me-1 text-pinterest" href="#">
-                  <font-awesome-icon :icon="faPinterest" class="fa-fw" />
                 </a> </li>
             </ul>
           </div>
@@ -60,8 +50,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { faBasketballBall } from '@fortawesome/free-solid-svg-icons';
-import { faFacebookSquare, faInstagram, faTwitter, faLinkedinIn, faPinterest } from '@fortawesome/free-brands-svg-icons';
+import { faFacebookSquare, faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 
 import contact from '@/assets/images/element/contact.svg';
 </script>
