@@ -3,6 +3,7 @@ import authRoutes from './auth.routes.js'
 import courseRoutes from './course.routes.js'
 import zoomRoutes from './zoom.routes.js'
 import stripeRoutes from './stripe.routes.js'
+import adminRoutes from './admin.routes.js'
 
 const router = Router()
 
@@ -14,7 +15,6 @@ router.use('/auth', authRoutes)
 router.use('/courses', courseRoutes)
 router.use('/zoom', zoomRoutes)
 router.use('/stripe', stripeRoutes)
-
-// router.use('/admin', adminRoutes)          // M6 — Admin Panel
+router.use('/admin', adminRoutes)
 
 export default router
