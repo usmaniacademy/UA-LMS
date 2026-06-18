@@ -456,6 +456,19 @@ const pagesRoutes = [
       title: setTitle("Abroad Single")
     },
     component: () => import("@/views/pages/event-detail/index.vue"),
+  },
+  // ─── UA LMS — Course Routes ───────────────────────────────────────────────
+  {
+    path: '/courses',
+    name: 'courses.list',
+    meta: { title: setTitle('All Courses') },
+    component: () => import('@/views/courses/index.vue')
+  },
+  {
+    path: '/courses/:slug',
+    name: 'course.detail.slug',
+    meta: { title: setTitle('Course') },
+    component: () => import('@/views/courses/detail.vue')
   }
 ];
 

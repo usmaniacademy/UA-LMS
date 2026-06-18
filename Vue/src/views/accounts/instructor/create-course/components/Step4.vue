@@ -1,139 +1,132 @@
 <template>
   <div id="step-4" role="tabpanel" class="content fade" aria-labelledby="steppertrigger4">
-    <h4>Additional information</h4>
+    <h4>Pricing & Publish</h4>
     <hr>
     <b-row class="g-4">
+      <!-- Free toggle summary -->
       <b-col cols="12">
-        <div class="bg-light border rounded p-2 p-sm-4">
-          <div class="d-sm-flex justify-content-sm-between align-items-center mb-3">
-            <h5 class="mb-2 mb-sm-0">Upload FAQs</h5>
-            <a href="#" class="btn btn-sm btn-primary-soft mb-0" data-bs-toggle="modal" data-bs-target="#addQuestion"
-              @click="showModal = !showModal">
-              <BIconPlusCircle class="me-2" />
-              Add Question
-            </a>
+        <div class="border rounded-3 p-4" :class="form.isFree ? 'border-success bg-success bg-opacity-10' : 'bg-light'">
+          <div class="d-flex align-items-center gap-3">
+            <span class="fs-2">{{ form.isFree ? '🆓' : '💳' }}</span>
+            <div>
+              <h5 class="mb-1">{{ form.isFree ? 'Free Course' : 'Paid Course — $26/month' }}</h5>
+              <p class="mb-0 text-muted small">
+                {{ form.isFree
+                  ? 'Students can access this course without subscribing. Great for attracting new learners.'
+                  : 'Students subscribe at $26/month per course via Stripe. You\'ll set the Stripe Price ID after publishing.' }}
+              </p>
+            </div>
           </div>
-
-          <b-row class="g-4">
-            <b-col cols="12">
-              <div class="bg-body p-3 p-sm-4 border rounded">
-                <div class="d-sm-flex justify-content-sm-between align-items-center mb-2">
-                  <h6 class="mb-0">How Digital Marketing Work?</h6>
-                  <div class="align-middle">
-                    <a href="#" class="btn btn-sm btn-success-soft btn-round me-1 mb-1 mb-md-0">
-                      <font-awesome-icon :icon="faEdit" class="fa-fw" />
-                    </a>
-                    <b-button :variant="null" size="sm" class="btn-danger-soft btn-round mb-0">
-                      <font-awesome-icon :icon="faTimes" class="fa-fw" />
-                    </b-button>
-                  </div>
-                </div>
-                <p>
-                  Comfort reached gay perhaps chamber his six detract besides add. Moonlight newspaper
-                  up its enjoyment agreeable depending. Timed voice share led him to widen noisy young.
-                  At weddings believed laughing although the material does the exercise of. Up attempt
-                  offered ye civilly so sitting to. She new course gets living within Elinor joy. She
-                  rapturous suffering concealed.
-                </p>
-              </div>
-            </b-col>
-
-            <b-col cols="12">
-              <div class="bg-body p-4 border rounded">
-                <div class="d-sm-flex justify-content-sm-between align-items-center mb-2">
-                  <h6 class="mb-0">How Digital Marketing Work?</h6>
-                  <div class="align-middle">
-                    <a href="#" class="btn btn-sm btn-success-soft btn-round me-1 mb-1 mb-md-0">
-                      <font-awesome-icon :icon="faEdit" class="fa-fw" />
-                    </a>
-                    <b-button :variant="null" size="sm" class="btn-danger-soft btn-round mb-0">
-                      <font-awesome-icon :icon="faTimes" class="fa-fw" />
-                    </b-button>
-                  </div>
-                </div>
-                <p>
-                  Comfort reached gay perhaps chamber his six detract besides add. Moonlight newspaper
-                  up its enjoyment agreeable depending. Timed voice share led him to widen noisy young.
-                  At weddings believed laughing although the material does the exercise of. Up attempt
-                  offered ye civilly so sitting to. She new course gets living within Elinor joy. She
-                  rapturous suffering concealed.
-                </p>
-              </div>
-            </b-col>
-          </b-row>
-        </div>
-      </b-col>
-
-      <b-col cols="12">
-        <div class="bg-light border rounded p-4">
-          <h5 class="mb-0">Tags</h5>
           <div class="mt-3">
-            <input type="text" class="form-control js-choice mb-0" data-placeholder="true"
-              data-placeholder-Val="Enter tags" data-max-item-count="14" data-remove-item-button="true">
-            <span class="small">
-              Maximum of 14 keywords. Keywords should all be in lowercase. e.g.
-              javascript, react, marketing
-            </span>
-          </div>
-        </div>
-      </b-col>
-
-      <b-col cols="12">
-        <div class="bg-light border rounded p-4">
-          <h5 class="mb-0">Message to a reviewer</h5>
-
-          <div class="mt-3">
-            <b-form-textarea placeholder="Write a message" rows="4" max-rows="6" />
-            <div class="form-check mb-0 mt-2">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1">
-              <label class="form-check-label" for="exampleCheck1">
-                Any images, sounds, or other assets that are not my own work, have been appropriately
-                licensed for use in the file preview or main course. Other than these items, this work
-                is entirely my own and I have full rights to sell it here.
-              </label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="isFreeToggle" v-model="form.isFree">
+              <label class="form-check-label" for="isFreeToggle">Make this a free course</label>
             </div>
           </div>
         </div>
       </b-col>
 
-      <div class="d-md-flex justify-content-between align-items-start mt-4">
-        <b-button variant="secondary" class="prev-btn mb-2 mb-md-0" @click="previousPage">Previous</b-button>
-        <b-button variant="light" class="me-auto ms-md-2 mb-2 mb-md-0">Preview Course</b-button>
-        <div class="text-md-end">
-          <router-link :to="{name: 'instructor.course.added'}" class="btn btn-success mb-2 mb-sm-0">
-            Submit a Course
-          </router-link>
-          <p class="mb-0 small mt-1">
-            Once you click "Submit a Course", your course will be uploaded
-            and marked as pending for review.
-          </p>
+      <!-- Stripe price ID (paid only) -->
+      <b-col v-if="!form.isFree" cols="12">
+        <b-form-group label="Stripe Price ID (optional — set after creating in Stripe Dashboard)">
+          <b-form-input v-model="form.stripePriceId" placeholder="price_..." />
+          <div class="form-text">Create a recurring monthly price in your Stripe Dashboard and paste the Price ID here.</div>
+        </b-form-group>
+      </b-col>
+
+      <!-- Course summary -->
+      <b-col cols="12">
+        <div class="border rounded-3 p-4 bg-light">
+          <h6 class="mb-3">Course Summary</h6>
+          <table class="table table-sm table-borderless mb-0">
+            <tbody>
+              <tr><td class="text-muted">Title</td><td class="fw-semibold">{{ form.title || '—' }}</td></tr>
+              <tr><td class="text-muted">Category</td><td>{{ form.category || '—' }}</td></tr>
+              <tr><td class="text-muted">Level</td><td class="text-capitalize">{{ form.level }}</td></tr>
+              <tr><td class="text-muted">Pricing</td><td>{{ form.isFree ? 'Free' : '$26/month' }}</td></tr>
+            </tbody>
+          </table>
         </div>
-      </div>
+      </b-col>
+
+      <b-col cols="12">
+        <div v-if="error" class="alert alert-danger py-2 mb-3">{{ error }}</div>
+        <div v-if="success" class="alert alert-success py-2 mb-3">{{ success }}</div>
+      </b-col>
+
+      <b-col cols="12" class="d-flex justify-content-between gap-2 flex-wrap">
+        <b-button variant="outline-secondary" @click="previousPage">Back</b-button>
+        <div class="d-flex gap-2">
+          <b-button variant="outline-primary" @click="handleSaveDraft" :disabled="loading">
+            <span v-if="loading === 'draft'" class="spinner-border spinner-border-sm me-1" />
+            Save as Draft
+          </b-button>
+          <b-button variant="primary" @click="handlePublish" :disabled="loading">
+            <span v-if="loading === 'publish'" class="spinner-border spinner-border-sm me-1" />
+            Save & Publish
+          </b-button>
+        </div>
+      </b-col>
     </b-row>
   </div>
-
-  <b-modal v-model="showModal" title="Add FAQ" header-class="bg-dark" title-class="text-white" ok-title="Save Lecture"
-    ok-variant="success" cancel-title="Close" cancel-variant="danger-soft">
-    <b-form class="row text-start g-3">
-      <b-col cols="12">
-        <b-form-group label="Question">
-					<b-form-input type="text" placeholder="Write a question" />
-				</b-form-group>
-      </b-col>
-      <b-col cols="12" class=" mt-3">
-        <b-form-group label="Answer">
-					<b-form-textarea rows="4" placeholder="Write a answer" />
-				</b-form-group>
-      </b-col>
-    </b-form>
-  </b-modal>
 </template>
-<script setup lang="ts">
-import { ref } from 'vue';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { faEdit } from '@fortawesome/free-regular-svg-icons';
-import { BIconPlusCircle } from 'bootstrap-icons-vue';
 
-const showModal = ref(false);
-defineProps(['previousPage'])
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useCourseStore } from '@/stores/course'
+import router from '@/router'
+
+const props = defineProps<{
+  form: any
+  courseId: string | null
+  setCourseId: (id: string) => void
+  previousPage: () => void
+}>()
+
+const courseStore = useCourseStore()
+const loading = ref<false | 'draft' | 'publish'>(false)
+const error = ref('')
+const success = ref('')
+
+async function saveCourse(publish: boolean) {
+  error.value = ''
+  success.value = ''
+  loading.value = publish ? 'publish' : 'draft'
+
+  try {
+    const payload = {
+      title: props.form.title,
+      description: props.form.description,
+      category: props.form.category,
+      level: props.form.level,
+      isFree: props.form.isFree,
+      thumbnailUrl: props.form.thumbnailUrl || undefined,
+      stripePriceId: props.form.stripePriceId || undefined
+    }
+
+    let course
+    if (props.courseId) {
+      course = await courseStore.updateCourse(props.courseId, payload)
+    } else {
+      course = await courseStore.createCourse(payload)
+      props.setCourseId(course.id)
+    }
+
+    if (publish) {
+      await courseStore.publishCourse(course.id)
+      success.value = 'Course published successfully!'
+    } else {
+      success.value = 'Draft saved!'
+    }
+
+    setTimeout(() => router.push({ name: 'instructor.course' }), 1500)
+  } catch (e: any) {
+    error.value = e.message || 'Something went wrong'
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleSaveDraft = () => saveCourse(false)
+const handlePublish = () => saveCourse(true)
 </script>

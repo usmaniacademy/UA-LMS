@@ -20,6 +20,20 @@ export function authenticate(req, res, next) {
   }
 }
 
+// Optional auth — attaches req.user if token present, but does not block if missing.
+export function optionalAuth(req, res, next) {
+  const header = req.headers.authorization || ''
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null
+  if (!token) return next()
+  try {
+    const payload = jwt.verify(token, env.jwt.accessSecret)
+    req.user = { id: payload.sub, role: payload.role, email: payload.email }
+  } catch {
+    // Invalid token — just proceed without user
+  }
+  next()
+}
+
 // Restricts a route to one or more roles. Use after authenticate().
 export const authorize = (...roles) => (req, res, next) => {
   if (!req.user) return next(ApiError.unauthorized())

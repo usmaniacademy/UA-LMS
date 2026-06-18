@@ -1,0 +1,256 @@
+import prisma from '../config/prisma.js'
+import { ApiError } from '../utils/ApiError.js'
+
+function slugify(title) {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+async function uniqueSlug(title, excludeId = null) {
+  const base = slugify(title)
+  let slug = base
+  let counter = 1
+  while (true) {
+    const existing = await prisma.course.findUnique({ where: { slug } })
+    if (!existing || existing.id === excludeId) break
+    slug = `${base}-${counter++}`
+  }
+  return slug
+}
+
+// ─── Public ───────────────────────────────────────────────────────────────────
+
+export async function listPublishedCourses({ category, level, search, page = 1, limit = 12 } = {}) {
+  const where = {
+    status: 'published',
+    isPublished: true,
+    ...(category && { category }),
+    ...(level && { level }),
+    ...(search && {
+      OR: [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } }
+      ]
+    })
+  }
+
+  const [courses, total] = await Promise.all([
+    prisma.course.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true, title: true, slug: true, description: true,
+        thumbnailUrl: true, category: true, level: true,
+        isFree: true, totalStudents: true, ratingAvg: true,
+        instructor: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } }
+      }
+    }),
+    prisma.course.count({ where })
+  ])
+
+  return { courses, total, page, limit, totalPages: Math.ceil(total / limit) }
+}
+
+export async function getCourseBySlug(slug, userId = null) {
+  const course = await prisma.course.findUnique({
+    where: { slug },
+    include: {
+      instructor: { select: { id: true, firstName: true, lastName: true, avatarUrl: true, bio: true } },
+      sections: {
+        orderBy: { orderIndex: 'asc' },
+        include: {
+          lessons: {
+            orderBy: { orderIndex: 'asc' },
+            select: { id: true, title: true, contentType: true, duration: true, orderIndex: true, isFree: true, contentUrl: true }
+          }
+        }
+      },
+      reviews: {
+        take: 10,
+        orderBy: { createdAt: 'desc' },
+        include: { student: { select: { firstName: true, lastName: true, avatarUrl: true } } }
+      },
+      _count: { select: { enrollments: true } }
+    }
+  })
+
+  if (!course || !course.isPublished) throw ApiError.notFound('Course not found')
+
+  // Check enrollment for authenticated user
+  let isEnrolled = false
+  if (userId) {
+    const enrollment = await prisma.enrollment.findUnique({
+      where: { studentId_courseId: { studentId: userId, courseId: course.id } }
+    })
+    isEnrolled = !!enrollment
+  }
+
+  // Hide lesson content URLs for locked lessons
+  const sectionsWithAccess = course.sections.map((section) => ({
+    ...section,
+    lessons: section.lessons.map((lesson) => ({
+      ...lesson,
+      contentUrl: lesson.isFree || isEnrolled ? lesson.contentUrl : null
+    }))
+  }))
+
+  return { ...course, sections: sectionsWithAccess, isEnrolled }
+}
+
+// ─── Instructor ───────────────────────────────────────────────────────────────
+
+export async function getInstructorCourses(instructorId, { search, status } = {}) {
+  return prisma.course.findMany({
+    where: {
+      instructorId,
+      ...(status && { status }),
+      ...(search && { title: { contains: search, mode: 'insensitive' } })
+    },
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true, title: true, slug: true, thumbnailUrl: true,
+      category: true, level: true, status: true, isPublished: true,
+      isFree: true, totalStudents: true, ratingAvg: true, createdAt: true,
+      _count: { select: { enrollments: true } }
+    }
+  })
+}
+
+export async function createCourse(instructorId, data) {
+  const slug = await uniqueSlug(data.title)
+  return prisma.course.create({
+    data: { ...data, instructorId, slug },
+    select: { id: true, title: true, slug: true, status: true, createdAt: true }
+  })
+}
+
+export async function updateCourse(courseId, instructorId, data, isAdmin = false) {
+  const course = await prisma.course.findUnique({ where: { id: courseId } })
+  if (!course) throw ApiError.notFound('Course not found')
+  if (!isAdmin && course.instructorId !== instructorId) throw ApiError.forbidden()
+
+  const updateData = { ...data }
+  if (data.title && data.title !== course.title) {
+    updateData.slug = await uniqueSlug(data.title, courseId)
+  }
+
+  return prisma.course.update({ where: { id: courseId }, data: updateData })
+}
+
+export async function publishCourse(courseId, instructorId) {
+  const course = await prisma.course.findUnique({ where: { id: courseId } })
+  if (!course) throw ApiError.notFound('Course not found')
+  if (course.instructorId !== instructorId) throw ApiError.forbidden()
+  if (course.status === 'archived') throw ApiError.badRequest('Cannot publish an archived course')
+
+  return prisma.course.update({
+    where: { id: courseId },
+    data: { status: 'published', isPublished: true }
+  })
+}
+
+export async function archiveCourse(courseId, instructorId, isAdmin = false) {
+  const course = await prisma.course.findUnique({ where: { id: courseId } })
+  if (!course) throw ApiError.notFound('Course not found')
+  if (!isAdmin && course.instructorId !== instructorId) throw ApiError.forbidden()
+
+  return prisma.course.update({
+    where: { id: courseId },
+    data: { status: 'archived', isPublished: false }
+  })
+}
+
+// ─── Sections ─────────────────────────────────────────────────────────────────
+
+async function assertCourseOwner(courseId, instructorId) {
+  const course = await prisma.course.findUnique({ where: { id: courseId } })
+  if (!course) throw ApiError.notFound('Course not found')
+  if (course.instructorId !== instructorId) throw ApiError.forbidden()
+  return course
+}
+
+export async function createSection(courseId, instructorId, data) {
+  await assertCourseOwner(courseId, instructorId)
+  return prisma.courseSection.create({ data: { courseId, ...data } })
+}
+
+export async function updateSection(sectionId, instructorId, data) {
+  const section = await prisma.courseSection.findUnique({ where: { id: sectionId }, include: { course: true } })
+  if (!section) throw ApiError.notFound('Section not found')
+  if (section.course.instructorId !== instructorId) throw ApiError.forbidden()
+  return prisma.courseSection.update({ where: { id: sectionId }, data })
+}
+
+export async function deleteSection(sectionId, instructorId) {
+  const section = await prisma.courseSection.findUnique({ where: { id: sectionId }, include: { course: true } })
+  if (!section) throw ApiError.notFound('Section not found')
+  if (section.course.instructorId !== instructorId) throw ApiError.forbidden()
+  return prisma.courseSection.delete({ where: { id: sectionId } })
+}
+
+// ─── Lessons ──────────────────────────────────────────────────────────────────
+
+export async function createLesson(sectionId, instructorId, data) {
+  const section = await prisma.courseSection.findUnique({ where: { id: sectionId }, include: { course: true } })
+  if (!section) throw ApiError.notFound('Section not found')
+  if (section.course.instructorId !== instructorId) throw ApiError.forbidden()
+  return prisma.lesson.create({ data: { sectionId, ...data } })
+}
+
+export async function updateLesson(lessonId, instructorId, data) {
+  const lesson = await prisma.lesson.findUnique({
+    where: { id: lessonId },
+    include: { section: { include: { course: true } } }
+  })
+  if (!lesson) throw ApiError.notFound('Lesson not found')
+  if (lesson.section.course.instructorId !== instructorId) throw ApiError.forbidden()
+  return prisma.lesson.update({ where: { id: lessonId }, data })
+}
+
+export async function deleteLesson(lessonId, instructorId) {
+  const lesson = await prisma.lesson.findUnique({
+    where: { id: lessonId },
+    include: { section: { include: { course: true } } }
+  })
+  if (!lesson) throw ApiError.notFound('Lesson not found')
+  if (lesson.section.course.instructorId !== instructorId) throw ApiError.forbidden()
+  return prisma.lesson.delete({ where: { id: lessonId } })
+}
+
+// ─── Student enrollment ───────────────────────────────────────────────────────
+
+export async function enrollFree(courseId, studentId) {
+  const course = await prisma.course.findUnique({ where: { id: courseId } })
+  if (!course) throw ApiError.notFound('Course not found')
+  if (!course.isFree) throw ApiError.badRequest('This course requires a subscription')
+
+  const existing = await prisma.enrollment.findUnique({
+    where: { studentId_courseId: { studentId, courseId } }
+  })
+  if (existing) return existing
+
+  return prisma.enrollment.create({ data: { studentId, courseId } })
+}
+
+export async function getStudentCourses(studentId) {
+  return prisma.enrollment.findMany({
+    where: { studentId },
+    include: {
+      course: {
+        select: {
+          id: true, title: true, slug: true, thumbnailUrl: true,
+          category: true, level: true,
+          instructor: { select: { firstName: true, lastName: true, avatarUrl: true } },
+          _count: { select: { sections: true } }
+        }
+      }
+    },
+    orderBy: { enrolledAt: 'desc' }
+  })
+}
