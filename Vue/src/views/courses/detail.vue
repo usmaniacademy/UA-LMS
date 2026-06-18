@@ -50,9 +50,10 @@
                     <span v-if="enrolling" class="spinner-border spinner-border-sm me-1" />
                     Enroll for Free
                   </b-button>
-                  <router-link v-else :to="{ name: 'student.subscription' }" class="btn btn-primary btn-lg">
+                  <b-button v-else variant="primary" size="lg" @click="handleSubscribe" :disabled="subscribing">
+                    <span v-if="subscribing" class="spinner-border spinner-border-sm me-1" />
                     Subscribe — $26/month
-                  </router-link>
+                  </b-button>
                   <p class="text-muted small text-center mb-0">Cancel anytime. Instant access.</p>
                 </div>
               </b-card>
@@ -136,6 +137,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import PagesLayout from '@/layouts/PagesLayout.vue'
 import { useCourseStore } from '@/stores/course'
+import { useSubscriptionStore } from '@/stores/subscription'
 import { api } from '@/helpers/api'
 import ZoomClasses from './ZoomClasses.vue'
 import defaultThumb from '@/assets/images/courses/4by3/08.jpg'
@@ -143,12 +145,27 @@ import defaultAvatar from '@/assets/images/avatar/01.jpg'
 
 const route = useRoute()
 const store = useCourseStore()
+const subStore = useSubscriptionStore()
 const course = computed(() => store.currentCourse)
 const enrolling = ref(false)
+const subscribing = ref(false)
 
 onMounted(() => {
   store.fetchCourseBySlug(route.params.slug as string)
 })
+
+async function handleSubscribe() {
+  if (!course.value) return
+  subscribing.value = true
+  try {
+    const checkoutUrl = await subStore.startCheckout(course.value.id)
+    window.location.href = checkoutUrl
+  } catch (e: any) {
+    alert(e.message)
+  } finally {
+    subscribing.value = false
+  }
+}
 
 async function enrollFree() {
   if (!course.value) return

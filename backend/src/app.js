@@ -19,10 +19,11 @@ app.use(
 )
 app.use(morgan(isProduction ? 'combined' : 'dev'))
 
-// NOTE: Stripe webhook needs the raw body for signature verification.
-// Its route (mounted under /api/stripe/webhook) must register express.raw()
-// BEFORE this JSON parser. That will be wired up in Milestone 5.
-app.use(express.json())
+// Stripe webhook needs raw body — skip JSON parsing for that route only
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/stripe/webhook') return next()
+  express.json()(req, res, next)
+})
 app.use(express.urlencoded({ extended: true }))
 
 app.use('/api', apiLimiter)

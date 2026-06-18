@@ -469,6 +469,12 @@ const pagesRoutes = [
     name: 'course.detail.slug',
     meta: { title: setTitle('Course') },
     component: () => import('@/views/courses/detail.vue')
+  },
+  {
+    path: '/subscription/success',
+    name: 'subscription.success',
+    meta: { title: setTitle('Subscription Successful') },
+    component: () => import('@/views/subscription/success.vue')
   }
 ];
 
