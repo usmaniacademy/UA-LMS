@@ -7,7 +7,7 @@ const setTitle = (pageName?: string) => {
 const demoRoutes = [
   {
     path: '/',
-    redirect: { name: 'demos.default' },
+    redirect: { name: 'home' },
     name: 'index'
   },
   {
@@ -456,6 +456,13 @@ const pagesRoutes = [
       title: setTitle("Abroad Single")
     },
     component: () => import("@/views/pages/event-detail/index.vue"),
+  },
+  // ─── UA LMS — Home ────────────────────────────────────────────────────────
+  {
+    path: '/home',
+    name: 'home',
+    meta: { title: setTitle('Usmani Academy — Teaching and Learning for Understanding') },
+    component: () => import('@/views/home/index.vue')
   },
   // ─── UA LMS — Course Routes ───────────────────────────────────────────────
   {

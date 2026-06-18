@@ -1,16 +1,12 @@
 <template>
-  <router-link class="navbar-brand" :class="logoClass" :to="{ name: 'demos.default' }">
-    <img class="light-mode-item navbar-brand-item" :src="logo" alt="logo" />
-    <img class="dark-mode-item navbar-brand-item" :src="logoLight" alt="logo" />
+  <router-link class="navbar-brand" :class="logoClass" :to="{ name: 'courses.list' }">
+    <img class="light-mode-item navbar-brand-item" :src="logoDark" alt="Usmani Academy" style="height:48px" />
+    <img class="dark-mode-item navbar-brand-item" :src="logoLight" alt="Usmani Academy" style="height:48px" />
   </router-link>
 </template>
 <script setup lang="ts">
-import logo from '@/assets/images/logo.svg';
-import logoLight from '@/assets/images/logo-light.svg';
+import logoDark from '@/assets/images/ua-logo-dark.png.png'
+import logoLight from '@/assets/images/ua-logo-light.png.png'
 
-type LogoBoxPropType = {
-  logoClass?: string;
-};
-
-defineProps<LogoBoxPropType>();
+defineProps<{ logoClass?: string }>()
 </script>
