@@ -98,6 +98,7 @@ const form = reactive({
   customCategory: '',
   level: 'beginner',
   isFree: false,
+  price: null as number | null,
   thumbnailUrl: '',
   promoVideoUrl: '',
   learningPoints: ['', ''],
