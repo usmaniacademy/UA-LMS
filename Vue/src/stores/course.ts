@@ -122,6 +122,21 @@ export const useCourseStore = defineStore('course_store', () => {
     }
   }
 
+  const instructorStudents = ref<any[]>([])
+
+  async function fetchInstructorStudents() {
+    loading.value = true
+    try {
+      const data = await api.get('/courses/instructor/students')
+      instructorStudents.value = data.students
+      return data.students
+    } catch (e: any) {
+      error.value = e.message
+    } finally {
+      loading.value = false
+    }
+  }
+
   const enrolledCourses = ref<any[]>([])
 
   async function fetchEnrolledCourses() {
@@ -213,8 +228,8 @@ export const useCourseStore = defineStore('course_store', () => {
 
   return {
     courses, currentCourse, myCourses, loading, error, pagination,
-    instructorStats, enrolledCourses,
-    fetchPublicCourses, fetchCourseBySlug, fetchMyCourses, fetchInstructorStats, fetchManageCourse, fetchEnrolledCourses,
+    instructorStats, enrolledCourses, instructorStudents,
+    fetchPublicCourses, fetchCourseBySlug, fetchMyCourses, fetchInstructorStats, fetchManageCourse, fetchEnrolledCourses, fetchInstructorStudents,
     createCourse, updateCourse, publishCourse, archiveCourse,
     createSection, updateSection, deleteSection,
     createLesson, updateLesson, deleteLesson

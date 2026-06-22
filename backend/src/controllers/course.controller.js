@@ -31,6 +31,11 @@ export const instructorStats = asyncHandler(async (req, res) => {
   res.json({ stats })
 })
 
+export const instructorStudents = asyncHandler(async (req, res) => {
+  const students = await CourseService.getInstructorStudents(req.user.id)
+  res.json({ students })
+})
+
 export const createCourse = asyncHandler(async (req, res) => {
   // Admins may assign the course to a specific instructor; instructors create for themselves.
   const { instructorId: bodyInstructorId, ...data } = req.body

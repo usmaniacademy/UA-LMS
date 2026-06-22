@@ -223,6 +223,33 @@ export async function deleteLesson(lessonId, instructorId, isAdmin = false) {
   return prisma.lesson.delete({ where: { id: lessonId } })
 }
 
+// ─── Instructor students ────────────────────────────────────────────────────────
+
+export async function getInstructorStudents(instructorId) {
+  const courses = await prisma.course.findMany({ where: { instructorId }, select: { id: true } })
+  const courseIds = courses.map((c) => c.id)
+  if (!courseIds.length) return []
+
+  const enrollments = await prisma.enrollment.findMany({
+    where: { courseId: { in: courseIds } },
+    include: {
+      student: { select: { id: true, firstName: true, lastName: true, email: true, avatarUrl: true } },
+      course: { select: { id: true, title: true } }
+    },
+    orderBy: { enrolledAt: 'desc' }
+  })
+
+  const byStudent = {}
+  for (const e of enrollments) {
+    const sid = e.student.id
+    if (!byStudent[sid]) {
+      byStudent[sid] = { ...e.student, courses: [], enrolledAt: e.enrolledAt }
+    }
+    byStudent[sid].courses.push(e.course.title)
+  }
+  return Object.values(byStudent)
+}
+
 // ─── Manage (edit) — owner or admin, any status ─────────────────────────────────
 
 export async function getCourseForEdit(courseId, userId, isAdmin = false) {

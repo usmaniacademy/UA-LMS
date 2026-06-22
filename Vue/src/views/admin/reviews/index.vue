@@ -5,19 +5,16 @@
         <h1 class="h3 mb-0">Reviews</h1>
       </b-col>
     </b-row>
-
-    <ReviewTable />
-
-    <b-row class="g-4">
-      <TopRatedCourses />
-      <ReviewsAnalyticsChart />
-    </b-row>
+    <b-card no-body class="bg-transparent border">
+      <b-card-body>
+        <div class="text-center py-5 text-muted">
+          <p class="mb-1">No reviews yet.</p>
+          <p class="small mb-0">Course reviews left by students will appear here.</p>
+        </div>
+      </b-card-body>
+    </b-card>
   </AdminLayout>
 </template>
 <script setup lang="ts">
 import AdminLayout from '@/layouts/AdminLayout.vue';
-
-import ReviewTable from '@/views/admin/reviews/components/ReviewTable.vue';
-import TopRatedCourses from '@/views/admin/reviews/components/TopRatedCourses.vue';
-import ReviewsAnalyticsChart from '@/views/admin/reviews/components/ReviewsAnalyticsChart.vue';
 </script>
