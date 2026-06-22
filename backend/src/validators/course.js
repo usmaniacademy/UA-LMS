@@ -6,7 +6,11 @@ export const createCourseSchema = z.object({
   category: z.string().optional(),
   level: z.enum(['beginner', 'intermediate', 'advanced']).default('beginner'),
   isFree: z.boolean().default(false),
+  price: z.number().int().positive().optional(),
+  promoVideoUrl: z.string().optional(),
+  learningPoints: z.array(z.string()).optional(),
   thumbnailUrl: z.string().url().optional().or(z.literal('')),
+  stripePriceId: z.string().optional(),
   // Admins may assign a course to a specific instructor
   instructorId: z.string().uuid().optional()
 })
@@ -24,7 +28,8 @@ export const createLessonSchema = z.object({
   contentUrl: z.string().optional(),
   duration: z.number().int().min(0).optional(),
   orderIndex: z.number().int().min(0).default(0),
-  isFree: z.boolean().default(false)
+  isFree: z.boolean().default(false),
+  zoomMeetingId: z.string().uuid().optional()
 })
 
 export const updateLessonSchema = createLessonSchema.partial()

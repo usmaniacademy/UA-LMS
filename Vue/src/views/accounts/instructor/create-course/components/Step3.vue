@@ -254,16 +254,18 @@ function openEditLesson(section: any, lesson: any) {
   activeLessonRef.value = lesson
   editingLesson.value = true
   zoomError.value = ''
+  // Zoom scheduling details live on the linked ZoomMeeting (attached as lesson.zoomMeeting)
+  const zm = lesson.zoomMeeting
   Object.assign(lessonForm, {
     title: lesson.title,
     contentType: lesson.contentType,
     contentUrl: lesson.contentUrl || '',
-    durationMin: lesson.duration ? Math.round(lesson.duration / 60) : 60,
+    durationMin: zm?.duration || (lesson.duration ? Math.round(lesson.duration / 60) : 60),
     isFree: lesson.isFree,
-    zoomTopic: lesson.zoomTopic || '',
-    zoomStartTime: lesson.zoomStartTime ? toLocalInput(lesson.zoomStartTime) : '',
-    zoomTimezone: lesson.zoomTimezone || 'America/Chicago',
-    zoomAgenda: lesson.zoomAgenda || '',
+    zoomTopic: zm?.topic || '',
+    zoomStartTime: zm?.startTime ? toLocalInput(zm.startTime) : '',
+    zoomTimezone: zm?.timezone || 'America/Chicago',
+    zoomAgenda: zm?.agenda || '',
     zoomWaitingRoom: true,
     zoomAutoRecording: false,
     zoomJoinUrl: lesson.contentUrl || '',
@@ -313,22 +315,34 @@ async function saveLesson(evt: Event) {
       contentUrl,
       duration: lessonForm.durationMin * 60,
       isFree: lessonForm.isFree,
-      orderIndex: activeSectionRef.value.lessons?.length ?? 0
+      orderIndex: editingLesson.value
+        ? (activeLessonRef.value?.orderIndex ?? 0)
+        : (activeSectionRef.value.lessons?.length ?? 0)
     }
 
-    // Attach zoom metadata if zoom lesson
+    // Persist the link to the Zoom meeting (its schedule lives in the ZoomMeeting table)
     if (lessonForm.contentType === 'zoom') {
       payload.zoomMeetingId = zoomMeetingId
-      payload.zoomTopic = lessonForm.zoomTopic || lessonForm.title
-      payload.zoomStartTime = new Date(lessonForm.zoomStartTime).toISOString()
-      payload.zoomTimezone = lessonForm.zoomTimezone
     }
+
+    // Keep the Zoom schedule on the local lesson so reopening it this session pre-fills correctly
+    const localZoomMeeting = lessonForm.contentType === 'zoom'
+      ? {
+          topic: lessonForm.zoomTopic || lessonForm.title,
+          startTime: new Date(lessonForm.zoomStartTime).toISOString(),
+          timezone: lessonForm.zoomTimezone,
+          duration: lessonForm.durationMin,
+          agenda: lessonForm.zoomAgenda
+        }
+      : null
 
     if (editingLesson.value && activeLessonRef.value?.id) {
       const updated = await courseStore.updateLesson(activeLessonRef.value.id, payload)
       Object.assign(activeLessonRef.value, updated)
+      activeLessonRef.value.zoomMeeting = localZoomMeeting || undefined
     } else {
       const lesson = await courseStore.createLesson(activeSectionRef.value.id, payload)
+      if (localZoomMeeting) lesson.zoomMeeting = localZoomMeeting
       if (!activeSectionRef.value.lessons) activeSectionRef.value.lessons = []
       activeSectionRef.value.lessons.push(lesson)
     }

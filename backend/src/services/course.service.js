@@ -262,7 +262,7 @@ export async function getCourseForEdit(courseId, userId, isAdmin = false) {
         include: {
           lessons: {
             orderBy: { orderIndex: 'asc' },
-            select: { id: true, title: true, contentType: true, duration: true, orderIndex: true, isFree: true, contentUrl: true }
+            select: { id: true, title: true, contentType: true, duration: true, orderIndex: true, isFree: true, contentUrl: true, zoomMeetingId: true }
           }
         }
       }
@@ -270,6 +270,23 @@ export async function getCourseForEdit(courseId, userId, isAdmin = false) {
   })
   if (!course) throw ApiError.notFound('Course not found')
   if (!isAdmin && course.instructorId !== userId) throw ApiError.forbidden()
+
+  // Attach each Zoom meeting's scheduling details to its lesson so the editor
+  // can pre-fill date/time/topic/timezone instead of losing them.
+  const meetings = await prisma.zoomMeeting.findMany({
+    where: { courseId },
+    select: { id: true, topic: true, startTime: true, duration: true, timezone: true, agenda: true, joinUrl: true, status: true }
+  })
+  const meetingById = {}
+  for (const m of meetings) meetingById[m.id] = m
+  for (const section of course.sections) {
+    for (const lesson of section.lessons) {
+      if (lesson.zoomMeetingId && meetingById[lesson.zoomMeetingId]) {
+        lesson.zoomMeeting = meetingById[lesson.zoomMeetingId]
+      }
+    }
+  }
+
   return course
 }
 

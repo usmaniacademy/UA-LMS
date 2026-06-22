@@ -57,16 +57,22 @@
         <div v-if="success" class="alert alert-success py-2 mb-3">{{ success }}</div>
       </b-col>
 
+      <b-col cols="12">
+        <p v-if="isEditMode" class="text-muted small mb-2">
+          Your existing details are kept — edit only what you need and save.
+        </p>
+      </b-col>
+
       <b-col cols="12" class="d-flex justify-content-between gap-2 flex-wrap">
         <b-button variant="outline-secondary" @click="previousPage">Back</b-button>
         <div class="d-flex gap-2">
           <b-button variant="outline-primary" @click="handleSaveDraft" :disabled="loading">
             <span v-if="loading === 'draft'" class="spinner-border spinner-border-sm me-1" />
-            Save as Draft
+            {{ isEditMode ? 'Save Changes' : 'Save as Draft' }}
           </b-button>
           <b-button variant="primary" @click="handlePublish" :disabled="loading">
             <span v-if="loading === 'publish'" class="spinner-border spinner-border-sm me-1" />
-            Save & Publish
+            {{ isEditMode ? 'Save & Publish' : 'Save & Publish' }}
           </b-button>
         </div>
       </b-col>
@@ -84,6 +90,7 @@ const props = defineProps<{
   courseId: string | null
   setCourseId: (id: string) => void
   previousPage: () => void
+  isEditMode?: boolean
 }>()
 
 const courseStore = useCourseStore()
@@ -97,6 +104,8 @@ async function saveCourse(publish: boolean) {
   loading.value = publish ? 'publish' : 'draft'
 
   try {
+    const cleanedLearningPoints = (props.form.learningPoints || []).filter((p: string) => p && p.trim())
+
     const payload = {
       title: props.form.title,
       description: props.form.description,
@@ -104,6 +113,8 @@ async function saveCourse(publish: boolean) {
       level: props.form.level,
       isFree: props.form.isFree,
       price: props.form.isFree ? undefined : (props.form.price || undefined),
+      promoVideoUrl: props.form.promoVideoUrl || undefined,
+      learningPoints: cleanedLearningPoints.length ? cleanedLearningPoints : undefined,
       thumbnailUrl: props.form.thumbnailUrl || undefined,
       stripePriceId: props.form.stripePriceId || undefined
     }
@@ -119,11 +130,14 @@ async function saveCourse(publish: boolean) {
     if (publish) {
       await courseStore.publishCourse(course.id)
       success.value = 'Course published successfully!'
+      // Only navigate away on publish
+      setTimeout(() => router.push({ name: 'instructor.course' }), 1500)
     } else {
-      success.value = 'Draft saved!'
+      // Stay on the builder so the user can keep adding curriculum & Zoom classes
+      success.value = props.isEditMode
+        ? 'Changes saved.'
+        : 'Draft saved. You can now add curriculum and Zoom classes in the Curriculum step.'
     }
-
-    setTimeout(() => router.push({ name: 'instructor.course' }), 1500)
   } catch (e: any) {
     error.value = e.message || 'Something went wrong'
   } finally {

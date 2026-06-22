@@ -97,6 +97,9 @@ model Course {
   category       String?
   level          CourseLevel  @default(beginner)
   isFree         Boolean      @default(false)
+  price          Int?         // instructor-set monthly price (USD)
+  promoVideoUrl  String?
+  learningPoints Json?        // array of "what you'll learn" bullet points
   stripePriceId  String?
   isPublished    Boolean      @default(false)
   status         CourseStatus @default(draft)
@@ -133,15 +136,16 @@ model CourseSection {
 }
 
 model Lesson {
-  id          String      @id @default(uuid())
-  sectionId   String
-  title       String
-  contentType ContentType @default(video)
-  contentUrl  String?
-  duration    Int?        // in seconds
-  orderIndex  Int         @default(0)
-  isFree      Boolean     @default(false)
-  createdAt   DateTime    @default(now())
+  id            String      @id @default(uuid())
+  sectionId     String
+  title         String
+  contentType   ContentType @default(video)
+  contentUrl    String?
+  duration      Int?        // in seconds
+  orderIndex    Int         @default(0)
+  isFree        Boolean     @default(false)
+  zoomMeetingId String?     // links a zoom lesson to its ZoomMeeting (for editing)
+  createdAt     DateTime    @default(now())
 
   section CourseSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 

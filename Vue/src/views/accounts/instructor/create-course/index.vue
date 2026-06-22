@@ -67,7 +67,7 @@
                   <Step1 :form="form" :nextPage="nextPage" />
                   <Step2 :form="form" :nextPage="nextPage" :previousPage="previousPage" />
                   <Step3 :courseId="courseId" :initialSections="loadedSections" :nextPage="nextPage" :previousPage="previousPage" />
-                  <Step4 :form="form" :courseId="courseId" :setCourseId="setCourseId" :previousPage="previousPage" />
+                  <Step4 :form="form" :courseId="courseId" :setCourseId="setCourseId" :previousPage="previousPage" :isEditMode="isEditMode" />
                 </b-form>
               </div>
             </b-card-body>
@@ -133,8 +133,13 @@ async function loadCourseForEdit(id: string) {
   form.description = course.description || ''
   form.level = course.level || 'beginner'
   form.isFree = course.isFree || false
+  form.price = course.price ?? null
+  form.promoVideoUrl = course.promoVideoUrl || ''
   form.thumbnailUrl = course.thumbnailUrl || ''
   form.stripePriceId = course.stripePriceId || ''
+  if (Array.isArray(course.learningPoints) && course.learningPoints.length) {
+    form.learningPoints = course.learningPoints
+  }
 
   // Map category to the dropdown, or "Other" + custom text
   if (course.category && !KNOWN_CATEGORIES.includes(course.category)) {
