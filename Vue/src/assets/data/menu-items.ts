@@ -608,27 +608,7 @@ export const ADMIN_MENU_ITEMS: MenuItemType[] = [
     key: "instructors",
     icon: faUserTie,
     label: "Instructors",
-    children: [
-      {
-        key: "course-all",
-        label: "Instructors",
-        route: { name: "admin.instructor.list" },
-        parentKey: "instructors",
-      },
-      {
-        key: "course-category",
-        label: "Instructor Detail",
-        route: { name: "admin.instructor.detail" },
-        parentKey: "instructors",
-      },
-      {
-        key: "course-detail",
-        label: "Instructor requests",
-        route: { name: "admin.instructor.request" },
-        parentKey: "instructors",
-        badge: '2'
-      },
-    ],
+    route: { name: "admin.instructor.list" },
   },
   {
     key: "reviews",
@@ -708,34 +688,14 @@ export const INSTRUCTOR_MENU_ITEMS = [
     icon: BIconPeople
   },
   {
-    title: 'Orders',
-    route: { name: 'instructor.order' },
-    icon: BIconFolderCheck
-  },
-  {
-    title: 'Reviews',
-    route: { name: 'instructor.review' },
-    icon: BIconStar
-  },
-  {
     title: 'Edit Profile',
     route: { name: 'instructor.edit.profile' },
     icon: BIconPencilSquare
   },
   {
-    title: 'Payouts',
-    route: { name: 'instructor.payout' },
-    icon: BIconWallet2
-  },
-  {
     title: 'Settings',
     route: { name: 'instructor.settings' },
     icon: BIconGear
-  },
-  {
-    title: 'Delete Profile',
-    route: { name: 'instructor.delete.account' },
-    icon: BIconTrash
   },
   {
     title: 'Sign Out',

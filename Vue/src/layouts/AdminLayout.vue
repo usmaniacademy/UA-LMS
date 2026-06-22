@@ -70,82 +70,19 @@
                     aria-expanded="false" data-bs-auto-close="outside">
                     <BIconBell class="fa-fw" />
                   </a>
-                  <span class="notif-badge animation-blink"></span>
                   <div
                     class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md p-0 shadow-lg border-0">
                     <b-card no-body class="bg-transparent">
                       <b-card-header
                         class="bg-transparent border-bottom py-4 d-flex justify-content-between align-items-center">
-                        <h6 class="m-0">Notifications <span class="badge bg-danger bg-opacity-10 text-danger ms-2">2
-                            new</span></h6>
-                        <a class="small" href="#">Clear all</a>
+                        <h6 class="m-0">Notifications</h6>
                       </b-card-header>
                       <b-card-body class="p-0">
-                        <ul class="list-group list-unstyled list-group-flush">
-                          <li>
-                            <a href="#" class="list-group-item-action border-0 border-bottom d-flex p-3">
-                              <div class="me-3">
-                                <div class="avatar avatar-md">
-                                  <img class="avatar-img rounded-circle" :src="avatar08" alt="avatar">
-                                </div>
-                              </div>
-                              <div>
-                                <p class="text-body small m-0">Congratulate <b>Joan Wallace</b> for graduating from
-                                  <b>Microverse university</b>
-                                </p>
-                                <u class="small">Say congrats</u>
-                              </div>
-                            </a>
-                          </li>
-
-                          <li>
-                            <a href="#" class="list-group-item-action border-0 border-bottom d-flex p-3">
-                              <div class="me-3">
-                                <div class="avatar avatar-md">
-                                  <img class="avatar-img rounded-circle" :src="avatar02" alt="avatar">
-                                </div>
-                              </div>
-                              <div>
-                                <h6 class="mb-1">Larry Lawson Added a new course</h6>
-                                <p class="small text-body m-0">What's new! Find out about new features</p>
-                                <u class="small">View detail</u>
-                              </div>
-                            </a>
-                          </li>
-
-                          <li>
-                            <a href="#" class="list-group-item-action border-0 border-bottom d-flex p-3">
-                              <div class="me-3">
-                                <div class="avatar avatar-md">
-                                  <img class="avatar-img rounded-circle" :src="avatar05" alt="avatar">
-                                </div>
-                              </div>
-                              <div>
-                                <h6 class="mb-1">New request to apply for Instructor</h6>
-                                <u class="small">View detail</u>
-                              </div>
-                            </a>
-                          </li>
-
-                          <li>
-                            <a href="#" class="list-group-item-action border-0 border-bottom d-flex p-3">
-                              <div class="me-3">
-                                <div class="avatar avatar-md">
-                                  <img class="avatar-img rounded-circle" :src="avatar03" alt="avatar">
-                                </div>
-                              </div>
-                              <div>
-                                <h6 class="mb-1">Update v2.3 completed successfully</h6>
-                                <p class="small text-body m-0">What's new! Find out about new features</p>
-                                <small class="text-body">5 min ago</small>
-                              </div>
-                            </a>
-                          </li>
-                        </ul>
+                        <div class="text-center text-muted py-5 px-3">
+                          <BIconBell class="fs-3 d-block mx-auto mb-2 opacity-50" />
+                          <p class="small mb-0">You're all caught up. No new notifications.</p>
+                        </div>
                       </b-card-body>
-                      <b-card-footer class="bg-transparent border-0 py-3 text-center position-relative">
-                        <a href="#" class="stretched-link">See all incoming activity</a>
-                      </b-card-footer>
                     </b-card>
                   </div>
                 </DropDown>
@@ -174,10 +111,6 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { BIconGearFill, BIconGlobe, BIconPower, BIconTextRight, BIconBell } from 'bootstrap-icons-vue';
 
 import logolight from '@/assets/images/logo-light.svg';
-import avatar08 from '@/assets/images/avatar/08.jpg';
-import avatar02 from '@/assets/images/avatar/02.jpg';
-import avatar05 from '@/assets/images/avatar/05.jpg';
-import avatar03 from '@/assets/images/avatar/03.jpg';
 import logoMobile from '@/assets/images/logo-mobile.svg';
 import logoMobilelight from '@/assets/images/logo-mobile-light.svg';
 

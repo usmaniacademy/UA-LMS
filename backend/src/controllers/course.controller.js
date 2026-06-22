@@ -26,6 +26,11 @@ export const myCourseslist = asyncHandler(async (req, res) => {
   res.json({ courses })
 })
 
+export const instructorStats = asyncHandler(async (req, res) => {
+  const stats = await CourseService.getInstructorStats(req.user.id)
+  res.json({ stats })
+})
+
 export const createCourse = asyncHandler(async (req, res) => {
   const course = await CourseService.createCourse(req.user.id, req.body)
   res.status(201).json({ message: 'Course created', course })

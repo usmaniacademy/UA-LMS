@@ -534,24 +534,6 @@ const adminRoutes = [
     component: () => import("@/views/admin/instructors/list/index.vue"),
   },
   {
-    path: "/admin/instructor-detail",
-    name: "admin.instructor.detail",
-    meta: {
-      title: setTitle("Instructor Detail"),
-      authRequired: true
-    },
-    component: () => import("@/views/admin/instructors/details/index.vue"),
-  },
-  {
-    path: "/admin/instructor-request",
-    name: "admin.instructor.request",
-    meta: {
-      title: setTitle("Instructor Request"),
-      authRequired: true
-    },
-    component: () => import("@/views/admin/instructors/request/index.vue"),
-  },
-  {
     path: "/admin/review",
     name: "admin.review",
     meta: {

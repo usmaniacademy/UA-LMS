@@ -5,6 +5,41 @@
 
 /*User CSS*/
 
+// =====================================================================
+// Admin sidebar — fix green-on-green hover/active
+// The sidebar uses bg-dark (#065F46 dark green) while the theme's hover/active
+// text color is $primary (#0F766E green) → green text on green bg is invisible.
+// Make hover/active readable with white text on a translucent white pill.
+// =====================================================================
+.sidebar .sidebar-content .navbar-nav .nav-link:hover,
+.sidebar .sidebar-content .navbar-nav .nav-link:focus {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: $border-radius;
+}
+.sidebar .sidebar-content .navbar-nav .nav-link.active {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $border-radius;
+}
+.sidebar .sidebar-content .navbar-nav > .nav-item > .nav-link[data-bs-toggle="collapse"][aria-expanded="true"] {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+// Instructor / student offcanvas sidebar (list-group-dark on dark-green card)
+// — same green-on-green issue on the active item.
+.list-group-dark .list-group-item.active {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: $border-radius;
+}
+.list-group-dark .list-group-item:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: $border-radius;
+}
+
 // [data-bs-theme="dark"] {
 //   --bs-primary: #19f032 !important;
 //   --bs-primary-rgb: 25, 240, 50 !important; 

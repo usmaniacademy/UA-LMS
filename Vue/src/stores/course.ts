@@ -37,6 +37,26 @@ export interface Lesson {
   isFree: boolean
 }
 
+export interface InstructorStats {
+  totalCourses: number
+  totalStudents: number
+  activeSubs: number
+  mrr: number
+  totalEarnings: number
+  currentMonthEarnings: number
+  lastMonthEarnings: number
+  monthly: { label: string; earnings: number }[]
+  topCourses: {
+    id: string
+    title: string
+    thumbnailUrl?: string
+    status: string
+    students: number
+    subscriptions: number
+    revenue: number
+  }[]
+}
+
 export const useCourseStore = defineStore('course_store', () => {
   const courses = ref<Course[]>([])
   const currentCourse = ref<Course | null>(null)
@@ -80,6 +100,21 @@ export const useCourseStore = defineStore('course_store', () => {
     try {
       const data = await api.get('/courses/instructor/my-courses')
       myCourses.value = data.courses
+    } catch (e: any) {
+      error.value = e.message
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const instructorStats = ref<InstructorStats | null>(null)
+
+  async function fetchInstructorStats() {
+    loading.value = true
+    try {
+      const data = await api.get('/courses/instructor/stats')
+      instructorStats.value = data.stats
+      return data.stats
     } catch (e: any) {
       error.value = e.message
     } finally {
@@ -147,7 +182,8 @@ export const useCourseStore = defineStore('course_store', () => {
 
   return {
     courses, currentCourse, myCourses, loading, error, pagination,
-    fetchPublicCourses, fetchCourseBySlug, fetchMyCourses,
+    instructorStats,
+    fetchPublicCourses, fetchCourseBySlug, fetchMyCourses, fetchInstructorStats,
     createCourse, updateCourse, publishCourse, archiveCourse,
     createSection, updateSection, deleteSection,
     createLesson, updateLesson, deleteLesson

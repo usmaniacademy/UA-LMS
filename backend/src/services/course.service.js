@@ -254,3 +254,71 @@ export async function getStudentCourses(studentId) {
     orderBy: { enrolledAt: 'desc' }
   })
 }
+
+// ─── Instructor dashboard stats ─────────────────────────────────────────────
+const SUB_PRICE = 26 // monthly price per subscription (matches admin revenue convention)
+
+export async function getInstructorStats(instructorId) {
+  const courses = await prisma.course.findMany({
+    where: { instructorId },
+    select: {
+      id: true, title: true, thumbnailUrl: true, status: true,
+      _count: { select: { enrollments: true, subscriptions: true } }
+    }
+  })
+  const courseIds = courses.map(c => c.id)
+  const totalCourses = courses.length
+
+  const [totalStudents, activeSubs, subs] = courseIds.length
+    ? await Promise.all([
+        prisma.enrollment.count({ where: { courseId: { in: courseIds } } }),
+        prisma.subscription.count({ where: { courseId: { in: courseIds }, status: 'active' } }),
+        prisma.subscription.findMany({
+          where: { courseId: { in: courseIds }, status: { in: ['active', 'cancelled'] } },
+          select: { createdAt: true }
+        })
+      ])
+    : [0, 0, []]
+
+  const mrr = activeSubs * SUB_PRICE
+  const totalEarnings = subs.length * SUB_PRICE
+
+  const now = new Date()
+  const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+  const inRange = (d, start, end) => {
+    const t = new Date(d)
+    return t >= start && (!end || t < end)
+  }
+  const currentMonthEarnings = subs.filter(s => inRange(s.createdAt, thisMonthStart)).length * SUB_PRICE
+  const lastMonthEarnings = subs.filter(s => inRange(s.createdAt, lastMonthStart, thisMonthStart)).length * SUB_PRICE
+
+  // Last 12 months earnings series for the chart
+  const monthly = []
+  for (let i = 11; i >= 0; i--) {
+    const start = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    const end = new Date(now.getFullYear(), now.getMonth() - i + 1, 1)
+    monthly.push({
+      label: start.toLocaleString('en-US', { month: 'short' }),
+      earnings: subs.filter(s => inRange(s.createdAt, start, end)).length * SUB_PRICE
+    })
+  }
+
+  const topCourses = courses
+    .map(c => ({
+      id: c.id,
+      title: c.title,
+      thumbnailUrl: c.thumbnailUrl,
+      status: c.status,
+      students: c._count.enrollments,
+      subscriptions: c._count.subscriptions,
+      revenue: c._count.subscriptions * SUB_PRICE
+    }))
+    .sort((a, b) => b.students - a.students)
+    .slice(0, 8)
+
+  return {
+    totalCourses, totalStudents, activeSubs, mrr, totalEarnings,
+    currentMonthEarnings, lastMonthEarnings, monthly, topCourses
+  }
+}

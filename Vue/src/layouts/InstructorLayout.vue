@@ -14,27 +14,27 @@
               <b-row class="d-flex justify-content-between">
                 <div class="col-auto mt-4 mt-md-0">
                   <div class="avatar avatar-xxl mt-n3">
-                    <img class="avatar-img rounded-circle border border-white border-3 shadow" :src="avatar01" alt="">
+                    <img v-if="avatarUrl" class="avatar-img rounded-circle border border-white border-3 shadow" :src="avatarUrl" alt="">
+                    <span v-else
+                      class="avatar-img rounded-circle border border-white border-3 shadow bg-primary text-white d-flex align-items-center justify-content-center fw-bold fs-3">
+                      {{ initials }}
+                    </span>
                   </div>
                 </div>
                 <div class="col d-md-flex justify-content-between align-items-center mt-4">
                   <div>
                     <h1 class="my-1 fs-4 d-flex align-items-center">
-                      Lori Stevens
+                      {{ fullName }}
                       <BIconPatchCheckFill class="text-info small ms-2" />
                     </h1>
                     <ul class="list-inline mb-0">
                       <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0">
-                        <font-awesome-icon :icon="faStar" class="text-warning me-1" />
-                        4.5/5.0
-                      </li>{{ ' ' }}
-                      <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0">
                         <font-awesome-icon :icon="faUserGraduate" class="text-orange me-1" />
-                        12k Enrolled Students
+                        {{ stats?.totalStudents ?? 0 }} Enrolled Students
                       </li>{{ ' ' }}
                       <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0">
                         <font-awesome-icon :icon="faBook" class="text-purple me-1" />
-                        25 Courses
+                        {{ stats?.totalCourses ?? 0 }} Courses
                       </li>
                     </ul>
                   </div>
@@ -109,18 +109,19 @@
   <Footer7 />
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import router from '@/router';
 
 import { INSTRUCTOR_MENU_ITEMS } from '@/assets/data/menu-items';
+import { useAuthStore } from '@/stores/auth';
+import { useCourseStore } from '@/stores/course';
 
 import TopBar8 from '@/layouts/components/TopBar8.vue';
 import Footer7 from '@/layouts/components/Footer7.vue';
 
 import pattern04 from '@/assets/images/pattern/04.png';
-import avatar01 from '@/assets/images/avatar/01.jpg';
 
-import { faStar, faUserGraduate, faBook, faSlidersH } from '@fortawesome/free-solid-svg-icons';
+import { faUserGraduate, faBook, faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import { BIconPatchCheckFill } from 'bootstrap-icons-vue';
 
 type LayoutPropType = {
@@ -131,9 +132,30 @@ type LayoutPropType = {
 
 defineProps<LayoutPropType>();
 
+const auth = useAuthStore();
+const courseStore = useCourseStore();
+
+const user = computed(() => auth.getUser());
+const fullName = computed(() => {
+  const u = user.value;
+  if (!u) return 'Instructor';
+  return [u.firstName, u.lastName].filter(Boolean).join(' ') || u.email;
+});
+const initials = computed(() => {
+  const u = user.value;
+  if (!u) return 'U';
+  return [(u.firstName || '')[0], (u.lastName || '')[0]].filter(Boolean).join('').toUpperCase() || u.email[0].toUpperCase();
+});
+const avatarUrl = computed(() => user.value?.avatarUrl || '');
+const stats = computed(() => courseStore.instructorStats);
+
 const currentRouteName = router.currentRoute.value.name;
 
 const offcanvas = ref(false);
+
+onMounted(() => {
+  if (!courseStore.instructorStats) courseStore.fetchInstructorStats();
+});
 
 const getMenuItems = () => {
   // NOTE - You can fetch from server and return here as well

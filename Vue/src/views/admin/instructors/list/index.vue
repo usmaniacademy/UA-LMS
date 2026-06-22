@@ -1,6 +1,6 @@
 <template>
   <AdminLayout>
-    <b-row>
+    <b-row class="mb-3">
       <b-col cols="12">
         <h1 class="h3 mb-2 mb-sm-0">Instructors</h1>
       </b-col>
@@ -8,73 +8,88 @@
 
     <b-card no-body class="bg-transparent">
       <b-card-header class="bg-transparent border-bottom px-0">
-        <b-row class="g-3 align-items-center justify-content-between">
-          <b-col md="8">
-            <b-form class="rounded position-relative">
-              <b-form-input class="bg-transparent" type="search" placeholder="Search" />
-              <button
-                class="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset"
-                type="submit">
-                <font-awesome-icon :icon="faSearch" class="fs-6" />
-              </button>
-            </b-form>
-          </b-col>
-
-          <b-col md="3">
-            <ul class="list-inline mb-0 nav nav-pills nav-pill-dark-soft border-0 justify-content-end" id="pills-tab"
-              role="tablist">
-              <li class="nav-item">
-                <a href="#nav-preview-tab-1" class="nav-link mb-0 me-2" :class="!show && 'active'" data-bs-toggle="tab"
-                  @click="show = !show">
-                  <font-awesome-icon :icon="faThLarge" class="fa-fw" />
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#nav-html-tab-1" class="nav-link mb-0" :class="show && 'active'" data-bs-toggle="tab"
-                  @click="show = !show">
-                  <font-awesome-icon :icon="faListUl" class="fa-fw" />
-                </a>
-              </li>
-            </ul>
-          </b-col>
-        </b-row>
+        <b-form class="rounded position-relative" @submit.prevent="search">
+          <b-form-input class="bg-transparent" type="search" placeholder="Search instructors" v-model="query" />
+          <button class="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset"
+            type="submit">
+            <font-awesome-icon :icon="faSearch" class="fs-6" />
+          </button>
+        </b-form>
       </b-card-header>
 
       <b-card-body class="px-0">
-        <div class="tab-content">
-          <div class="tab-pane fade" :class="!show && 'show active'" id="nav-preview-tab-1">
-            <InstructorGrid />
-          </div>
-          <div class="tab-pane fade" :class="show && 'show active'" id="nav-html-tab-1">
-            <InstructorList />
-          </div>
+        <div v-if="admin.loading" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div>
+
+        <div v-else-if="!instructors.length" class="text-center text-muted py-5">
+          No instructors found.
+        </div>
+
+        <div v-else class="table-responsive border-0 mb-0">
+          <table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+            <thead>
+              <tr>
+                <th scope="col" class="border-0 rounded-start">Instructor</th>
+                <th scope="col" class="border-0">Email</th>
+                <th scope="col" class="border-0">Students</th>
+                <th scope="col" class="border-0">Status</th>
+                <th scope="col" class="border-0 rounded-end">Joined</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="user in instructors" :key="user.id">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-md">
+                      <img v-if="user.avatarUrl" :src="user.avatarUrl" class="rounded-circle" alt="">
+                      <span v-else
+                        class="avatar-img rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold">
+                        {{ initials(user) }}
+                      </span>
+                    </div>
+                    <h6 class="mb-0 ms-2">{{ user.firstName }} {{ user.lastName }}</h6>
+                  </div>
+                </td>
+                <td>{{ user.email }}</td>
+                <td>{{ user._count?.enrollments ?? 0 }}</td>
+                <td>
+                  <span class="badge bg-opacity-10" :class="user.isActive ? 'bg-success text-success' : 'bg-danger text-danger'">
+                    {{ user.isActive ? 'Active' : 'Blocked' }}
+                  </span>
+                </td>
+                <td>{{ formatDate(user.createdAt) }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </b-card-body>
-
-      <b-card-footer class="bg-transparent p-0">
-        <div class="d-sm-flex justify-content-sm-between align-items-sm-center">
-          <p class="mb-0 text-center text-sm-start">Showing 1 to 8 of 20 entries</p>
-          <nav class="d-flex justify-content-center mb-0" aria-label="navigation">
-            <ul class="pagination pagination-sm pagination-primary-soft d-inline-block d-md-flex rounded mb-0">
-              <li class="page-item mb-0"><a class="page-link" href="#" tabindex="-1"><font-awesome-icon :icon="faAngleLeft" /></a></li>
-              <li class="page-item mb-0"><a class="page-link" href="#">1</a></li>
-              <li class="page-item mb-0 active"><a class="page-link" href="#">2</a></li>
-              <li class="page-item mb-0"><a class="page-link" href="#">3</a></li>
-              <li class="page-item mb-0"><a class="page-link" href="#"><font-awesome-icon :icon="faAngleRight" /></a></li>
-            </ul>
-          </nav>
-        </div>
-      </b-card-footer>
     </b-card>
   </AdminLayout>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
+import { useAdminStore } from '@/stores/admin';
+import type { AdminUser } from '@/stores/admin';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-import InstructorGrid from '@/views/admin/instructors/list/components/InstructorGrid.vue';
-import InstructorList from '@/views/admin/instructors/list/components/InstructorList.vue';
+const admin = useAdminStore();
+const query = ref('');
 
-import { faSearch, faThLarge, faListUl, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
-const show = ref(false);
+const instructors = computed(() => admin.users);
+
+function initials(u: AdminUser) {
+  return [(u.firstName || '')[0], (u.lastName || '')[0]].filter(Boolean).join('').toUpperCase() || u.email[0].toUpperCase();
+}
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function search() {
+  admin.fetchUsers({ role: 'instructor', search: query.value || undefined });
+}
+
+onMounted(() => admin.fetchUsers({ role: 'instructor' }));
 </script>
