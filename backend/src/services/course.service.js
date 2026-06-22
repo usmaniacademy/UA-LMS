@@ -47,7 +47,7 @@ export async function listPublishedCourses({ category, level, search, page = 1, 
       select: {
         id: true, title: true, slug: true, description: true,
         thumbnailUrl: true, category: true, level: true,
-        isFree: true, totalStudents: true, ratingAvg: true,
+        isFree: true, price: true, totalStudents: true, ratingAvg: true,
         instructor: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } }
       }
     }),
@@ -67,7 +67,7 @@ export async function getCourseBySlug(slug, userId = null) {
         include: {
           lessons: {
             orderBy: { orderIndex: 'asc' },
-            select: { id: true, title: true, contentType: true, duration: true, orderIndex: true, isFree: true, contentUrl: true }
+            select: { id: true, title: true, contentType: true, duration: true, orderIndex: true, isFree: true, contentUrl: true, zoomMeetingId: true }
           }
         }
       },

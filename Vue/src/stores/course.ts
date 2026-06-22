@@ -11,6 +11,7 @@ export interface Course {
   category?: string
   level: 'beginner' | 'intermediate' | 'advanced'
   isFree: boolean
+  price?: number
   status: 'draft' | 'published' | 'archived'
   isPublished: boolean
   totalStudents: number

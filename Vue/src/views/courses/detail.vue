@@ -37,11 +37,13 @@
 
                 <div class="text-center mb-3">
                   <div v-if="course.isFree" class="fs-3 fw-bold text-success">Free</div>
-                  <div v-else class="fs-3 fw-bold text-primary">$26 / month</div>
+                  <div v-else class="fs-3 fw-bold text-primary">
+                    ${{ monthlyPrice }} <span class="fs-6 fw-normal text-muted">/ month</span>
+                  </div>
                 </div>
 
                 <div v-if="course.isEnrolled" class="d-grid">
-                  <router-link :to="{ name: 'student.course.resume' }" class="btn btn-success btn-lg">
+                  <router-link :to="{ name: 'course.learn', params: { slug } }" class="btn btn-success btn-lg">
                     Continue Learning
                   </router-link>
                 </div>
@@ -52,7 +54,7 @@
                   </b-button>
                   <b-button v-else variant="primary" size="lg" @click="handleSubscribe" :disabled="subscribing">
                     <span v-if="subscribing" class="spinner-border spinner-border-sm me-1" />
-                    Subscribe — $26/month
+                    Subscribe — ${{ monthlyPrice }}/month
                   </b-button>
                   <p class="text-muted small text-center mb-0">Cancel anytime. Instant access.</p>
                 </div>
@@ -80,18 +82,26 @@
                   header-class="font-base fw-bold"
                   class="mb-3"
                 >
-                  <div v-for="lesson in section.lessons" :key="lesson.id"
-                    class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <button
+                    v-for="lesson in section.lessons" :key="lesson.id"
+                    type="button"
+                    class="lesson-row d-flex justify-content-between align-items-center py-2 border-bottom w-100 text-start bg-transparent border-0 border-bottom"
+                    @click="openLesson(lesson)"
+                  >
                     <div class="d-flex align-items-center gap-2">
-                      <span class="badge bg-light text-dark text-uppercase small">{{ lesson.contentType }}</span>
-                      <span :class="{ 'text-muted': !lesson.contentUrl && !lesson.isFree }">{{ lesson.title }}</span>
+                      <span class="badge text-uppercase small"
+                        :class="lesson.contentType === 'zoom' ? 'bg-primary' : lesson.contentType === 'video' ? 'bg-warning text-dark' : 'bg-light text-dark'">
+                        {{ lesson.contentType }}
+                      </span>
+                      <span>{{ lesson.title }}</span>
                       <span v-if="lesson.isFree" class="badge bg-success-soft text-success small">Free</span>
-                      <span v-if="!lesson.contentUrl && !course.isEnrolled" class="text-muted small">🔒</span>
+                      <BIconLockFill v-else-if="!course.isEnrolled" class="text-muted small" />
                     </div>
-                    <span v-if="lesson.duration" class="text-muted small">
-                      {{ Math.round(lesson.duration / 60) }}m
+                    <span class="d-flex align-items-center gap-2">
+                      <span v-if="lesson.duration" class="text-muted small">{{ Math.round(lesson.duration / 60) }}m</span>
+                      <BIconPlayCircle class="text-primary" />
                     </span>
-                  </div>
+                  </button>
                 </b-accordion-item>
               </b-accordion>
 
@@ -135,11 +145,13 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import router from '@/router'
 import PagesLayout from '@/layouts/PagesLayout.vue'
 import { useCourseStore } from '@/stores/course'
 import { useSubscriptionStore } from '@/stores/subscription'
 import { api } from '@/helpers/api'
 import ZoomClasses from './ZoomClasses.vue'
+import { BIconLockFill, BIconPlayCircle } from 'bootstrap-icons-vue'
 import defaultThumb from '@/assets/images/courses/4by3/08.jpg'
 import defaultAvatar from '@/assets/images/avatar/01.jpg'
 
@@ -147,12 +159,24 @@ const route = useRoute()
 const store = useCourseStore()
 const subStore = useSubscriptionStore()
 const course = computed(() => store.currentCourse)
+const slug = computed(() => route.params.slug as string)
+const monthlyPrice = computed(() => (course.value as any)?.price || 26)
 const enrolling = ref(false)
 const subscribing = ref(false)
 
 onMounted(() => {
   store.fetchCourseBySlug(route.params.slug as string)
 })
+
+function openLesson(lesson: any) {
+  const accessible = course.value?.isEnrolled || lesson.isFree
+  if (!accessible) {
+    // Non-accessible: take them to the player which shows the locked state + subscribe CTA
+    router.push({ name: 'course.learn', params: { slug: slug.value }, query: { lesson: lesson.id } })
+    return
+  }
+  router.push({ name: 'course.learn', params: { slug: slug.value }, query: { lesson: lesson.id } })
+}
 
 async function handleSubscribe() {
   if (!course.value) return

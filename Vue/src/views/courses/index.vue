@@ -4,7 +4,7 @@
       <b-container class="d-flex align-items-center" style="min-height:180px">
         <div>
           <h1 class="text-white mb-1">All Courses</h1>
-          <p class="text-white-50 mb-0">Expand your skills in Forex, Crypto, Stocks and more.</p>
+          <p class="text-white-50 mb-0">Explore live courses in Islamic Studies, Astronomy and Technology.</p>
         </div>
       </b-container>
     </section>
@@ -22,12 +22,9 @@
           <b-col md="3">
             <b-form-select v-model="filters.category" @change="load">
               <option value="">All categories</option>
-              <option value="Forex">Forex Trading</option>
-              <option value="Crypto">Cryptocurrency</option>
-              <option value="Stocks">Stock Market</option>
-              <option value="Options">Options Trading</option>
-              <option value="Finance">Personal Finance</option>
-              <option value="Investing">Investing</option>
+              <option value="Islamic Studies">Islamic Studies</option>
+              <option value="Astronomy">Astronomy</option>
+              <option value="Technology">Technology</option>
             </b-form-select>
           </b-col>
           <b-col md="3">

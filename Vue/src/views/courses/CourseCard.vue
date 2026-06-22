@@ -9,7 +9,7 @@
           :alt="course.title"
         />
         <span v-if="course.isFree" class="badge bg-success position-absolute top-0 start-0 m-2">Free</span>
-        <span v-else class="badge bg-gold position-absolute top-0 start-0 m-2">$26/mo</span>
+        <span v-else class="badge bg-gold position-absolute top-0 start-0 m-2">${{ course.price || 26 }}/mo</span>
         <span class="badge bg-primary position-absolute top-0 end-0 m-2 text-capitalize">{{ course.level }}</span>
       </div>
 

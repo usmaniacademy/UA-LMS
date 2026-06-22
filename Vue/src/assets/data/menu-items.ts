@@ -12,7 +12,7 @@ export const APP_MENU_ITEMS: MenuItemType[] = [
   {
     key: 'courses',
     label: 'Courses',
-    route: { name: 'course.grid.classic' }
+    route: { name: 'courses.list' }
   },
   {
     key: 'about',
