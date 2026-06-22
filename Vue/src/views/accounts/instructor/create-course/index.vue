@@ -95,6 +95,7 @@ const form = reactive({
   title: '',
   description: '',
   category: '',
+  customCategory: '',
   level: 'beginner',
   isFree: false,
   thumbnailUrl: '',

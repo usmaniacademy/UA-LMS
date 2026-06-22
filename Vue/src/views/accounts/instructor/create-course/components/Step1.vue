@@ -19,14 +19,15 @@
         <b-form-group label="Category *">
           <b-form-select v-model="form.category" size="lg">
             <option value="">Select category</option>
-            <option value="Forex">Forex Trading</option>
-            <option value="Crypto">Cryptocurrency</option>
-            <option value="Stocks">Stock Market</option>
-            <option value="Options">Options Trading</option>
-            <option value="Finance">Personal Finance</option>
-            <option value="Investing">Investing</option>
+            <option value="Islamic Studies">Islamic Studies</option>
+            <option value="Astronomy">Astronomy</option>
+            <option value="Technology">Technology</option>
+            <option value="Other">Other</option>
           </b-form-select>
         </b-form-group>
+        <div v-if="form.category === 'Other'" class="mt-2">
+          <b-form-input v-model="form.customCategory" placeholder="Enter category name" size="lg" />
+        </div>
       </b-col>
 
       <b-col md="6">
@@ -73,7 +74,9 @@ import { computed } from 'vue'
 const props = defineProps<{ form: any; nextPage: () => void }>()
 
 const canProceed = computed(() =>
-  props.form.title?.trim().length >= 3 && props.form.category
+  props.form.title?.trim().length >= 3 &&
+  props.form.category &&
+  (props.form.category !== 'Other' || props.form.customCategory?.trim().length >= 2)
 )
 
 function handleNext() {

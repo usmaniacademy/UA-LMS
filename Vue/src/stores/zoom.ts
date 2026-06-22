@@ -54,7 +54,7 @@ export const useZoomStore = defineStore('zoom_store', () => {
   }
 
   async function updateMeeting(meetingId: string, payload: Partial<ZoomMeeting>) {
-    const data = await api.put(`/zoom/meetings/${meetingId}`, payload)
+    const data = await api.patch(`/zoom/meetings/${meetingId}`, payload)
     const idx = meetings.value.findIndex((m) => m.id === meetingId)
     if (idx !== -1) meetings.value[idx] = { ...meetings.value[idx], ...data.meeting }
     return data.meeting

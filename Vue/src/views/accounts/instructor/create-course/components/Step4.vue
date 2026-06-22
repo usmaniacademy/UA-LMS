@@ -97,7 +97,7 @@ async function saveCourse(publish: boolean) {
     const payload = {
       title: props.form.title,
       description: props.form.description,
-      category: props.form.category,
+      category: props.form.category === 'Other' ? props.form.customCategory : props.form.category,
       level: props.form.level,
       isFree: props.form.isFree,
       thumbnailUrl: props.form.thumbnailUrl || undefined,

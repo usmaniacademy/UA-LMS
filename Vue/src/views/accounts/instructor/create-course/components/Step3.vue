@@ -27,13 +27,21 @@
           <!-- Lessons -->
           <div v-for="(lesson, lIdx) in section.lessons" :key="lesson.id ?? lIdx"
             class="d-flex justify-content-between align-items-center py-2 border-bottom">
-            <div class="d-flex align-items-center gap-2">
-              <span class="badge bg-light text-dark text-uppercase small">{{ lesson.contentType }}</span>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span class="badge text-uppercase small"
+                :class="lesson.contentType === 'zoom' ? 'bg-primary' : lesson.contentType === 'video' ? 'bg-warning text-dark' : 'bg-light text-dark'">
+                {{ lesson.contentType === 'zoom' ? '📹 Zoom' : lesson.contentType === 'video' ? '🎬 Video' : '📄 Text' }}
+              </span>
               <span>{{ lesson.title }}</span>
+              <span v-if="lesson.zoomStartTime" class="text-muted small">
+                · {{ new Date(lesson.zoomStartTime).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) }}
+              </span>
               <span v-if="lesson.isFree" class="badge bg-success-soft text-success small">Free preview</span>
             </div>
             <div class="d-flex gap-2">
-              <b-button size="sm" variant="outline-success" @click="openEditLesson(section, lesson)">Edit</b-button>
+              <a v-if="lesson.contentType === 'zoom' && lesson.contentUrl" :href="lesson.contentUrl"
+                target="_blank" class="btn btn-sm btn-outline-success">Join Link</a>
+              <b-button size="sm" variant="outline-primary" @click="openEditLesson(section, lesson)">Edit</b-button>
               <b-button size="sm" variant="outline-danger" @click="removeLesson(section, lesson, lIdx)">✕</b-button>
             </div>
           </div>
@@ -59,24 +67,92 @@
     </div>
 
     <!-- Lesson modal -->
-    <b-modal v-model="lessonModal" :title="editingLesson ? 'Edit Lesson' : 'Add Lesson'" @ok="saveLesson">
+    <b-modal v-model="lessonModal" :title="editingLesson ? 'Edit Lesson' : 'Add Lesson'"
+      @ok="saveLesson" :ok-disabled="zoomSaving" ok-title="Save Lesson" size="lg">
+
+      <div v-if="zoomError" class="alert alert-danger py-2 mb-3">{{ zoomError }}</div>
+
       <b-form class="d-flex flex-column gap-3">
         <b-form-group label="Lesson title *">
-          <b-form-input v-model="lessonForm.title" placeholder="e.g. What is Forex?" />
+          <b-form-input v-model="lessonForm.title" placeholder="e.g. Introduction to Islamic Finance" />
         </b-form-group>
+
         <b-form-group label="Content type">
           <b-form-select v-model="lessonForm.contentType">
-            <option value="video">Video</option>
-            <option value="text">Text / Reading</option>
-            <option value="zoom">Zoom Class</option>
+            <option value="video">🎬 Video</option>
+            <option value="text">📄 Text / Reading</option>
+            <option value="zoom">📹 Zoom Live Class</option>
           </b-form-select>
         </b-form-group>
-        <b-form-group v-if="lessonForm.contentType !== 'zoom'" label="Content URL">
-          <b-form-input v-model="lessonForm.contentUrl" placeholder="https://..." />
-        </b-form-group>
-        <b-form-group label="Duration (minutes)">
-          <b-form-input v-model.number="lessonForm.durationMin" type="number" min="0" />
-        </b-form-group>
+
+        <!-- Video / Text fields -->
+        <template v-if="lessonForm.contentType !== 'zoom'">
+          <b-form-group label="Content URL">
+            <b-form-input v-model="lessonForm.contentUrl" placeholder="https://..." />
+          </b-form-group>
+          <b-form-group label="Duration (minutes)">
+            <b-form-input v-model.number="lessonForm.durationMin" type="number" min="0" />
+          </b-form-group>
+        </template>
+
+        <!-- Zoom class fields -->
+        <template v-else>
+          <div class="bg-light border rounded-3 p-3">
+            <h6 class="mb-3 text-primary">📹 Zoom Class Details</h6>
+            <b-row class="g-3">
+              <b-col cols="12">
+                <b-form-group label="Class topic / title">
+                  <b-form-input v-model="lessonForm.zoomTopic" :placeholder="lessonForm.title || 'e.g. Live Q&A Session Week 1'" />
+                  <div class="form-text">Leave blank to use the lesson title above.</div>
+                </b-form-group>
+              </b-col>
+              <b-col md="6">
+                <b-form-group label="Date & Time *">
+                  <b-form-input v-model="lessonForm.zoomStartTime" type="datetime-local" />
+                </b-form-group>
+              </b-col>
+              <b-col md="3">
+                <b-form-group label="Duration (min)">
+                  <b-form-input v-model.number="lessonForm.durationMin" type="number" min="15" max="480" />
+                </b-form-group>
+              </b-col>
+              <b-col md="3">
+                <b-form-group label="Timezone">
+                  <b-form-select v-model="lessonForm.zoomTimezone">
+                    <option value="America/Chicago">CDT (Wichita)</option>
+                    <option value="America/New_York">EDT (New York)</option>
+                    <option value="America/Los_Angeles">PDT (Los Angeles)</option>
+                    <option value="Asia/Karachi">PKT (Karachi)</option>
+                    <option value="Asia/Dubai">GST (Dubai)</option>
+                    <option value="Europe/London">GMT (London)</option>
+                    <option value="UTC">UTC</option>
+                  </b-form-select>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group label="Agenda / description (optional)">
+                  <b-form-textarea v-model="lessonForm.zoomAgenda" rows="2" placeholder="What will be covered in this class?" />
+                </b-form-group>
+              </b-col>
+              <b-col md="6">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="waitingRoom" v-model="lessonForm.zoomWaitingRoom">
+                  <label class="form-check-label" for="waitingRoom">Enable waiting room</label>
+                </div>
+              </b-col>
+              <b-col md="6">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="autoRec" v-model="lessonForm.zoomAutoRecording">
+                  <label class="form-check-label" for="autoRec">Auto cloud recording</label>
+                </div>
+              </b-col>
+            </b-row>
+            <div v-if="lessonForm.zoomJoinUrl" class="alert alert-success mt-3 mb-0 py-2 small">
+              ✅ Zoom meeting created — <a :href="lessonForm.zoomJoinUrl" target="_blank">Join link</a>
+            </div>
+          </div>
+        </template>
+
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="isFreeLesson" v-model="lessonForm.isFree">
           <label class="form-check-label" for="isFreeLesson">Free preview (visible without subscription)</label>
@@ -89,6 +165,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useCourseStore } from '@/stores/course'
+import { useZoomStore } from '@/stores/zoom'
 
 const props = defineProps<{
   courseId: string | null
@@ -97,6 +174,7 @@ const props = defineProps<{
 }>()
 
 const courseStore = useCourseStore()
+const zoomStore = useZoomStore()
 
 const localSections = ref<any[]>([])
 const newSectionTitle = ref('')
@@ -104,9 +182,24 @@ const lessonModal = ref(false)
 const editingLesson = ref(false)
 const activeSectionRef = ref<any>(null)
 const activeLessonRef = ref<any>(null)
+const zoomSaving = ref(false)
+const zoomError = ref('')
 
 const lessonForm = reactive({
-  title: '', contentType: 'video', contentUrl: '', durationMin: 0, isFree: false
+  title: '',
+  contentType: 'video',
+  contentUrl: '',
+  durationMin: 60,
+  isFree: false,
+  // Zoom-specific
+  zoomTopic: '',
+  zoomStartTime: '',
+  zoomTimezone: 'America/Chicago',
+  zoomAgenda: '',
+  zoomWaitingRoom: true,
+  zoomAutoRecording: false,
+  zoomJoinUrl: '',
+  zoomMeetingId: ''
 })
 
 async function addSection() {
@@ -130,7 +223,13 @@ async function removeSection(section: any, idx: number) {
 function openAddLesson(section: any) {
   activeSectionRef.value = section
   editingLesson.value = false
-  Object.assign(lessonForm, { title: '', contentType: 'video', contentUrl: '', durationMin: 0, isFree: false })
+  zoomError.value = ''
+  Object.assign(lessonForm, {
+    title: '', contentType: 'video', contentUrl: '', durationMin: 60, isFree: false,
+    zoomTopic: '', zoomStartTime: '', zoomTimezone: 'America/Chicago',
+    zoomAgenda: '', zoomWaitingRoom: true, zoomAutoRecording: false,
+    zoomJoinUrl: '', zoomMeetingId: ''
+  })
   lessonModal.value = true
 }
 
@@ -138,33 +237,91 @@ function openEditLesson(section: any, lesson: any) {
   activeSectionRef.value = section
   activeLessonRef.value = lesson
   editingLesson.value = true
+  zoomError.value = ''
   Object.assign(lessonForm, {
     title: lesson.title,
     contentType: lesson.contentType,
     contentUrl: lesson.contentUrl || '',
-    durationMin: lesson.duration ? Math.round(lesson.duration / 60) : 0,
-    isFree: lesson.isFree
+    durationMin: lesson.duration ? Math.round(lesson.duration / 60) : 60,
+    isFree: lesson.isFree,
+    zoomTopic: lesson.zoomTopic || '',
+    zoomStartTime: lesson.zoomStartTime ? toLocalInput(lesson.zoomStartTime) : '',
+    zoomTimezone: lesson.zoomTimezone || 'America/Chicago',
+    zoomAgenda: lesson.zoomAgenda || '',
+    zoomWaitingRoom: true,
+    zoomAutoRecording: false,
+    zoomJoinUrl: lesson.contentUrl || '',
+    zoomMeetingId: lesson.zoomMeetingId || ''
   })
   lessonModal.value = true
 }
 
-async function saveLesson() {
-  const payload = {
-    title: lessonForm.title,
-    contentType: lessonForm.contentType,
-    contentUrl: lessonForm.contentUrl || undefined,
-    duration: lessonForm.durationMin * 60,
-    isFree: lessonForm.isFree,
-    orderIndex: activeSectionRef.value.lessons?.length ?? 0
-  }
+async function saveLesson(evt: Event) {
+  evt.preventDefault()
+  zoomError.value = ''
+  zoomSaving.value = true
 
-  if (editingLesson.value && activeLessonRef.value?.id) {
-    const updated = await courseStore.updateLesson(activeLessonRef.value.id, payload)
-    Object.assign(activeLessonRef.value, updated)
-  } else {
-    const lesson = await courseStore.createLesson(activeSectionRef.value.id, payload)
-    if (!activeSectionRef.value.lessons) activeSectionRef.value.lessons = []
-    activeSectionRef.value.lessons.push(lesson)
+  try {
+    let contentUrl = lessonForm.contentUrl || undefined
+    let zoomMeetingId = lessonForm.zoomMeetingId || undefined
+
+    // Create / update Zoom meeting if this is a Zoom lesson
+    if (lessonForm.contentType === 'zoom') {
+      if (!lessonForm.zoomStartTime) {
+        zoomError.value = 'Please set a date and time for the Zoom class.'
+        zoomSaving.value = false
+        return
+      }
+      const zoomPayload = {
+        courseId: props.courseId!,
+        topic: lessonForm.zoomTopic || lessonForm.title,
+        startTime: new Date(lessonForm.zoomStartTime).toISOString(),
+        duration: lessonForm.durationMin,
+        timezone: lessonForm.zoomTimezone,
+        agenda: lessonForm.zoomAgenda || undefined,
+        waitingRoom: lessonForm.zoomWaitingRoom,
+        autoRecording: lessonForm.zoomAutoRecording
+      }
+
+      const meeting = editingLesson.value && lessonForm.zoomMeetingId
+        ? await zoomStore.updateMeeting(lessonForm.zoomMeetingId, zoomPayload)
+        : await zoomStore.createMeeting(zoomPayload)
+
+      contentUrl = meeting.joinUrl
+      zoomMeetingId = meeting.id
+    }
+
+    const payload: any = {
+      title: lessonForm.title,
+      contentType: lessonForm.contentType,
+      contentUrl,
+      duration: lessonForm.durationMin * 60,
+      isFree: lessonForm.isFree,
+      orderIndex: activeSectionRef.value.lessons?.length ?? 0
+    }
+
+    // Attach zoom metadata if zoom lesson
+    if (lessonForm.contentType === 'zoom') {
+      payload.zoomMeetingId = zoomMeetingId
+      payload.zoomTopic = lessonForm.zoomTopic || lessonForm.title
+      payload.zoomStartTime = new Date(lessonForm.zoomStartTime).toISOString()
+      payload.zoomTimezone = lessonForm.zoomTimezone
+    }
+
+    if (editingLesson.value && activeLessonRef.value?.id) {
+      const updated = await courseStore.updateLesson(activeLessonRef.value.id, payload)
+      Object.assign(activeLessonRef.value, updated)
+    } else {
+      const lesson = await courseStore.createLesson(activeSectionRef.value.id, payload)
+      if (!activeSectionRef.value.lessons) activeSectionRef.value.lessons = []
+      activeSectionRef.value.lessons.push(lesson)
+    }
+
+    lessonModal.value = false
+  } catch (e: any) {
+    zoomError.value = e.message || 'Failed to save lesson'
+  } finally {
+    zoomSaving.value = false
   }
 }
 
@@ -172,5 +329,9 @@ async function removeLesson(section: any, lesson: any, idx: number) {
   if (!confirm('Delete this lesson?')) return
   if (lesson.id) await courseStore.deleteLesson(lesson.id)
   section.lessons.splice(idx, 1)
+}
+
+function toLocalInput(iso: string) {
+  return new Date(iso).toISOString().slice(0, 16)
 }
 </script>
