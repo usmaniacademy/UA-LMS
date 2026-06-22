@@ -14,28 +14,20 @@
 							<b-row class="d-sm-flex justify-sm-content-between mt-2 mt-md-0">
 								<div class="col-auto">
 									<div class="avatar avatar-xxl position-relative mt-n3">
-										<img class="avatar-img rounded-circle border border-white border-3 shadow" :src="avatar09" alt="">
-										<b-badge variant="success" pill
-											class="position-absolute top-50 start-100 translate-middle mt-4 mt-md-5 ms-n3 px-md-3">
-											Pro
-										</b-badge>
+										<img v-if="avatarUrl" class="avatar-img rounded-circle border border-white border-3 shadow" :src="avatarUrl" alt="">
+										<span v-else
+											class="avatar-img rounded-circle border border-white border-3 shadow bg-primary text-white d-flex align-items-center justify-content-center fw-bold fs-3">
+											{{ initials }}
+										</span>
 									</div>
 								</div>
 								<div class="col d-sm-flex justify-content-between align-items-center">
 									<div>
-										<h1 class="my-1 fs-4">Lori Stevens</h1>
+										<h1 class="my-1 fs-4">{{ fullName }}</h1>
 										<ul class="list-inline mb-0">
 											<li class="list-inline-item me-3 mb-1 mb-sm-0">
-												<span class="h6">255</span>
-												<span class="text-body fw-light"> points</span>
-											</li>{{ ' ' }}
-											<li class="list-inline-item me-3 mb-1 mb-sm-0">
-												<span class="h6">7</span>
-												<span class="text-body fw-light"> Completed courses</span>
-											</li>{{ ' ' }}
-											<li class="list-inline-item me-3 mb-1 mb-sm-0">
-												<span class="h6">52</span>
-												<span class="text-body fw-light"> Completed lessons</span>
+												<span class="h6">{{ store.enrolledCourses.length }}</span>
+												<span class="text-body fw-light"> Enrolled courses</span>
 											</li>
 										</ul>
 									</div>
@@ -79,14 +71,6 @@
 												{{ item.title }}
 											</router-link>
 										</template>
-										<a class="list-group-item" data-bs-toggle="collapse" href="#collapseauthentication" role="button"
-											aria-expanded="false" aria-controls="collapseauthentication">
-											<BIconLock class="fa-fw me-2" />Dropdown level
-										</a>
-										<ul class="nav collapse flex-column" id="collapseauthentication" data-bs-parent="#navbar-sidebar">
-											<li class="nav-item"> <a class="nav-link" href="#">Dropdown item</a></li>
-											<li class="nav-item"> <a class="nav-link" href="#">Dropdown item</a></li>
-										</ul>
 									</div>
 								</div>
 							</div>
@@ -104,14 +88,6 @@
 											{{ item.title }}
 										</router-link>
 									</template>
-									<a class="list-group-item" data-bs-toggle="collapse" href="#collapseauthentication" role="button"
-										aria-expanded="false" aria-controls="collapseauthentication">
-										<BIconLock class="fa-fw me-2" />Dropdown level
-									</a>
-									<ul class="nav collapse flex-column" id="collapseauthentication" data-bs-parent="#navbar-sidebar">
-										<li class="nav-item"> <a class="nav-link" href="#">Dropdown item</a></li>
-										<li class="nav-item"> <a class="nav-link" href="#">Dropdown item</a></li>
-									</ul>
 								</div>
 							</div>
 						</b-offcanvas>
@@ -124,26 +100,43 @@
 	<Footer7 />
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import router from '@/router';
 
 import { STUDENT_MENU_ITEMS } from '@/assets/data/menu-items';
+import { useAuthStore } from '@/stores/auth';
+import { useCourseStore } from '@/stores/course';
 
 import TopBar8 from '@/layouts/components/TopBar8.vue';
 import Footer7 from '@/layouts/components/Footer7.vue';
 
 import pattern04 from '@/assets/images/pattern/04.png';
-import avatar09 from '@/assets/images/avatar/09.jpg';
 
 import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
-import { BIconLock } from 'bootstrap-icons-vue';
+
+const auth = useAuthStore();
+const store = useCourseStore();
+
+const user = computed(() => auth.getUser());
+const fullName = computed(() => {
+	const u = user.value;
+	if (!u) return 'Student';
+	return [u.firstName, u.lastName].filter(Boolean).join(' ') || u.email;
+});
+const initials = computed(() => {
+	const u = user.value;
+	if (!u) return 'U';
+	return [(u.firstName || '')[0], (u.lastName || '')[0]].filter(Boolean).join('').toUpperCase() || u.email[0].toUpperCase();
+});
+const avatarUrl = computed(() => user.value?.avatarUrl || '');
 
 const currentRouteName = router.currentRoute.value.name;
 
 const offcanvas = ref(false);
 
-const getMenuItems = () => {
-	// NOTE - You can fetch from server and return here as well
-	return STUDENT_MENU_ITEMS;
-};
+const getMenuItems = () => STUDENT_MENU_ITEMS;
+
+onMounted(() => {
+	if (!store.enrolledCourses.length) store.fetchEnrolledCourses();
+});
 </script>

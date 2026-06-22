@@ -6,6 +6,8 @@ export interface AdminStats {
   totalStudents: number
   totalInstructors: number
   totalCourses: number
+  publishedCourses: number
+  draftCourses: number
   activeSubs: number
   mrr: number
 }
@@ -46,12 +48,34 @@ export interface RevenueData {
 export const useAdminStore = defineStore('admin_store', () => {
   const stats = ref<AdminStats | null>(null)
   const users = ref<AdminUser[]>([])
+  const instructors = ref<AdminUser[]>([])
   const courses = ref<AdminCourse[]>([])
   const revenue = ref<RevenueData | null>(null)
   const loading = ref(false)
   const error = ref('')
   const usersPagination = ref({ total: 0, page: 1, totalPages: 1 })
   const coursesPagination = ref({ total: 0, page: 1, totalPages: 1 })
+
+  // Instructors for the "assign course" dropdown (kept separate from `users`)
+  async function fetchInstructors() {
+    try {
+      const data = await api.get('/admin/users?role=instructor&limit=100')
+      instructors.value = data.users
+    } catch (e: any) { error.value = e.message }
+  }
+
+  // Admin creates a course assigned to an instructor
+  async function createCourse(payload: Record<string, unknown>) {
+    const data = await api.post('/courses', payload)
+    return data.course
+  }
+
+  // Admin removes (archives) a course
+  async function deleteCourse(courseId: string) {
+    await api.delete(`/courses/${courseId}`)
+    const idx = courses.value.findIndex(c => c.id === courseId)
+    if (idx !== -1) courses.value[idx].status = 'archived'
+  }
 
   async function fetchStats() {
     loading.value = true
@@ -114,9 +138,10 @@ export const useAdminStore = defineStore('admin_store', () => {
   }
 
   return {
-    stats, users, courses, revenue, loading, error,
+    stats, users, instructors, courses, revenue, loading, error,
     usersPagination, coursesPagination,
     fetchStats, fetchUsers, toggleUserActive,
-    fetchCourses, approveCourse, rejectCourse, fetchRevenue
+    fetchCourses, approveCourse, rejectCourse, fetchRevenue,
+    fetchInstructors, createCourse, deleteCourse
   }
 })

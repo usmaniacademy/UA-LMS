@@ -122,6 +122,37 @@ export const useCourseStore = defineStore('course_store', () => {
     }
   }
 
+  const enrolledCourses = ref<any[]>([])
+
+  async function fetchEnrolledCourses() {
+    loading.value = true
+    try {
+      const data = await api.get('/courses/student/my-courses')
+      enrolledCourses.value = data.enrollments
+      return data.enrollments
+    } catch (e: any) {
+      error.value = e.message
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Fetch a course (any status) with full curriculum for editing — owner or admin
+  async function fetchManageCourse(id: string) {
+    loading.value = true
+    error.value = ''
+    try {
+      const data = await api.get(`/courses/manage/${id}`)
+      currentCourse.value = data.course
+      return data.course
+    } catch (e: any) {
+      error.value = e.message
+      throw e
+    } finally {
+      loading.value = false
+    }
+  }
+
   async function createCourse(payload: Partial<Course>) {
     const data = await api.post('/courses', payload)
     myCourses.value.unshift(data.course)
@@ -182,8 +213,8 @@ export const useCourseStore = defineStore('course_store', () => {
 
   return {
     courses, currentCourse, myCourses, loading, error, pagination,
-    instructorStats,
-    fetchPublicCourses, fetchCourseBySlug, fetchMyCourses, fetchInstructorStats,
+    instructorStats, enrolledCourses,
+    fetchPublicCourses, fetchCourseBySlug, fetchMyCourses, fetchInstructorStats, fetchManageCourse, fetchEnrolledCourses,
     createCourse, updateCourse, publishCourse, archiveCourse,
     createSection, updateSection, deleteSection,
     createLesson, updateLesson, deleteLesson

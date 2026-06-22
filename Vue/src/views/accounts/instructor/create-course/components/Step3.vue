@@ -163,12 +163,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { useCourseStore } from '@/stores/course'
 import { useZoomStore } from '@/stores/zoom'
 
 const props = defineProps<{
   courseId: string | null
+  initialSections?: any[]
   nextPage: () => void
   previousPage: () => void
 }>()
@@ -178,6 +179,21 @@ const zoomStore = useZoomStore()
 
 const localSections = ref<any[]>([])
 const newSectionTitle = ref('')
+
+// Populate curriculum when editing an existing course
+watch(
+  () => props.initialSections,
+  (sections) => {
+    if (sections && sections.length) {
+      localSections.value = sections.map((s: any) => ({
+        ...s,
+        editing: false,
+        lessons: (s.lessons || []).map((l: any) => ({ ...l }))
+      }))
+    }
+  },
+  { immediate: true }
+)
 const lessonModal = ref(false)
 const editingLesson = ref(false)
 const activeSectionRef = ref<any>(null)

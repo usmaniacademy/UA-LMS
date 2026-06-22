@@ -67,9 +67,14 @@
                         {{ course.status }}
                       </span>
                     </td>
-                    <td>{{ course.isFree ? 'Free' : '$26/mo' }}</td>
+                    <td>{{ course.isFree ? 'Free' : 'Paid' }}</td>
                     <td>
-                      <div class="d-flex gap-1">
+                      <div class="d-flex gap-1 flex-wrap">
+                        <router-link
+                          :to="{ name: 'instructor.edit.course', params: { id: course.id } }"
+                          class="btn btn-sm btn-primary-soft mb-0"
+                          title="Edit course, curriculum & Zoom classes"
+                        >Edit</router-link>
                         <b-button
                           v-if="course.status === 'draft'"
                           size="sm"

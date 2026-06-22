@@ -60,7 +60,7 @@
                   {{ course.level }}
                 </span>
               </td>
-              <td>{{ course.isFree ? 'Free' : '$26/mo' }}</td>
+              <td>{{ course.isFree ? 'Free' : 'Paid' }}</td>
               <td>
                 <span class="badge bg-opacity-15"
                   :class="course.status === 'published' ? 'bg-success text-success' : course.status === 'draft' ? 'bg-warning text-warning' : 'bg-secondary text-secondary'">
@@ -68,23 +68,23 @@
                 </span>
               </td>
               <td>
-                <template v-if="course.status !== 'published'">
-                  <b-button size="sm" variant="success-soft" class="me-1 mb-1 mb-md-0"
+                <div class="d-flex gap-1 flex-wrap">
+                  <router-link :to="{ name: 'instructor.edit.course', params: { id: course.id } }"
+                    class="btn btn-sm btn-primary-soft mb-0">Edit</router-link>
+                  <b-button v-if="course.status !== 'published'" size="sm" variant="success-soft"
                     @click="approve(course.id)" :disabled="acting === course.id">
                     <span v-if="acting === course.id" class="spinner-border spinner-border-sm me-1" />
                     Approve
                   </b-button>
-                  <b-button v-if="course.status === 'published'" size="sm" variant="secondary-soft"
-                    @click="reject(course.id)" :disabled="acting === course.id">
-                    Reject
-                  </b-button>
-                </template>
-                <template v-else>
-                  <b-button size="sm" variant="secondary-soft"
+                  <b-button v-else size="sm" variant="secondary-soft"
                     @click="reject(course.id)" :disabled="acting === course.id">
                     Unpublish
                   </b-button>
-                </template>
+                  <b-button size="sm" variant="danger-soft"
+                    @click="remove(course.id)" :disabled="acting === course.id">
+                    Delete
+                  </b-button>
+                </div>
               </td>
             </tr>
             <tr v-if="!adminStore.loading && !adminStore.courses.length">
@@ -159,5 +159,13 @@ async function reject(id: string) {
   try { await adminStore.rejectCourse(id) } catch (e: any) { alert(e.message) } finally { acting.value = null }
 }
 
+async function remove(id: string) {
+  if (!confirm('Delete this course? It will be archived and hidden from students.')) return
+  acting.value = id
+  try { await adminStore.deleteCourse(id); await adminStore.fetchStats() } catch (e: any) { alert(e.message) } finally { acting.value = null }
+}
+
 onMounted(load)
+
+defineExpose({ load })
 </script>

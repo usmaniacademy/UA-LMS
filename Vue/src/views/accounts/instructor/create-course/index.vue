@@ -6,8 +6,12 @@
       <b-container>
         <b-row>
           <b-col cols="12" class="text-center">
-            <h1 class="text-white">Create a New Course</h1>
-            <p class="text-white mb-0">Fill in the details below. You can save as a draft and come back anytime.</p>
+            <h1 class="text-white">{{ isEditMode ? 'Edit Course' : 'Create a New Course' }}</h1>
+            <p class="text-white mb-0">
+              {{ isEditMode
+                ? 'Update your course details, curriculum and live Zoom classes.'
+                : 'Fill in the details below. You can save as a draft and come back anytime.' }}
+            </p>
           </b-col>
         </b-row>
       </b-container>
@@ -62,7 +66,7 @@
                 <b-form onsubmit="return false">
                   <Step1 :form="form" :nextPage="nextPage" />
                   <Step2 :form="form" :nextPage="nextPage" :previousPage="previousPage" />
-                  <Step3 :courseId="courseId" :nextPage="nextPage" :previousPage="previousPage" />
+                  <Step3 :courseId="courseId" :initialSections="loadedSections" :nextPage="nextPage" :previousPage="previousPage" />
                   <Step4 :form="form" :courseId="courseId" :setCourseId="setCourseId" :previousPage="previousPage" />
                 </b-form>
               </div>
@@ -76,7 +80,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, reactive } from 'vue'
+import { onMounted, ref, reactive, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import Stepper from 'bs-stepper'
 import type { default as StepperType } from 'bs-stepper'
 import TopBar8 from '@/views/accounts/instructor/create-course/components/TopBar8.vue'
@@ -86,9 +91,18 @@ import Step3 from '@/views/accounts/instructor/create-course/components/Step3.vu
 import Step4 from '@/views/accounts/instructor/create-course/components/Step4.vue'
 import Footer7 from '@/views/accounts/instructor/create-course/components/Footer7.vue'
 import pattern04 from '@/assets/images/pattern/04.png'
+import { useCourseStore } from '@/stores/course'
+
+const route = useRoute()
+const courseStore = useCourseStore()
+
+const editId = computed(() => (route.params.id as string) || null)
+const isEditMode = computed(() => !!editId.value)
 
 const stepperRef = ref<HTMLElement | null>(null)
 let stepperInstance = ref<StepperType>()
+
+const KNOWN_CATEGORIES = ['Islamic Studies', 'Astronomy', 'Technology']
 
 // Shared form state across all steps
 const form = reactive({
@@ -105,13 +119,47 @@ const form = reactive({
   stripePriceId: ''
 })
 
-// Created after first save in Step4
+// Created after first save in Step4 (or preset in edit mode)
 const courseId = ref<string | null>(null)
 const setCourseId = (id: string) => { courseId.value = id }
 
-onMounted(() => {
+// Sections passed to Step3 when editing an existing course
+const loadedSections = ref<any[]>([])
+
+async function loadCourseForEdit(id: string) {
+  const course = await courseStore.fetchManageCourse(id)
+  courseId.value = course.id
+  form.title = course.title || ''
+  form.description = course.description || ''
+  form.level = course.level || 'beginner'
+  form.isFree = course.isFree || false
+  form.thumbnailUrl = course.thumbnailUrl || ''
+  form.stripePriceId = course.stripePriceId || ''
+
+  // Map category to the dropdown, or "Other" + custom text
+  if (course.category && !KNOWN_CATEGORIES.includes(course.category)) {
+    form.category = 'Other'
+    form.customCategory = course.category
+  } else {
+    form.category = course.category || ''
+  }
+
+  // Curriculum for Step3 (map duration seconds -> handled inside Step3)
+  loadedSections.value = (course.sections || []).map((s: any) => ({
+    id: s.id,
+    title: s.title,
+    editing: false,
+    lessons: (s.lessons || []).map((l: any) => ({ ...l }))
+  }))
+}
+
+onMounted(async () => {
   if (stepperRef.value) {
     stepperInstance.value = new Stepper(stepperRef.value, { linear: false, animation: true })
+  }
+  if (editId.value) {
+    try { await loadCourseForEdit(editId.value) }
+    catch { /* error surfaced via store */ }
   }
 })
 

@@ -143,10 +143,10 @@ export async function updateCourse(courseId, instructorId, data, isAdmin = false
   return prisma.course.update({ where: { id: courseId }, data: updateData })
 }
 
-export async function publishCourse(courseId, instructorId) {
+export async function publishCourse(courseId, instructorId, isAdmin = false) {
   const course = await prisma.course.findUnique({ where: { id: courseId } })
   if (!course) throw ApiError.notFound('Course not found')
-  if (course.instructorId !== instructorId) throw ApiError.forbidden()
+  if (!isAdmin && course.instructorId !== instructorId) throw ApiError.forbidden()
   if (course.status === 'archived') throw ApiError.badRequest('Cannot publish an archived course')
 
   return prisma.course.update({
@@ -168,59 +168,82 @@ export async function archiveCourse(courseId, instructorId, isAdmin = false) {
 
 // ─── Sections ─────────────────────────────────────────────────────────────────
 
-async function assertCourseOwner(courseId, instructorId) {
+async function assertCourseOwner(courseId, instructorId, isAdmin = false) {
   const course = await prisma.course.findUnique({ where: { id: courseId } })
   if (!course) throw ApiError.notFound('Course not found')
-  if (course.instructorId !== instructorId) throw ApiError.forbidden()
+  if (!isAdmin && course.instructorId !== instructorId) throw ApiError.forbidden()
   return course
 }
 
-export async function createSection(courseId, instructorId, data) {
-  await assertCourseOwner(courseId, instructorId)
+export async function createSection(courseId, instructorId, data, isAdmin = false) {
+  await assertCourseOwner(courseId, instructorId, isAdmin)
   return prisma.courseSection.create({ data: { courseId, ...data } })
 }
 
-export async function updateSection(sectionId, instructorId, data) {
+export async function updateSection(sectionId, instructorId, data, isAdmin = false) {
   const section = await prisma.courseSection.findUnique({ where: { id: sectionId }, include: { course: true } })
   if (!section) throw ApiError.notFound('Section not found')
-  if (section.course.instructorId !== instructorId) throw ApiError.forbidden()
+  if (!isAdmin && section.course.instructorId !== instructorId) throw ApiError.forbidden()
   return prisma.courseSection.update({ where: { id: sectionId }, data })
 }
 
-export async function deleteSection(sectionId, instructorId) {
+export async function deleteSection(sectionId, instructorId, isAdmin = false) {
   const section = await prisma.courseSection.findUnique({ where: { id: sectionId }, include: { course: true } })
   if (!section) throw ApiError.notFound('Section not found')
-  if (section.course.instructorId !== instructorId) throw ApiError.forbidden()
+  if (!isAdmin && section.course.instructorId !== instructorId) throw ApiError.forbidden()
   return prisma.courseSection.delete({ where: { id: sectionId } })
 }
 
 // ─── Lessons ──────────────────────────────────────────────────────────────────
 
-export async function createLesson(sectionId, instructorId, data) {
+export async function createLesson(sectionId, instructorId, data, isAdmin = false) {
   const section = await prisma.courseSection.findUnique({ where: { id: sectionId }, include: { course: true } })
   if (!section) throw ApiError.notFound('Section not found')
-  if (section.course.instructorId !== instructorId) throw ApiError.forbidden()
+  if (!isAdmin && section.course.instructorId !== instructorId) throw ApiError.forbidden()
   return prisma.lesson.create({ data: { sectionId, ...data } })
 }
 
-export async function updateLesson(lessonId, instructorId, data) {
+export async function updateLesson(lessonId, instructorId, data, isAdmin = false) {
   const lesson = await prisma.lesson.findUnique({
     where: { id: lessonId },
     include: { section: { include: { course: true } } }
   })
   if (!lesson) throw ApiError.notFound('Lesson not found')
-  if (lesson.section.course.instructorId !== instructorId) throw ApiError.forbidden()
+  if (!isAdmin && lesson.section.course.instructorId !== instructorId) throw ApiError.forbidden()
   return prisma.lesson.update({ where: { id: lessonId }, data })
 }
 
-export async function deleteLesson(lessonId, instructorId) {
+export async function deleteLesson(lessonId, instructorId, isAdmin = false) {
   const lesson = await prisma.lesson.findUnique({
     where: { id: lessonId },
     include: { section: { include: { course: true } } }
   })
   if (!lesson) throw ApiError.notFound('Lesson not found')
-  if (lesson.section.course.instructorId !== instructorId) throw ApiError.forbidden()
+  if (!isAdmin && lesson.section.course.instructorId !== instructorId) throw ApiError.forbidden()
   return prisma.lesson.delete({ where: { id: lessonId } })
+}
+
+// ─── Manage (edit) — owner or admin, any status ─────────────────────────────────
+
+export async function getCourseForEdit(courseId, userId, isAdmin = false) {
+  const course = await prisma.course.findUnique({
+    where: { id: courseId },
+    include: {
+      instructor: { select: { id: true, firstName: true, lastName: true } },
+      sections: {
+        orderBy: { orderIndex: 'asc' },
+        include: {
+          lessons: {
+            orderBy: { orderIndex: 'asc' },
+            select: { id: true, title: true, contentType: true, duration: true, orderIndex: true, isFree: true, contentUrl: true }
+          }
+        }
+      }
+    }
+  })
+  if (!course) throw ApiError.notFound('Course not found')
+  if (!isAdmin && course.instructorId !== userId) throw ApiError.forbidden()
+  return course
 }
 
 // ─── Student enrollment ───────────────────────────────────────────────────────

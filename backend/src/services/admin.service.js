@@ -1,23 +1,18 @@
 import prisma from '../config/prisma.js'
 
 export async function getStats() {
-  const [totalStudents, totalInstructors, totalCourses, activeSubs] = await Promise.all([
+  const [totalStudents, totalInstructors, totalCourses, publishedCourses, draftCourses, activeSubs] = await Promise.all([
     prisma.user.count({ where: { role: 'student' } }),
     prisma.user.count({ where: { role: 'instructor' } }),
     prisma.course.count(),
+    prisma.course.count({ where: { status: 'published' } }),
+    prisma.course.count({ where: { status: 'draft' } }),
     prisma.subscription.count({ where: { status: 'active' } })
   ])
 
   const mrr = activeSubs * 26
 
-  const recentRevenue = await prisma.subscription.groupBy({
-    by: ['createdAt'],
-    where: { status: { in: ['active', 'cancelled'] } },
-    _count: true,
-    orderBy: { createdAt: 'asc' }
-  })
-
-  return { totalStudents, totalInstructors, totalCourses, activeSubs, mrr, recentRevenue }
+  return { totalStudents, totalInstructors, totalCourses, publishedCourses, draftCourses, activeSubs, mrr }
 }
 
 export async function listUsers({ role, search, page = 1, limit = 20 }) {

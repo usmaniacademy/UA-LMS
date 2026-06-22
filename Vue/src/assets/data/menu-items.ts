@@ -678,11 +678,6 @@ export const INSTRUCTOR_MENU_ITEMS = [
     icon: BIconQuestionDiamond
   },
   {
-    title: 'Earnings',
-    route: { name: 'instructor.earning' },
-    icon: BIconGraphUp
-  },
-  {
     title: 'Students',
     route: { name: 'instructor.student' },
     icon: BIconPeople

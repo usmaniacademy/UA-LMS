@@ -32,8 +32,17 @@ export const instructorStats = asyncHandler(async (req, res) => {
 })
 
 export const createCourse = asyncHandler(async (req, res) => {
-  const course = await CourseService.createCourse(req.user.id, req.body)
+  // Admins may assign the course to a specific instructor; instructors create for themselves.
+  const { instructorId: bodyInstructorId, ...data } = req.body
+  const instructorId = req.user.role === 'admin' && bodyInstructorId ? bodyInstructorId : req.user.id
+  const course = await CourseService.createCourse(instructorId, data)
   res.status(201).json({ message: 'Course created', course })
+})
+
+export const getManageCourse = asyncHandler(async (req, res) => {
+  const isAdmin = req.user.role === 'admin'
+  const course = await CourseService.getCourseForEdit(req.params.id, req.user.id, isAdmin)
+  res.json({ course })
 })
 
 export const updateCourse = asyncHandler(async (req, res) => {
@@ -43,7 +52,7 @@ export const updateCourse = asyncHandler(async (req, res) => {
 })
 
 export const publishCourse = asyncHandler(async (req, res) => {
-  const course = await CourseService.publishCourse(req.params.id, req.user.id)
+  const course = await CourseService.publishCourse(req.params.id, req.user.id, req.user.role === 'admin')
   res.json({ message: 'Course published', course })
 })
 
@@ -56,34 +65,34 @@ export const archiveCourse = asyncHandler(async (req, res) => {
 // ─── Sections ─────────────────────────────────────────────────────────────────
 
 export const createSection = asyncHandler(async (req, res) => {
-  const section = await CourseService.createSection(req.params.courseId, req.user.id, req.body)
+  const section = await CourseService.createSection(req.params.courseId, req.user.id, req.body, req.user.role === 'admin')
   res.status(201).json({ message: 'Section created', section })
 })
 
 export const updateSection = asyncHandler(async (req, res) => {
-  const section = await CourseService.updateSection(req.params.sectionId, req.user.id, req.body)
+  const section = await CourseService.updateSection(req.params.sectionId, req.user.id, req.body, req.user.role === 'admin')
   res.json({ message: 'Section updated', section })
 })
 
 export const deleteSection = asyncHandler(async (req, res) => {
-  await CourseService.deleteSection(req.params.sectionId, req.user.id)
+  await CourseService.deleteSection(req.params.sectionId, req.user.id, req.user.role === 'admin')
   res.json({ message: 'Section deleted' })
 })
 
 // ─── Lessons ──────────────────────────────────────────────────────────────────
 
 export const createLesson = asyncHandler(async (req, res) => {
-  const lesson = await CourseService.createLesson(req.params.sectionId, req.user.id, req.body)
+  const lesson = await CourseService.createLesson(req.params.sectionId, req.user.id, req.body, req.user.role === 'admin')
   res.status(201).json({ message: 'Lesson created', lesson })
 })
 
 export const updateLesson = asyncHandler(async (req, res) => {
-  const lesson = await CourseService.updateLesson(req.params.lessonId, req.user.id, req.body)
+  const lesson = await CourseService.updateLesson(req.params.lessonId, req.user.id, req.body, req.user.role === 'admin')
   res.json({ message: 'Lesson updated', lesson })
 })
 
 export const deleteLesson = asyncHandler(async (req, res) => {
-  await CourseService.deleteLesson(req.params.lessonId, req.user.id)
+  await CourseService.deleteLesson(req.params.lessonId, req.user.id, req.user.role === 'admin')
   res.json({ message: 'Lesson deleted' })
 })
 

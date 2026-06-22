@@ -3,7 +3,7 @@ import { authenticate, authorize, optionalAuth } from '../middleware/auth.js'
 import { validate } from '../middleware/validate.js'
 import {
   listCourses, getCourse,
-  myCourseslist, instructorStats, createCourse, updateCourse, publishCourse, archiveCourse,
+  myCourseslist, instructorStats, getManageCourse, createCourse, updateCourse, publishCourse, archiveCourse,
   createSection, updateSection, deleteSection,
   createLesson, updateLesson, deleteLesson,
   enrollFree, myEnrolledCourses
@@ -22,6 +22,7 @@ router.get('/', listCourses)
 // ─── Instructor (must come BEFORE /:slug to avoid conflict) ──────────────────
 router.get('/instructor/my-courses', authenticate, authorize('instructor', 'admin'), myCourseslist)
 router.get('/instructor/stats', authenticate, authorize('instructor', 'admin'), instructorStats)
+router.get('/manage/:id', authenticate, authorize('instructor', 'admin'), getManageCourse)
 router.post('/', authenticate, authorize('instructor', 'admin'), validate(createCourseSchema), createCourse)
 router.put('/:id', authenticate, authorize('instructor', 'admin'), validate(updateCourseSchema), updateCourse)
 router.post('/:id/publish', authenticate, authorize('instructor', 'admin'), publishCourse)

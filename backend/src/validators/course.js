@@ -6,7 +6,9 @@ export const createCourseSchema = z.object({
   category: z.string().optional(),
   level: z.enum(['beginner', 'intermediate', 'advanced']).default('beginner'),
   isFree: z.boolean().default(false),
-  thumbnailUrl: z.string().url().optional().or(z.literal(''))
+  thumbnailUrl: z.string().url().optional().or(z.literal('')),
+  // Admins may assign a course to a specific instructor
+  instructorId: z.string().uuid().optional()
 })
 
 export const updateCourseSchema = createCourseSchema.partial()
