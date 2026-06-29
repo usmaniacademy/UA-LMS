@@ -1,4 +1,19 @@
 import prisma from '../config/prisma.js'
+import bcrypt from 'bcryptjs'
+
+export async function createInstructor({ email, password, firstName, lastName }) {
+  const existing = await prisma.user.findUnique({ where: { email } })
+  if (existing) throw Object.assign(new Error('An account with this email already exists'), { status: 409 })
+  const passwordHash = await bcrypt.hash(password, 12)
+  return prisma.user.create({
+    data: { email, passwordHash, firstName, lastName, role: 'instructor' },
+    select: {
+      id: true, email: true, firstName: true, lastName: true,
+      role: true, isActive: true, avatarUrl: true, createdAt: true,
+      _count: { select: { enrollments: true } }
+    }
+  })
+}
 
 export async function getStats() {
   const [totalStudents, totalInstructors, totalCourses, publishedCourses, draftCourses, activeSubs] = await Promise.all([

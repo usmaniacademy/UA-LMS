@@ -1,10 +1,43 @@
 <template>
   <AdminLayout>
     <b-row class="mb-3">
-      <b-col cols="12">
+      <b-col cols="12" class="d-sm-flex justify-content-between align-items-center">
         <h1 class="h3 mb-2 mb-sm-0">Instructors</h1>
+        <b-button variant="primary" size="sm" class="mb-0" @click="openCreate">+ Add Instructor</b-button>
       </b-col>
     </b-row>
+
+    <!-- Add instructor modal -->
+    <b-modal v-model="createModal" title="Add Instructor" @ok="submitCreate" ok-title="Create Instructor"
+      :ok-disabled="saving" size="lg">
+      <div v-if="formError" class="alert alert-danger py-2 mb-3">{{ formError }}</div>
+      <div v-if="createdMsg" class="alert alert-success py-2 mb-3">{{ createdMsg }}</div>
+      <b-form class="d-flex flex-column gap-3">
+        <b-row class="g-3">
+          <b-col md="6">
+            <b-form-group label="First name *">
+              <b-form-input v-model="form.firstName" placeholder="e.g. Ahmed" />
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Last name *">
+              <b-form-input v-model="form.lastName" placeholder="e.g. Khan" />
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-form-group label="Email *">
+          <b-form-input v-model="form.email" type="email" placeholder="instructor@usmaniacademy.com" />
+        </b-form-group>
+        <b-form-group label="Password *">
+          <b-input-group>
+            <b-form-input v-model="form.password" :type="showPass ? 'text' : 'password'" placeholder="Min. 8 characters" />
+            <b-button variant="outline-secondary" @click="showPass = !showPass">{{ showPass ? 'Hide' : 'Show' }}</b-button>
+            <b-button variant="outline-primary" @click="form.password = randomPassword()">Generate</b-button>
+          </b-input-group>
+          <div class="form-text">You set the password here and share these login details with the instructor.</div>
+        </b-form-group>
+      </b-form>
+    </b-modal>
 
     <b-card no-body class="bg-transparent">
       <b-card-header class="bg-transparent border-bottom px-0">
@@ -68,7 +101,7 @@
   </AdminLayout>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { useAdminStore } from '@/stores/admin';
 import type { AdminUser } from '@/stores/admin';
@@ -78,6 +111,51 @@ const admin = useAdminStore();
 const query = ref('');
 
 const instructors = computed(() => admin.users);
+
+// ─── Add instructor ──────────────────────────────────────────────────────────
+const createModal = ref(false);
+const saving = ref(false);
+const showPass = ref(false);
+const formError = ref('');
+const createdMsg = ref('');
+const form = reactive({ firstName: '', lastName: '', email: '', password: '' });
+
+function randomPassword() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+  let p = '';
+  for (let i = 0; i < 10; i++) p += chars[Math.floor(Math.random() * chars.length)];
+  return p + '@1';
+}
+
+function openCreate() {
+  formError.value = '';
+  createdMsg.value = '';
+  showPass.value = true;
+  Object.assign(form, { firstName: '', lastName: '', email: '', password: randomPassword() });
+  createModal.value = true;
+}
+
+async function submitCreate(evt: Event) {
+  evt.preventDefault();
+  formError.value = '';
+  createdMsg.value = '';
+  if (!form.firstName.trim() || !form.lastName.trim()) { formError.value = 'Please enter the first and last name.'; return; }
+  if (!form.email.trim()) { formError.value = 'Please enter an email.'; return; }
+  if (form.password.length < 8) { formError.value = 'Password must be at least 8 characters.'; return; }
+
+  saving.value = true;
+  try {
+    await admin.createInstructor({ ...form });
+    createdMsg.value = `Instructor created. Share these login details: ${form.email} / ${form.password}`;
+    await admin.fetchUsers({ role: 'instructor' });
+    Object.assign(form, { firstName: '', lastName: '', email: '', password: '' });
+    // keep the modal open so the admin can copy the credentials
+  } catch (e: any) {
+    formError.value = e.message || 'Failed to create instructor';
+  } finally {
+    saving.value = false;
+  }
+}
 
 function initials(u: AdminUser) {
   return [(u.firstName || '')[0], (u.lastName || '')[0]].filter(Boolean).join('').toUpperCase() || u.email[0].toUpperCase();

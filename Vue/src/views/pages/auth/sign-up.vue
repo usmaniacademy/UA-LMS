@@ -98,24 +98,6 @@
                     </b-form-group>
                   </div>
 
-                  <!-- Role selection -->
-                  <div class="mb-4">
-                    <label class="form-label">I want to join as *</label>
-                    <div class="d-flex gap-3">
-                      <div
-                        v-for="option in roleOptions"
-                        :key="option.value"
-                        class="role-card flex-fill text-center p-3 border rounded-3 cursor-pointer"
-                        :class="{ 'border-primary bg-primary bg-opacity-10': form.role === option.value }"
-                        @click="form.role = option.value"
-                      >
-                        <div class="fs-3">{{ option.icon }}</div>
-                        <div class="fw-semibold mt-1">{{ option.label }}</div>
-                        <div class="text-muted small">{{ option.desc }}</div>
-                      </div>
-                    </div>
-                  </div>
-
                   <div class="mb-4">
                     <div class="form-check">
                       <input type="checkbox" class="form-check-input" id="terms" v-model="agreedToTerms" required>
@@ -162,22 +144,18 @@ import router from '@/router'
 const auth = useAuthStore()
 const route = useRoute()
 
+// Public sign-up always creates a student. Instructors are created by the admin.
 const form = reactive({
   firstName: '',
   lastName: '',
   email: '',
   password: '',
-  role: 'student' as 'student' | 'instructor'
+  role: 'student' as const
 })
 const agreedToTerms = ref(false)
 const loading = ref(false)
 const errorMsg = ref('')
 const successMsg = ref('')
-
-const roleOptions = [
-  { value: 'student', label: 'Student', icon: '🎓', desc: 'I want to learn' },
-  { value: 'instructor', label: 'Instructor', icon: '👨‍🏫', desc: 'I want to teach' }
-]
 
 async function handleSignUp() {
   errorMsg.value = ''

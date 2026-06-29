@@ -56,6 +56,12 @@ export const useAdminStore = defineStore('admin_store', () => {
   const usersPagination = ref({ total: 0, page: 1, totalPages: 1 })
   const coursesPagination = ref({ total: 0, page: 1, totalPages: 1 })
 
+  // Admin creates an instructor account (sets their password; gives credentials to the teacher)
+  async function createInstructor(payload: { firstName: string; lastName: string; email: string; password: string }) {
+    const data = await api.post('/admin/instructors', payload)
+    return data.user
+  }
+
   // Instructors for the "assign course" dropdown (kept separate from `users`)
   async function fetchInstructors() {
     try {
@@ -142,6 +148,6 @@ export const useAdminStore = defineStore('admin_store', () => {
     usersPagination, coursesPagination,
     fetchStats, fetchUsers, toggleUserActive,
     fetchCourses, approveCourse, rejectCourse, fetchRevenue,
-    fetchInstructors, createCourse, deleteCourse
+    fetchInstructors, createInstructor, createCourse, deleteCourse
   }
 })
