@@ -90,10 +90,11 @@ model User {
 model Course {
   id             String       @id @default(uuid())
   instructorId   String
-  title          String
-  slug           String       @unique
-  description    String?
-  thumbnailUrl   String?
+  title           String
+  slug            String       @unique
+  description     String?      // short blurb shown below the title / in listings
+  fullDescription String?      // long description shown in the course overview
+  thumbnailUrl    String?
   category       String?
   level          CourseLevel  @default(beginner)
   isFree         Boolean      @default(false)

@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const createCourseSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
   description: z.string().optional(),
+  fullDescription: z.string().optional(),
   category: z.string().optional(),
   level: z.enum(['beginner', 'intermediate', 'advanced']).default('beginner'),
   isFree: z.boolean().default(false),

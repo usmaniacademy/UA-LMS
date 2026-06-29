@@ -71,7 +71,7 @@
                   <!-- Overview -->
                   <div v-show="tab === 1">
                     <h5 class="mb-3">Course Description</h5>
-                    <p class="mb-4">{{ course.description || 'No description provided yet.' }}</p>
+                    <p class="mb-4" style="white-space:pre-line">{{ course.fullDescription || course.description || 'No description provided yet.' }}</p>
 
                     <template v-if="learningPoints.length">
                       <h5 class="mb-3">What you'll learn</h5>

@@ -11,7 +11,8 @@
 
       <b-col cols="12">
         <b-form-group label="Short description *">
-          <b-form-textarea v-model="form.description" placeholder="Brief overview of what students will learn" rows="3" />
+          <b-form-textarea v-model="form.description" placeholder="Brief one-line overview shown below the course title" rows="2" />
+          <div class="form-text">A short blurb shown below the title and on course cards. The full description is added in Step 2.</div>
         </b-form-group>
       </b-col>
 

@@ -13,10 +13,11 @@
       <b-col cols="12">
         <b-form-group label="Full course description">
           <b-form-textarea
-            v-model="form.description"
+            v-model="form.fullDescription"
             rows="8"
             placeholder="Describe what students will learn, who this course is for, prerequisites, etc."
           />
+          <div class="form-text">Shown in the course Overview. This is separate from the short description on Step 1.</div>
         </b-form-group>
       </b-col>
 

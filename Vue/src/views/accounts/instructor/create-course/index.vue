@@ -108,6 +108,7 @@ const KNOWN_CATEGORIES = ['Islamic Studies', 'Astronomy', 'Technology']
 const form = reactive({
   title: '',
   description: '',
+  fullDescription: '',
   category: '',
   customCategory: '',
   level: 'beginner',
@@ -131,6 +132,7 @@ async function loadCourseForEdit(id: string) {
   courseId.value = course.id
   form.title = course.title || ''
   form.description = course.description || ''
+  form.fullDescription = course.fullDescription || ''
   form.level = course.level || 'beginner'
   form.isFree = course.isFree || false
   form.price = course.price ?? null
