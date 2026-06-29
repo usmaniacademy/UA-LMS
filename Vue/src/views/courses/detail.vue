@@ -127,8 +127,6 @@
                         </template>
                       </b-accordion-item>
                     </b-accordion>
-
-                    <ZoomClasses :courseId="course.id" :isEnrolled="course.isEnrolled ?? false" />
                   </div>
 
                   <!-- Instructor -->
@@ -245,7 +243,6 @@ import PagesLayout from '@/layouts/PagesLayout.vue'
 import { useCourseStore } from '@/stores/course'
 import { useSubscriptionStore } from '@/stores/subscription'
 import { api } from '@/helpers/api'
-import ZoomClasses from './ZoomClasses.vue'
 import { BIconPatchCheckFill, BIconCameraVideoFill } from 'bootstrap-icons-vue'
 import { faStar, faUserGraduate, faSignal, faGlobe, faPlay, faLock, faBookOpen } from '@fortawesome/free-solid-svg-icons'
 import defaultThumb from '@/assets/images/courses/4by3/08.jpg'
