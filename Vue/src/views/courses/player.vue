@@ -97,19 +97,27 @@
                   <table class="table table-borderless mb-3">
                     <tbody>
                       <tr>
-                        <td class="text-muted">Meeting date</td>
+                        <td class="zoom-lbl">Meeting date</td>
                         <td class="fw-semibold">{{ formatDate(zoomMeeting.startTime) }}</td>
                       </tr>
                       <tr>
-                        <td class="text-muted">Duration</td>
+                        <td class="zoom-lbl">Add to</td>
+                        <td>
+                          <a :href="googleCalUrl" target="_blank" class="text-primary">Google Calendar</a>
+                          <span class="text-muted mx-1">·</span>
+                          <a href="#" class="text-primary" @click.prevent="downloadIcs">iCal Export</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="zoom-lbl">Duration</td>
                         <td>{{ zoomMeeting.duration }} min</td>
                       </tr>
                       <tr v-if="zoomMeeting.password">
-                        <td class="text-muted">Password</td>
+                        <td class="zoom-lbl">Password</td>
                         <td><code>{{ zoomMeeting.password }}</code></td>
                       </tr>
                       <tr>
-                        <td class="text-muted">Status</td>
+                        <td class="zoom-lbl">Status</td>
                         <td class="text-capitalize">
                           <span class="badge"
                             :class="zoomMeeting.status === 'live' ? 'bg-success' : zoomMeeting.status === 'completed' ? 'bg-secondary' : 'bg-primary'">
@@ -204,6 +212,48 @@ const zoomMeeting = computed(() => {
   return zoomStore.meetings.find((m) => m.id === selected.value.zoomMeetingId) || null
 })
 
+// ─── Add to calendar ─────────────────────────────────────────────────────────
+function toCalDate(d: Date) {
+  const p = (n: number) => String(n).padStart(2, '0')
+  return d.getUTCFullYear() + p(d.getUTCMonth() + 1) + p(d.getUTCDate()) + 'T' + p(d.getUTCHours()) + p(d.getUTCMinutes()) + '00Z'
+}
+const googleCalUrl = computed(() => {
+  const m = zoomMeeting.value
+  if (!m) return '#'
+  const start = new Date(m.startTime)
+  const end = new Date(start.getTime() + (m.duration || 60) * 60000)
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: m.topic || selected.value?.title || 'Live Zoom Class',
+    dates: `${toCalDate(start)}/${toCalDate(end)}`,
+    details: m.agenda || ''
+  })
+  return `https://calendar.google.com/calendar/render?${params.toString()}`
+})
+function downloadIcs() {
+  const m = zoomMeeting.value
+  if (!m) return
+  const start = new Date(m.startTime)
+  const end = new Date(start.getTime() + (m.duration || 60) * 60000)
+  const esc = (s: string) => (s || '').replace(/([,;])/g, '\\$1')
+  const ics = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Usmani Academy//EN', 'BEGIN:VEVENT',
+    `UID:${m.id}@usmaniacademy`,
+    `DTSTAMP:${toCalDate(new Date())}`,
+    `DTSTART:${toCalDate(start)}`,
+    `DTEND:${toCalDate(end)}`,
+    `SUMMARY:${esc(m.topic || selected.value?.title || 'Live Zoom Class')}`,
+    `DESCRIPTION:${esc(m.agenda || '')}`,
+    'END:VEVENT', 'END:VCALENDAR'
+  ].join('\r\n')
+  const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }))
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'zoom-class.ics'
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 // Convert YouTube / Vimeo links to embeddable URLs
 const embedUrl = computed(() => {
   const url: string = selected.value?.contentUrl || ''
@@ -277,7 +327,8 @@ onMounted(async () => {
 .lms-lesson__icon { color: var(--bs-primary); flex-shrink: 0; }
 .lms-lesson__title { flex: 1; font-size: .9rem; }
 .lms-lesson__meta { display: flex; align-items: center; gap: .35rem; flex-shrink: 0; }
-.zoom-card { background: var(--bs-tertiary-bg); border: 1px solid var(--bs-border-color); }
+.zoom-card { background: #F5F7F9; border: 1px solid var(--bs-border-color); }
+.zoom-lbl { color: #454545; white-space: nowrap; }
 .lms-locked { padding: 4rem 1rem; }
 @media (max-width: 768px) {
   .lms-player__body { flex-direction: column; }

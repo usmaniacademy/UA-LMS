@@ -69,5 +69,5 @@ const display = computed(() => {
   box-shadow: 0 2px 6px rgba(0,0,0,.04);
 }
 .cd-num { font-size: 1.6rem; font-weight: 700; line-height: 1; }
-.cd-lbl { font-size: .7rem; color: var(--bs-secondary-color); margin-top: .25rem; }
+.cd-lbl { font-size: .7rem; color: #454545; margin-top: .25rem; }
 </style>

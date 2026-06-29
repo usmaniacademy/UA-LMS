@@ -11,7 +11,7 @@
 
     <template v-else>
       <!-- ─── Page intro ─────────────────────────────────────────────── -->
-      <section class="bg-light py-0 py-sm-5">
+      <section class="py-0 py-sm-5" style="background-color:#F5F7F9">
         <b-container>
           <b-row class="py-5">
             <b-col lg="8">
