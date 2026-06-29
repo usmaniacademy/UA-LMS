@@ -19,9 +19,9 @@
               <router-link class="h5 mb-0 text-body" :to="{ name: 'demos.default' }" v-b-tooltip.hover.top="'Home'">
                 <BIconGlobe />
               </router-link>
-              <router-link class="h5 mb-0 text-body" :to="{ name: 'auth.sign-in' }" v-b-tooltip.hover.top="'Sign out'">
+              <a href="#" class="h5 mb-0 text-body" @click.prevent="logout" v-b-tooltip.hover.top="'Sign out'">
                 <BIconPower />
-              </router-link>
+              </a>
             </div>
           </div>
         </div>
@@ -106,6 +106,7 @@ import ProfileDropdown from '@/components/ProfileDropdown.vue';
 import MobileNavbarToggler from '@/components/MobileNavbarToggler.vue';
 import AdminMenu from '@/components/navbar/AdminMenu/index.vue';
 import { OverlayScrollbarsComponent } from "overlayscrollbars-vue";
+import { useAuthStore } from '@/stores/auth';
 
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { BIconGearFill, BIconGlobe, BIconPower, BIconTextRight, BIconBell } from 'bootstrap-icons-vue';
@@ -113,6 +114,9 @@ import { BIconGearFill, BIconGlobe, BIconPower, BIconTextRight, BIconBell } from
 import logolight from '@/assets/images/logo-light.svg';
 import logoMobile from '@/assets/images/logo-mobile.svg';
 import logoMobilelight from '@/assets/images/logo-mobile-light.svg';
+
+const auth = useAuthStore();
+const logout = () => auth.logout();
 
 const offcanvas = ref(false);
 

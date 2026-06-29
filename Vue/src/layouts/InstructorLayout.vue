@@ -72,8 +72,13 @@
                 <div class="bg-dark border rounded-3 pb-0 p-3 w-100">
                   <div class="list-group list-group-dark list-group-borderless">
                     <template v-for="(item, idx) in getMenuItems() || []" :key="idx">
-                      <router-link class="list-group-item icons-center"
-                        :class="item.route.name === currentRouteName && 'active', getMenuItems().length - 1 === idx && 'text-danger bg-danger-soft-hover'"
+                      <a v-if="item.route.name === 'auth.sign-in'" href="#"
+                        class="list-group-item icons-center text-danger bg-danger-soft-hover" @click.prevent="logout">
+                        <component :is="item.icon" class="fa-fw me-2" />
+                        {{ item.title }}
+                      </a>
+                      <router-link v-else class="list-group-item icons-center"
+                        :class="{ active: item.route.name === currentRouteName }"
                         :to="{ name: item.route.name }">
                         <component :is="item.icon" class="fa-fw me-2" />
                         {{ item.title }}
@@ -89,8 +94,13 @@
               <div class="bg-dark border rounded-3 pb-0 p-3 w-100">
                 <div class="list-group list-group-dark list-group-borderless">
                   <template v-for="(item, idx) in getMenuItems()" :key="idx">
-                    <router-link class="list-group-item"
-                      :class="item.route.name === currentRouteName && 'active', getMenuItems().length - 1 === idx && 'text-danger bg-danger-soft-hover'"
+                    <a v-if="item.route.name === 'auth.sign-in'" href="#"
+                      class="list-group-item text-danger bg-danger-soft-hover" @click.prevent="logout">
+                      <component :is="item.icon" class="fa-fw me-2" />
+                      {{ item.title }}
+                    </a>
+                    <router-link v-else class="list-group-item"
+                      :class="{ active: item.route.name === currentRouteName }"
                       :to="{ name: item.route.name }">
                       <component :is="item.icon" class="fa-fw me-2" />
                       {{ item.title }}
@@ -134,6 +144,7 @@ defineProps<LayoutPropType>();
 
 const auth = useAuthStore();
 const courseStore = useCourseStore();
+const logout = () => auth.logout();
 
 const user = computed(() => auth.getUser());
 const fullName = computed(() => {
