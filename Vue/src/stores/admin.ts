@@ -70,11 +70,11 @@ export const useAdminStore = defineStore('admin_store', () => {
     return data.course
   }
 
-  // Admin removes (archives) a course
+  // Admin removes (archives) a course — drop it from the visible list
   async function deleteCourse(courseId: string) {
     await api.delete(`/courses/${courseId}`)
-    const idx = courses.value.findIndex(c => c.id === courseId)
-    if (idx !== -1) courses.value[idx].status = 'archived'
+    courses.value = courses.value.filter(c => c.id !== courseId)
+    coursesPagination.value.total = Math.max(0, coursesPagination.value.total - 1)
   }
 
   async function fetchStats() {

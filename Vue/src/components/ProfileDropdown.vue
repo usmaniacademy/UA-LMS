@@ -2,13 +2,19 @@
   <DropDown :custom-class="className">
     <a class="avatar avatar-sm p-0" href="#" id="profileDropdown" role="button" data-bs-auto-close="outside"
       data-bs-display="static" data-bs-toggle="dropdown" aria-expanded="false">
-      <img class="avatar-img rounded-circle" :src="avatarSrc" alt="avatar" />
+      <img v-if="avatarUrl" class="avatar-img rounded-circle" :src="avatarUrl" alt="avatar" />
+      <span v-else class="avatar-img rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold">
+        {{ initials }}
+      </span>
     </a>
     <ul class="dropdown-menu dropdown-animation dropdown-menu-end shadow pt-3" aria-labelledby="profileDropdown">
       <li class="px-3 mb-3">
         <div class="d-flex align-items-center">
           <div class="avatar me-3">
-            <img class="avatar-img rounded-circle shadow" :src="avatarSrc" alt="avatar" />
+            <img v-if="avatarUrl" class="avatar-img rounded-circle shadow" :src="avatarUrl" alt="avatar" />
+            <span v-else class="avatar-img rounded-circle shadow bg-primary text-white d-flex align-items-center justify-content-center fw-bold">
+              {{ initials }}
+            </span>
           </div>
           <div>
             <span class="h6 d-block mb-0">{{ fullName }}</span>
@@ -60,7 +66,6 @@ import type { ThemeModeType } from '@/types/layout';
 import { toSentenceCase } from '@/helpers/change-casing';
 
 import { BIconPerson, BIconGear, BIconInfoCircle, BIconPower, BIconSun, BIconMoonStars, BIconCircleHalf, BIconSpeedometer2 } from 'bootstrap-icons-vue';
-import avatar01 from '@/assets/images/avatar/01.jpg';
 
 const useLayout = useLayoutStore();
 const auth = useAuthStore();
@@ -73,7 +78,12 @@ const fullName = computed(() => {
   return [u.firstName, u.lastName].filter(Boolean).join(' ') || u.email;
 });
 const email = computed(() => user.value?.email ?? '');
-const avatarSrc = computed(() => user.value?.avatarUrl || avatar01);
+const avatarUrl = computed(() => user.value?.avatarUrl || '');
+const initials = computed(() => {
+  const u = user.value;
+  if (!u) return 'G';
+  return [(u.firstName || '')[0], (u.lastName || '')[0]].filter(Boolean).join('').toUpperCase() || (u.email[0] || 'U').toUpperCase();
+});
 
 const dashboardRoute = computed(() => {
   switch (user.value?.role) {

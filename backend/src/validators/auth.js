@@ -19,3 +19,10 @@ export const loginSchema = z.object({
 export const refreshSchema = z.object({
   refreshToken: z.string().min(1, 'Refresh token is required')
 })
+
+export const updateProfileSchema = z.object({
+  firstName: z.string().min(1).optional(),
+  lastName: z.string().min(1).optional(),
+  bio: z.string().max(2000).optional().or(z.literal('')),
+  avatarUrl: z.string().optional() // URL or base64 data URI
+})

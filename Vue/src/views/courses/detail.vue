@@ -71,7 +71,7 @@
                   <!-- Overview -->
                   <div v-show="tab === 1">
                     <h5 class="mb-3">Course Description</h5>
-                    <p class="mb-4" style="white-space:pre-line">{{ course.fullDescription || course.description || 'No description provided yet.' }}</p>
+                    <p class="mb-4" style="white-space:pre-line">{{ course.fullDescription || 'No detailed description provided yet.' }}</p>
 
                     <template v-if="learningPoints.length">
                       <h5 class="mb-3">What you'll learn</h5>
@@ -274,6 +274,7 @@ import router from '@/router'
 import PagesLayout from '@/layouts/PagesLayout.vue'
 import { useCourseStore } from '@/stores/course'
 import { useSubscriptionStore } from '@/stores/subscription'
+import { useAuthStore } from '@/stores/auth'
 import { api } from '@/helpers/api'
 import CustomGLightbox from '@/components/CustomGLightbox.vue'
 import { BIconPatchCheckFill, BIconCameraVideoFill } from 'bootstrap-icons-vue'
@@ -284,6 +285,7 @@ import defaultThumb from '@/assets/images/courses/4by3/08.jpg'
 const route = useRoute()
 const store = useCourseStore()
 const subStore = useSubscriptionStore()
+const auth = useAuthStore()
 const course = computed(() => store.currentCourse as any)
 const slug = computed(() => route.params.slug as string)
 const tab = ref(1)
@@ -361,6 +363,17 @@ function openLesson(lesson: any) {
 }
 
 function enroll() {
+  // Guests must create an account first, then return to this course
+  if (!auth.isAuthenticated()) {
+    router.push({ name: 'auth.sign-up', query: { redirectedFrom: route.fullPath } })
+    return
+  }
+  // Admins / instructors don't enroll — let them preview the player
+  if (auth.userRole() && auth.userRole() !== 'student') {
+    router.push({ name: 'course.learn', params: { slug: slug.value } })
+    return
+  }
+  // Students: free → instant enroll, paid → Stripe checkout
   if (course.value?.isFree) enrollFree()
   else handleSubscribe()
 }
@@ -384,6 +397,7 @@ async function enrollFree() {
   try {
     await api.post(`/courses/${course.value.id}/enroll`, {})
     await store.fetchCourseBySlug(route.params.slug as string)
+    router.push({ name: 'course.learn', params: { slug: slug.value } })
   } catch (e: any) {
     alert(e.message)
   } finally {

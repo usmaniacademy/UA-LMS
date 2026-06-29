@@ -102,3 +102,16 @@ export async function getMe(userId) {
   if (!user) throw ApiError.notFound('User not found')
   return user
 }
+
+export async function updateProfile(userId, data) {
+  const allowed = {}
+  if (data.firstName !== undefined) allowed.firstName = data.firstName
+  if (data.lastName !== undefined) allowed.lastName = data.lastName
+  if (data.bio !== undefined) allowed.bio = data.bio
+  if (data.avatarUrl !== undefined) allowed.avatarUrl = data.avatarUrl || null
+  return prisma.user.update({
+    where: { id: userId },
+    data: allowed,
+    select: { id: true, email: true, firstName: true, lastName: true, role: true, avatarUrl: true, bio: true, emailVerified: true, createdAt: true }
+  })
+}

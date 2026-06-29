@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useSessionStorage } from '@vueuse/core'
+import { useLocalStorage } from '@vueuse/core'
 import router from '@/router'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
@@ -19,7 +19,7 @@ interface AuthState {
 }
 
 export const useAuthStore = defineStore('auth_store', () => {
-  const stored = useSessionStorage<string | null>('UA_AUTH', null)
+  const stored = useLocalStorage<string | null>('UA_AUTH', null)
 
   function _getState(): AuthState {
     try {
@@ -65,13 +65,14 @@ export const useAuthStore = defineStore('auth_store', () => {
     if (!res.ok) throw new Error(data.error || 'Login failed')
 
     _setState({ user: data.user, accessToken: data.accessToken })
-    // Store refresh token separately (longer-lived)
-    sessionStorage.setItem('UA_REFRESH', data.refreshToken)
+    // Store refresh token separately (longer-lived). localStorage so the session
+    // survives across tabs and reloads (sessionStorage is per-tab only).
+    localStorage.setItem('UA_REFRESH', data.refreshToken)
     return data.user
   }
 
   async function refreshToken() {
-    const rt = sessionStorage.getItem('UA_REFRESH')
+    const rt = localStorage.getItem('UA_REFRESH')
     if (!rt) throw new Error('No refresh token')
 
     const res = await fetch(`${API}/auth/refresh`, {
@@ -114,8 +115,27 @@ export const useAuthStore = defineStore('auth_store', () => {
       }).catch(() => {})
     }
     stored.value = null
-    sessionStorage.removeItem('UA_REFRESH')
+    localStorage.removeItem('UA_REFRESH')
     router.push({ name: 'auth.sign-in' })
+  }
+
+  async function updateProfile(payload: {
+    firstName?: string
+    lastName?: string
+    bio?: string
+    avatarUrl?: string
+  }) {
+    const token = await getValidToken()
+    const res = await fetch(`${API}/auth/profile`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(payload)
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'Failed to update profile')
+    const state = _getState()
+    _setState({ ...state, user: data.user })
+    return data.user
   }
 
   // Returns a valid access token, refreshing if needed
@@ -144,6 +164,7 @@ export const useAuthStore = defineStore('auth_store', () => {
     logout,
     refreshToken,
     fetchMe,
+    updateProfile,
     // Legacy compat for template components that use saveSession/removeSession
     saveSession: (u: AuthUser, token: string) => _setState({ user: u, accessToken: token }),
     removeSession: logout

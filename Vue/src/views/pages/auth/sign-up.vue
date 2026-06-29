@@ -156,9 +156,11 @@ import avatar03 from '@/assets/images/avatar/03.jpg'
 import avatar04 from '@/assets/images/avatar/04.jpg'
 import element02 from '@/assets/images/element/02.svg'
 import { useAuthStore } from '@/stores/auth'
+import { useRoute } from 'vue-router'
 import router from '@/router'
 
 const auth = useAuthStore()
+const route = useRoute()
 
 const form = reactive({
   firstName: '',
@@ -184,7 +186,9 @@ async function handleSignUp() {
   try {
     await auth.register(form)
     successMsg.value = 'Account created! Redirecting to sign in...'
-    setTimeout(() => router.push({ name: 'auth.sign-in' }), 1500)
+    // Preserve any post-login redirect (e.g. the course the user wanted to enrol in)
+    const redirectedFrom = route.query.redirectedFrom as string | undefined
+    setTimeout(() => router.push({ name: 'auth.sign-in', query: redirectedFrom ? { redirectedFrom } : {} }), 1500)
   } catch (e: any) {
     errorMsg.value = e.message || 'Registration failed. Please try again.'
   } finally {

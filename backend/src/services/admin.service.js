@@ -68,7 +68,9 @@ export async function changeUserRole(userId, role) {
 
 export async function listCourses({ status, search, page = 1, limit = 20 }) {
   const where = {}
+  // Default view hides archived (deleted) courses; admins can still pick "Archived" in the filter.
   if (status) where.status = status
+  else where.status = { not: 'archived' }
   if (search) {
     where.OR = [
       { title: { contains: search, mode: 'insensitive' } },
