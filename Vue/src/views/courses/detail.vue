@@ -194,7 +194,7 @@
                         <h3 class="fw-bold mb-0 text-success">Free</h3>
                       </div>
                       <div v-else class="d-flex align-items-center flex-wrap gap-2">
-                        <h3 class="fw-bold mb-0">${{ monthlyPrice }}<span class="fs-6 fw-normal text-muted">/mo</span></h3>
+                        <h3 class="fw-bold mb-0">${{ monthlyPrice }}<span class="fs-6 fw-normal text-body">/month</span></h3>
                         <span v-if="hasDiscount" class="text-decoration-line-through text-muted">${{ course.originalPrice }}</span>
                         <span v-if="hasDiscount" class="badge text-bg-orange mb-0">{{ discountPercent }}% off</span>
                       </div>
@@ -229,16 +229,11 @@
                     <div v-if="course.isEnrolled" class="d-grid">
                       <router-link :to="{ name: 'course.learn', params: { slug } }" class="btn btn-success mb-0">Continue Learning</router-link>
                     </div>
-                    <div v-else class="d-sm-flex justify-content-sm-between gap-2">
-                      <router-link :to="{ name: 'course.learn', params: { slug } }" class="btn btn-outline-primary mb-2 mb-sm-0 flex-fill">Preview</router-link>
-                      <b-button v-if="course.isFree" variant="success" class="mb-0 flex-fill" @click="enrollFree" :disabled="enrolling">
-                        <span v-if="enrolling" class="spinner-border spinner-border-sm me-1" />Enroll free
-                      </b-button>
-                      <b-button v-else variant="success" class="mb-0 flex-fill" @click="handleSubscribe" :disabled="subscribing">
-                        <span v-if="subscribing" class="spinner-border spinner-border-sm me-1" />Subscribe
+                    <div v-else class="d-grid">
+                      <b-button variant="success" class="mb-0" @click="enroll" :disabled="enrolling || subscribing">
+                        <span v-if="enrolling || subscribing" class="spinner-border spinner-border-sm me-1" />Enroll now
                       </b-button>
                     </div>
-                    <p v-if="!course.isEnrolled && !course.isFree" class="text-muted small text-center mt-2 mb-0">Cancel anytime. Instant access.</p>
                   </div>
                 </b-card-body>
               </b-card>
@@ -363,6 +358,11 @@ onMounted(() => {
 
 function openLesson(lesson: any) {
   router.push({ name: 'course.learn', params: { slug: slug.value }, query: { lesson: lesson.id } })
+}
+
+function enroll() {
+  if (course.value?.isFree) enrollFree()
+  else handleSubscribe()
 }
 
 async function handleSubscribe() {
