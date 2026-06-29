@@ -737,23 +737,8 @@ export const STUDENT_MENU_ITEMS = [
   },
   {
     title: 'Edit Profile',
-    route: { name: 'instructor.edit.profile' },
+    route: { name: 'student.edit.profile' },
     icon: BIconPencilSquare
-  },
-  {
-    title: 'Settings',
-    route: { name: 'instructor.settings' },
-    icon: BIconGear
-  },
-  {
-    title: 'Delete Profile',
-    route: { name: 'instructor.delete.account' },
-    icon: BIconTrash
-  },
-  {
-    title: 'Sign Out',
-    route: { name: 'auth.sign-in' },
-    icon: BIconBoxArrowRight
   }
 ];
 

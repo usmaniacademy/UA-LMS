@@ -754,6 +754,14 @@ const accountsRoutes = [
       title: setTitle("Bookmark")
     },
     component: () => import("@/views/accounts/student/bookmark/index.vue"),
+  },
+  {
+    path: "/student/edit-profile",
+    name: "student.edit.profile",
+    meta: {
+      title: setTitle("Edit Profile")
+    },
+    component: () => import("@/views/accounts/student/edit-profile/index.vue"),
   }
 ];
 

@@ -95,17 +95,17 @@ const dashboardRoute = computed(() => {
 
 const editProfileRoute = computed(() => {
   switch (user.value?.role) {
-    case 'admin': return null; // admin has a single settings page (shown below)
+    case 'admin': return 'admin.setting';      // admin profile/settings page
     case 'instructor': return 'instructor.edit.profile';
-    default: return null; // students have no dedicated profile page
+    case 'student': return 'student.edit.profile';
+    default: return null;
   }
 });
 
 const settingsRoute = computed(() => {
   switch (user.value?.role) {
-    case 'admin': return 'admin.setting';
     case 'instructor': return 'instructor.settings';
-    default: return null;
+    default: return null; // admin & student manage everything from Edit Profile
   }
 });
 

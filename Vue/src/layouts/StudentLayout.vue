@@ -65,7 +65,7 @@
 									<div class="list-group list-group-dark list-group-borderless collapse-list">
 										<template v-for="(item, idx) in getMenuItems() || []" :key="idx">
 											<router-link class="list-group-item icons-center"
-												:class="item.route.name === currentRouteName && 'active', getMenuItems().length - 1 === idx && 'text-danger bg-danger-soft-hover'"
+												:class="{ active: item.route.name === currentRouteName }"
 												:to="{ name: item.route.name }">
 												<component :is="item.icon" class="fa-fw me-2" />
 												{{ item.title }}
@@ -82,7 +82,7 @@
 								<div class="list-group list-group-dark list-group-borderless collapse-list">
 									<template v-for="(item, idx) in getMenuItems()" :key="idx">
 										<router-link class="list-group-item"
-											:class="item.route.name === currentRouteName && 'active', getMenuItems().length - 1 === idx && 'text-danger bg-danger-soft-hover'"
+											:class="{ active: item.route.name === currentRouteName }"
 											:to="{ name: item.route.name }">
 											<component :is="item.icon" class="fa-fw me-2" />
 											{{ item.title }}
