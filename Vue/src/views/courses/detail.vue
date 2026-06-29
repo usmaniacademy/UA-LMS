@@ -174,34 +174,71 @@
 
             <!-- Right: pricing + info sidebar -->
             <b-col lg="4" class="pt-5 pt-lg-0">
-              <b-card no-body class="shadow p-2 mb-4">
+              <b-card no-body class="shadow p-2 mb-4 z-index-9">
                 <div class="overflow-hidden rounded-3 position-relative">
-                  <img :src="course.thumbnailUrl || defaultThumb" class="card-img" alt="course img" style="height:200px;object-fit:cover">
-                  <a v-if="course.promoVideoUrl" :href="course.promoVideoUrl" target="_blank"
-                    class="position-absolute top-50 start-50 translate-middle btn btn-lg text-danger btn-round bg-white shadow">
-                    <font-awesome-icon :icon="faPlay" />
-                  </a>
+                  <img :src="course.thumbnailUrl || defaultThumb" class="card-img" alt="course img" style="height:210px;object-fit:cover">
+                  <template v-if="course.promoVideoUrl">
+                    <div class="bg-overlay bg-dark opacity-6"></div>
+                    <div class="card-img-overlay d-flex align-items-center justify-content-center">
+                      <CustomGLightbox :link="course.promoVideoUrl" class="btn btn-lg text-danger btn-round bg-white shadow mb-0">
+                        <font-awesome-icon :icon="faPlay" />
+                      </CustomGLightbox>
+                    </div>
+                  </template>
                 </div>
 
                 <b-card-body class="px-3">
-                  <div class="text-center mb-3">
-                    <h3 v-if="course.isFree" class="fw-bold text-success mb-0">Free</h3>
-                    <h3 v-else class="fw-bold text-primary mb-0">${{ monthlyPrice }} <span class="fs-6 fw-normal text-muted">/ month</span></h3>
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <div v-if="course.isFree">
+                        <h3 class="fw-bold mb-0 text-success">Free</h3>
+                      </div>
+                      <div v-else class="d-flex align-items-center flex-wrap gap-2">
+                        <h3 class="fw-bold mb-0">${{ monthlyPrice }}<span class="fs-6 fw-normal text-muted">/mo</span></h3>
+                        <span v-if="hasDiscount" class="text-decoration-line-through text-muted">${{ course.originalPrice }}</span>
+                        <span v-if="hasDiscount" class="badge text-bg-orange mb-0">{{ discountPercent }}% off</span>
+                      </div>
+                      <p v-if="daysLeft > 0" class="mb-0 text-danger small mt-1">
+                        <font-awesome-icon :icon="faStopwatch" class="me-1" />
+                        {{ daysLeft }} day{{ daysLeft === 1 ? '' : 's' }} left at this price
+                      </p>
+                    </div>
+
+                    <!-- Share -->
+                    <b-dropdown end variant="link" toggle-class="btn btn-sm btn-light rounded small"
+                      menu-class="dropdown-menu-end shadow rounded" no-caret>
+                      <template #button-content>
+                        <font-awesome-icon :icon="faShareAlt" class="fa-fw" />
+                      </template>
+                      <b-dropdown-item :href="shareLinks.twitter" target="_blank">
+                        <font-awesome-icon :icon="faTwitterSquare" class="me-2" />Twitter
+                      </b-dropdown-item>
+                      <b-dropdown-item :href="shareLinks.facebook" target="_blank">
+                        <font-awesome-icon :icon="faFacebookSquare" class="me-2" />Facebook
+                      </b-dropdown-item>
+                      <b-dropdown-item :href="shareLinks.linkedin" target="_blank">
+                        <font-awesome-icon :icon="faLinkedinIn" class="me-2" />LinkedIn
+                      </b-dropdown-item>
+                      <b-dropdown-item href="#" @click.prevent="copyLink">
+                        <font-awesome-icon :icon="faCopy" class="me-2" />{{ copied ? 'Copied!' : 'Copy link' }}
+                      </b-dropdown-item>
+                    </b-dropdown>
                   </div>
 
-                  <div v-if="course.isEnrolled" class="d-grid">
-                    <router-link :to="{ name: 'course.learn', params: { slug } }" class="btn btn-success">Continue Learning</router-link>
-                  </div>
-                  <div v-else class="d-grid gap-2">
-                    <b-button v-if="course.isFree" variant="primary" @click="enrollFree" :disabled="enrolling">
-                      <span v-if="enrolling" class="spinner-border spinner-border-sm me-1" />
-                      Enroll for Free
-                    </b-button>
-                    <b-button v-else variant="success" @click="handleSubscribe" :disabled="subscribing">
-                      <span v-if="subscribing" class="spinner-border spinner-border-sm me-1" />
-                      Subscribe — ${{ monthlyPrice }}/month
-                    </b-button>
-                    <p class="text-muted small text-center mb-0">Cancel anytime. Instant access.</p>
+                  <div class="mt-3">
+                    <div v-if="course.isEnrolled" class="d-grid">
+                      <router-link :to="{ name: 'course.learn', params: { slug } }" class="btn btn-success mb-0">Continue Learning</router-link>
+                    </div>
+                    <div v-else class="d-sm-flex justify-content-sm-between gap-2">
+                      <router-link :to="{ name: 'course.learn', params: { slug } }" class="btn btn-outline-primary mb-2 mb-sm-0 flex-fill">Preview</router-link>
+                      <b-button v-if="course.isFree" variant="success" class="mb-0 flex-fill" @click="enrollFree" :disabled="enrolling">
+                        <span v-if="enrolling" class="spinner-border spinner-border-sm me-1" />Enroll free
+                      </b-button>
+                      <b-button v-else variant="success" class="mb-0 flex-fill" @click="handleSubscribe" :disabled="subscribing">
+                        <span v-if="subscribing" class="spinner-border spinner-border-sm me-1" />Subscribe
+                      </b-button>
+                    </div>
+                    <p v-if="!course.isEnrolled && !course.isFree" class="text-muted small text-center mt-2 mb-0">Cancel anytime. Instant access.</p>
                   </div>
                 </b-card-body>
               </b-card>
@@ -243,8 +280,10 @@ import PagesLayout from '@/layouts/PagesLayout.vue'
 import { useCourseStore } from '@/stores/course'
 import { useSubscriptionStore } from '@/stores/subscription'
 import { api } from '@/helpers/api'
+import CustomGLightbox from '@/components/CustomGLightbox.vue'
 import { BIconPatchCheckFill, BIconCameraVideoFill } from 'bootstrap-icons-vue'
-import { faStar, faUserGraduate, faSignal, faGlobe, faPlay, faLock, faBookOpen } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faUserGraduate, faSignal, faGlobe, faPlay, faLock, faBookOpen, faStopwatch, faShareAlt, faCopy } from '@fortawesome/free-solid-svg-icons'
+import { faTwitterSquare, faFacebookSquare, faLinkedinIn } from '@fortawesome/free-brands-svg-icons'
 import defaultThumb from '@/assets/images/courses/4by3/08.jpg'
 
 const route = useRoute()
@@ -272,6 +311,51 @@ const instructorInitials = computed(() => {
   if (!i) return '?'
   return [(i.firstName || '')[0], (i.lastName || '')[0]].filter(Boolean).join('').toUpperCase()
 })
+
+// ─── Discount ────────────────────────────────────────────────────────────────
+const hasDiscount = computed(() => {
+  const o = course.value?.originalPrice
+  return !course.value?.isFree && o && o > monthlyPrice.value
+})
+const discountPercent = computed(() => {
+  if (!hasDiscount.value) return 0
+  const o = course.value.originalPrice
+  return Math.round(((o - monthlyPrice.value) / o) * 100)
+})
+const daysLeft = computed(() => {
+  const end = course.value?.discountEndsAt
+  if (!end) return 0
+  const diff = new Date(end).getTime() - Date.now()
+  return diff > 0 ? Math.ceil(diff / 86400000) : 0
+})
+
+// ─── Share ───────────────────────────────────────────────────────────────────
+const pageUrl = computed(() => (typeof window !== 'undefined' ? window.location.href : ''))
+const shareLinks = computed(() => {
+  const u = encodeURIComponent(pageUrl.value)
+  const t = encodeURIComponent(course.value?.title || 'Usmani Academy course')
+  return {
+    twitter: `https://twitter.com/intent/tweet?url=${u}&text=${t}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${u}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${u}`
+  }
+})
+const copied = ref(false)
+async function copyLink() {
+  try {
+    await navigator.clipboard.writeText(pageUrl.value)
+  } catch {
+    // Fallback for older browsers / insecure contexts
+    const ta = document.createElement('textarea')
+    ta.value = pageUrl.value
+    document.body.appendChild(ta)
+    ta.select()
+    document.execCommand('copy')
+    document.body.removeChild(ta)
+  }
+  copied.value = true
+  setTimeout(() => (copied.value = false), 2000)
+}
 
 onMounted(() => {
   store.fetchCourseBySlug(route.params.slug as string)

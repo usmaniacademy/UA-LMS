@@ -114,6 +114,8 @@ const form = reactive({
   level: 'beginner',
   isFree: false,
   price: null as number | null,
+  originalPrice: null as number | null,
+  discountEndsAt: '',
   thumbnailUrl: '',
   promoVideoUrl: '',
   learningPoints: ['', ''],
@@ -136,6 +138,8 @@ async function loadCourseForEdit(id: string) {
   form.level = course.level || 'beginner'
   form.isFree = course.isFree || false
   form.price = course.price ?? null
+  form.originalPrice = course.originalPrice ?? null
+  form.discountEndsAt = course.discountEndsAt ? new Date(course.discountEndsAt).toISOString().slice(0, 10) : ''
   form.promoVideoUrl = course.promoVideoUrl || ''
   form.thumbnailUrl = course.thumbnailUrl || ''
   form.stripePriceId = course.stripePriceId || ''

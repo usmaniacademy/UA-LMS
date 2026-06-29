@@ -8,6 +8,8 @@ export const createCourseSchema = z.object({
   level: z.enum(['beginner', 'intermediate', 'advanced']).default('beginner'),
   isFree: z.boolean().default(false),
   price: z.number().int().positive().optional(),
+  originalPrice: z.number().int().positive().optional(),
+  discountEndsAt: z.coerce.date().optional(),
   promoVideoUrl: z.string().optional(),
   learningPoints: z.array(z.string()).optional(),
   thumbnailUrl: z.string().url().optional().or(z.literal('')),

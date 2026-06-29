@@ -29,6 +29,28 @@
           </b-form-group>
         </b-col>
 
+        <!-- Discount (optional) -->
+        <b-col md="4">
+          <b-form-group label="Original price (optional)">
+            <b-input-group prepend="$">
+              <b-form-input v-model.number="form.originalPrice" type="number" min="1" step="1" placeholder="e.g. 99" />
+            </b-input-group>
+            <div class="form-text">Shown struck through to display a discount. Leave blank for no discount.</div>
+          </b-form-group>
+        </b-col>
+        <b-col md="4">
+          <b-form-group label="Discount ends on (optional)">
+            <b-form-input v-model="form.discountEndsAt" type="date" />
+            <div class="form-text">Shows a "X days left at this price" countdown.</div>
+          </b-form-group>
+        </b-col>
+
+        <b-col cols="12" v-if="discountPercent">
+          <div class="alert alert-success py-2 mb-0">
+            Discount preview: <strong>{{ discountPercent }}% off</strong> — ${{ form.price }} (was ${{ form.originalPrice }})
+          </div>
+        </b-col>
+
         <b-col cols="12">
           <b-form-group label="Stripe Price ID (optional — paste after creating in Stripe Dashboard)">
             <b-form-input v-model="form.stripePriceId" placeholder="price_..." />
@@ -81,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useCourseStore } from '@/stores/course'
 import router from '@/router'
 
@@ -97,6 +119,13 @@ const courseStore = useCourseStore()
 const loading = ref<false | 'draft' | 'publish'>(false)
 const error = ref('')
 const success = ref('')
+
+const discountPercent = computed(() => {
+  const p = props.form.price
+  const o = props.form.originalPrice
+  if (!p || !o || o <= p) return 0
+  return Math.round(((o - p) / o) * 100)
+})
 
 async function saveCourse(publish: boolean) {
   error.value = ''
@@ -114,6 +143,10 @@ async function saveCourse(publish: boolean) {
       level: props.form.level,
       isFree: props.form.isFree,
       price: props.form.isFree ? undefined : (props.form.price || undefined),
+      originalPrice: props.form.isFree ? undefined : (props.form.originalPrice || undefined),
+      discountEndsAt: props.form.isFree || !props.form.discountEndsAt
+        ? undefined
+        : new Date(props.form.discountEndsAt).toISOString(),
       promoVideoUrl: props.form.promoVideoUrl || undefined,
       learningPoints: cleanedLearningPoints.length ? cleanedLearningPoints : undefined,
       thumbnailUrl: props.form.thumbnailUrl || undefined,
