@@ -63,12 +63,16 @@
                           </span>
                         </template>
                         <b-form-input
-                          type="password"
-                          class="border-0 bg-light rounded-end ps-1"
+                          :type="showPassword ? 'text' : 'password'"
+                          class="border-0 bg-light ps-1"
                           placeholder="••••••••"
                           v-model="form.password"
                           required
                         />
+                        <b-button variant="light" class="border-0" type="button" @click="showPassword = !showPassword"
+                          :title="showPassword ? 'Hide password' : 'Show password'">
+                          <font-awesome-icon :icon="showPassword ? faEyeSlash : faEye" />
+                        </b-button>
                       </b-input-group>
                     </b-form-group>
                   </div>
@@ -103,7 +107,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { faLock } from '@fortawesome/free-solid-svg-icons'
+import { faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { BIconEnvelopeFill } from 'bootstrap-icons-vue'
 import avatar01 from '@/assets/images/avatar/01.jpg'
 import avatar02 from '@/assets/images/avatar/02.jpg'
@@ -117,6 +121,7 @@ const auth = useAuthStore()
 const route = useRoute()
 
 const form = reactive({ email: '', password: '' })
+const showPassword = ref(false)
 const loading = ref(false)
 const errorMsg = ref('')
 
