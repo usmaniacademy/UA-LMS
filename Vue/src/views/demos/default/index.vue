@@ -5,6 +5,7 @@
     <MainBanner />
 
     <Counter />
+    <About />
 
     <PopularCourse />
 
@@ -19,8 +20,9 @@
 </template>
 <script setup lang="ts">
 import TopBar1 from '@/views/demos/default/components/TopBar1.vue';
-import MainBanner from '@/views/demos/default/components/MainBanner.vue';
+import MainBanner from '@/views/demos/workshop/components/MainBanner.vue';
 import Counter from '@/views/demos/default/components/Counter.vue';
+import About from '@/views/demos/school/components/About.vue';
 import PopularCourse from '@/views/demos/default/components/PopularCourse.vue';
 import ActionBox from '@/views/demos/default/components/ActionBox.vue';
 import TrendingCourses from '@/views/demos/default/components/TrendingCourses.vue';
