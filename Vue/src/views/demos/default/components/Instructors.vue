@@ -3,7 +3,7 @@
     <b-container>
       <b-row class="mb-4">
         <b-col lg="8" class="mx-auto text-center">
-          <h2 class="fs-1 fw-bold">Taught By Educators Who Care</h2>
+          <h2 class="fs-1 fw-bold mb-3">Taught By Educators Who Care</h2>
           <p class="mb-0">Every course is led by a qualified instructor invested in your understanding.</p>
         </b-col>
       </b-row>

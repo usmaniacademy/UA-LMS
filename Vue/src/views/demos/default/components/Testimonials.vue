@@ -1,9 +1,9 @@
 <template>
   <section class="py-5">
     <b-container>
-      <b-row class="mb-5">
+      <b-row class="mb-4">
         <b-col lg="8" class="mx-auto text-center">
-          <h2 class="fs-1 fw-bold">Voices from Our Community</h2>
+          <h2 class="fs-1 fw-bold mb-3">Voices from Our Community</h2>
           <p class="mb-0">What parents, students, and school leaders say about Usmani Academy.</p>
         </b-col>
       </b-row>

@@ -3,7 +3,7 @@
     <b-container>
       <b-row class="mb-4">
         <b-col cols="12" class="text-center">
-          <h2 class="mb-0">On-Field Framework</h2>
+          <h2 class="fs-1 fw-bold mb-0">On-Field Framework</h2>
         </b-col>
       </b-row>
 

@@ -29,7 +29,7 @@
 
         <!-- Right: content -->
         <b-col lg="6" class="mt-5 mt-lg-0">
-          <h2 class="mb-3">Why Usmani Academy?</h2>
+          <h2 class="fs-1 fw-bold mb-3">Why Usmani Academy?</h2>
           <p class="mb-3 mb-lg-4">Islamic schools deserve the same caliber of tools as the world's best institutions —
             without losing what makes them unique. Usmani Academy exists at that intersection. Our products are built by
             people who understand your community, your values, and the operational realities of running a mission-driven

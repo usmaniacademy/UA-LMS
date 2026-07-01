@@ -3,7 +3,7 @@
     <b-container>
       <b-row class="align-items-center g-4 g-lg-5">
         <b-col lg="6">
-          <h2 class="h1">Building the Infrastructure for Islamic Education</h2>
+          <h2 class="fs-1 fw-bold">Building the Infrastructure for Islamic Education</h2>
 
           <p class="mt-4 mb-4">Usmani Academy is an Islamic EdTech organization building the infrastructure for the next
             generation of Muslim education — in classrooms, on campuses, and online.</p>

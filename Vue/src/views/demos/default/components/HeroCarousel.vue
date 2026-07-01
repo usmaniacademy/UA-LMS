@@ -4,7 +4,7 @@
     <b-container>
       <b-row class="justify-content-center text-center">
         <b-col lg="9" xl="8">
-          <h1 class="display-5">Usmani Academy — Teaching and Learning for Understanding</h1>
+          <h1 class="display-5">Usmani Academy Teaching and Learning for Understanding</h1>
           <p class="lead mb-4">We build AI-powered tools for Islamic schools and deliver world-class technology
             education to students everywhere — rooted in Islamic values.</p>
           <div class="d-flex gap-2 justify-content-center mb-0">
@@ -19,7 +19,7 @@
 
     <!-- Full-width cylinder carousel stage -->
     <div class="hero-stage">
-      <CylinderCarousel :images="images" :card-width="285" :animation-duration="36" :edge-fade="false" />
+      <CylinderCarousel :images="images" :card-width="285" :animation-duration="36" :edge-fade="true" />
     </div>
   </section>
 </template>
@@ -36,12 +36,13 @@ import p6 from '@/assets/images/bg/3by4/6.jpg';
 import p7 from '@/assets/images/bg/3by4/7.jpg';
 import p8 from '@/assets/images/bg/3by4/8.jpg';
 
-// Duplicating the set gives more cards in the ring → a bigger radius, so the
-// front is a gentle left-to-right arc instead of a tight circle.
+// More cards in the ring → a bigger radius, so the front arc is flatter and
+// stretches wider — reaching the left/right screen edges on large monitors,
+// where the edge-fade blends it out (same feel as the testimonials rows).
 const base = [
   { src: p1 }, { src: p2 }, { src: p4 }, { src: p5 }, { src: p6 }, { src: p7 }, { src: p8 },
 ];
-const images = [...base, ...base];
+const images = [...base, ...base, ...base];
 </script>
 <style scoped>
 /* Full-bleed stage — stretches the carousel edge to edge, no background */
