@@ -50,7 +50,7 @@ import about26 from '@/assets/images/about/26.jpg';
 .about-img-inset {
   position: absolute;
   left: -1rem;
-  bottom: -3rem;
+  bottom: calc(-3rem - 17px);
   width: 40%;
   border: 4px solid #fff;
   border-radius: 0.75rem;
