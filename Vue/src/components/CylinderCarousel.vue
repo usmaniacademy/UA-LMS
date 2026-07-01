@@ -28,17 +28,23 @@ const props = withDefaults(
     animationDuration?: number
     /** Card width in pixels */
     cardWidth?: number
+    /** Fade the left/right edges. Turn off to let cards run to the screen edges. */
+    edgeFade?: boolean
   }>(),
-  { animationDuration: 32, cardWidth: 250 }
+  { animationDuration: 32, cardWidth: 250, edgeFade: true }
 )
 
 const n = computed(() => props.images.length || 1)
 
-const viewportStyle = computed(() => ({
-  perspective: '70em',
-  maskImage: 'linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%)',
-  WebkitMaskImage: 'linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%)'
-}))
+const viewportStyle = computed(() => {
+  const style: Record<string, string> = { perspective: '70em' }
+  if (props.edgeFade) {
+    const mask = 'linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%)'
+    style.maskImage = mask
+    style.WebkitMaskImage = mask
+  }
+  return style
+})
 
 const ringStyle = computed(() => ({
   '--n': String(n.value),
@@ -62,7 +68,7 @@ function cardStyle(i: number) {
 .cyl-viewport {
   width: 100%;
   height: 100%;
-  min-height: 460px;
+  min-height: 525px;
   display: grid;
   place-items: center;
   overflow: hidden;

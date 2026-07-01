@@ -19,7 +19,7 @@
 
     <!-- Full-width cylinder carousel stage -->
     <div class="hero-stage">
-      <CylinderCarousel :images="images" :card-width="240" :animation-duration="36" />
+      <CylinderCarousel :images="images" :card-width="285" :animation-duration="36" :edge-fade="false" />
     </div>
   </section>
 </template>
