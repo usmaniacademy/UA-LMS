@@ -4,7 +4,7 @@
     <b-container>
       <b-row class="justify-content-center text-center">
         <b-col lg="9" xl="8">
-          <h1 class="display-5">Usmani Academy Teaching and Learning for Understanding</h1>
+          <h1 class="display-5">Usmani Academy<br>Teaching and Learning for Understanding</h1>
           <p class="lead mb-4">We build AI-powered tools for Islamic schools and deliver world-class technology
             education to students everywhere — rooted in Islamic values.</p>
           <div class="d-flex gap-2 justify-content-center mb-0">
