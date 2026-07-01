@@ -36,9 +36,12 @@ import p6 from '@/assets/images/bg/3by4/6.jpg';
 import p7 from '@/assets/images/bg/3by4/7.jpg';
 import p8 from '@/assets/images/bg/3by4/8.jpg';
 
-const images = [
+// Duplicating the set gives more cards in the ring → a bigger radius, so the
+// front is a gentle left-to-right arc instead of a tight circle.
+const base = [
   { src: p1 }, { src: p2 }, { src: p4 }, { src: p5 }, { src: p6 }, { src: p7 }, { src: p8 },
 ];
+const images = [...base, ...base];
 </script>
 <style scoped>
 /* Full-bleed stage — stretches the carousel edge to edge, no background */

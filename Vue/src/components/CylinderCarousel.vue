@@ -35,7 +35,7 @@ const props = withDefaults(
 const n = computed(() => props.images.length || 1)
 
 const viewportStyle = computed(() => ({
-  perspective: '38em',
+  perspective: '70em',
   maskImage: 'linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%)',
   WebkitMaskImage: 'linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%)'
 }))
