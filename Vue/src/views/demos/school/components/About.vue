@@ -46,11 +46,11 @@ import about26 from '@/assets/images/about/26.jpg';
   display: block;
   object-fit: cover;
 }
-/* Small photo sitting on the big image, bottom-left corner */
+/* Small photo straddling the big image's left edge — half on, half hanging off to the left */
 .about-img-inset {
   position: absolute;
-  left: 1rem;
-  bottom: 1rem;
+  left: -20%;
+  bottom: 1.75rem;
   width: 40%;
   border: 4px solid #fff;
   border-radius: 0.75rem;
