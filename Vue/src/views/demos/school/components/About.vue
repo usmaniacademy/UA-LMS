@@ -20,11 +20,11 @@
           </div>
         </b-col>
 
-        <!-- Overlapping images: the top image sits on the upper layer of the bottom one -->
+        <!-- Big main image, with a small inset photo in the bottom-left corner -->
         <b-col lg="6" class="mt-4 mt-lg-0">
           <div class="about-images">
-            <img :src="about26" class="rounded-3 shadow about-img about-img--bottom" alt="Usmani Academy team">
-            <img :src="about25" class="rounded-3 shadow about-img about-img--top" alt="Usmani Academy at an event">
+            <img :src="about25" class="rounded-3 shadow about-img-main" alt="Usmani Academy at an event">
+            <img :src="about26" class="about-img-inset" alt="Usmani Academy team">
           </div>
         </b-col>
       </b-row>
@@ -40,41 +40,22 @@ import about26 from '@/assets/images/about/26.jpg';
 .about-images {
   position: relative;
 }
-.about-img {
+/* Big image fills the space */
+.about-img-main {
+  width: 100%;
   display: block;
   object-fit: cover;
 }
-/* Stacked on mobile */
-.about-img--bottom {
-  width: 85%;
-  margin-left: auto;
-}
-.about-img--top {
-  width: 70%;
-  margin-top: -2.5rem;
+/* Small photo sitting on the big image, bottom-left corner */
+.about-img-inset {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  width: 40%;
   border: 4px solid #fff;
-}
-/* Overlap on tablet and up */
-@media (min-width: 768px) {
-  .about-images {
-    min-height: 540px;
-  }
-  /* bottom image nudged down (top:44%) and ~5% smaller so it stays fully visible */
-  .about-img--bottom {
-    position: absolute;
-    left: 0;
-    top: 44%;
-    width: 65%;
-    z-index: 1;
-    margin: 0;
-  }
-  .about-img--top {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 64%;
-    z-index: 2;
-    margin: 0;
-  }
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  object-fit: cover;
+  z-index: 2;
 }
 </style>

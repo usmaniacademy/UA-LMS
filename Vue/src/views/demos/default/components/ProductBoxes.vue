@@ -4,12 +4,16 @@
     <b-row class="g-3">
       <b-col cols="12" v-for="p in products" :key="p.id">
         <div class="product-card p-3 rounded-4 h-100" role="button" @click="open(p)">
-          <div class="d-flex align-items-center gap-2 mb-1">
+          <div class="d-flex align-items-center gap-3">
             <img :src="p.favicon" class="product-fav flex-shrink-0" :alt="p.title">
-            <h6 class="mb-0">{{ p.title }}</h6>
-            <BIconArrowUpRight class="ms-auto text-primary" />
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center">
+                <h6 class="mb-0">{{ p.title }}</h6>
+                <BIconArrowUpRight class="ms-auto text-primary" />
+              </div>
+              <p class="mb-0 product-text mt-1">{{ p.cardText }}</p>
+            </div>
           </div>
-          <p class="mb-0 product-text">{{ p.cardText }}</p>
         </div>
       </b-col>
     </b-row>
@@ -48,7 +52,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import { BIconArrowUpRight, BIconCheckCircleFill, BIconX } from 'bootstrap-icons-vue';
+import { BIconArrowUpRight, BIconBuildingFill, BIconCheckCircleFill, BIconCpuFill, BIconX } from 'bootstrap-icons-vue';
 
 import sarkaarImg from '@/assets/images/about/sarkaar.png';
 import roboImg from '@/assets/images/about/ai robo.png';
@@ -140,12 +144,12 @@ function open(p: Product) {
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
 }
 .product-fav {
-  width: 40px;
-  height: 40px;
-  border-radius: 0.5rem;
+  width: 52px;
+  height: 52px;
+  border-radius: 0.6rem;
   object-fit: contain;
   background: #fff;
-  padding: 3px;
+  padding: 4px;
 }
 .product-text {
   color: #454545;
