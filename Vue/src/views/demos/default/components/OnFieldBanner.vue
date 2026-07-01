@@ -40,18 +40,17 @@
 import CustomTinySlider from '@/components/CustomTinySlider.vue';
 import type { TinySliderSettings } from 'tiny-slider';
 
-// Slide background images — replace these files (or repoint the imports) with your own.
-// Place your images in: Vue/src/assets/images/bg/
-import bg01 from '@/assets/images/bg/01.jpg';
-import bg02 from '@/assets/images/bg/02.jpg';
-import bg03 from '@/assets/images/bg/03.jpg';
-import bg04 from '@/assets/images/bg/04.jpg';
+// Slide background images (in Vue/src/assets/images/bg/), one per slide title.
+import bgLearning from '@/assets/images/bg/UA learing center.jpg';
+import bgRobo from '@/assets/images/bg/ai-robovision.jpg';
+import bgManagement from '@/assets/images/bg/ai powered school management.jpg';
+import bgSupport from '@/assets/images/bg/On-demand-technical-support.jpg';
 
 const slides = [
-  { title: 'UA Learning Center', bg: bg01 },
-  { title: 'AI RoboVision', bg: bg02 },
-  { title: 'AI Powered School Management Solutions', bg: bg03 },
-  { title: 'On-Field Technical Support', bg: bg04 },
+  { title: 'UA Learning Center', bg: bgLearning },
+  { title: 'AI RoboVision', bg: bgRobo },
+  { title: 'AI Powered School Management Solutions', bg: bgManagement },
+  { title: 'On-Field Technical Support', bg: bgSupport },
 ];
 
 const settings: TinySliderSettings = {

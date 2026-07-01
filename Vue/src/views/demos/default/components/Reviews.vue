@@ -183,7 +183,7 @@
           </b-row>
         </b-col>
         <b-col xl="5" class="order-1 text-center text-xl-start">
-          <h2 class="fs-1">Some valuable feedback from our students</h2>
+          <h2 class="fs-1">Voices from Our Community</h2>
           <p>Supposing so be resolving breakfast am or perfectly. It drew a hill from me. Valley by oh twenty direct me
             so. Departure defective arranging rapturous did believe him all had supported. Family months lasted simple
             set nature vulgar him. Picture for attempt joy excited ten carried manners talking how.</p>

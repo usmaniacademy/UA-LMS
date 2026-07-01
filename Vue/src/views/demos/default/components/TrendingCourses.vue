@@ -3,8 +3,8 @@
     <b-container>
       <b-row class="mb-4">
         <b-col lg="8" class="mx-auto text-center">
-          <h2 class="fs-1">Our Trending Courses</h2>
-          <p class="mb-0">Check out most 🔥 courses in the market</p>
+          <h2 class="fs-1">Explore Our Courses</h2>
+          <p class="mb-0">Islamic Studies, Science, and Technology — taught by qualified instructors.</p>
         </b-col>
       </b-row>
       <b-row>

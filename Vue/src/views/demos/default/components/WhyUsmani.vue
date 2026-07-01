@@ -65,25 +65,25 @@ const points = [
     title: 'Built for Islamic Schools',
     desc: 'Islamic framing by default, not as an afterthought. From Hifdh tracking to halal-compliant finance workflows.',
     icon: BIconBuildingFill,
-    bg: 'bg-warning'
+    bg: 'bg-blue'
   },
   {
     title: 'AI-Native from Day One',
     desc: 'Not legacy software with AI bolted on. Sarkaar was built as an agentic platform from the ground up.',
     icon: BIconCpuFill,
-    bg: 'bg-info'
+    bg: 'bg-blue'
   },
   {
     title: 'Deployed and Proven',
     desc: 'Active pilots and partnerships with Islamic schools across the United States.',
     icon: BIconPatchCheckFill,
-    bg: 'bg-danger'
+    bg: 'bg-blue'
   },
   {
     title: 'Onsite + Online',
     desc: 'AI RoboVision brings our instructors to your campus. Online courses bring our faculty to your screen.',
     icon: BIconLaptop,
-    bg: 'bg-purple'
+    bg: 'bg-blue'
   }
 ];
 </script>

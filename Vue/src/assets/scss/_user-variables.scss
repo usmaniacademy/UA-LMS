@@ -15,6 +15,11 @@ $gold:        #D4AF37; // Premium highlights, star ratings, CTA borders, price b
 $body-bg:     #F8FAFC; // Page background
 $body-color:  #1F2937; // Body text, labels, table content
 
+// Font — Google Sans across the whole site
+$font-family-sans-serif: 'Google Sans', 'Heebo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+$font-family-base:       $font-family-sans-serif;
+$headings-font-family:   'Google Sans', 'Heebo', sans-serif;
+
 // theme colors map — register $gold so `bg-gold`, `text-gold`, `btn-gold` utilities work
 $theme-colors: ();
 $theme-colors: map-merge(

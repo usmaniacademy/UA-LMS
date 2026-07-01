@@ -17,7 +17,7 @@
         </b-col>
 
         <b-col lg="6" xl="4" xxl="5" class="text-center position-relative">
-          <h1 class="display-6">Discover best classes for the best learning</h1>
+          <h1 class="display-6">Usmani Academy<br>Teaching and Learning for Understanding</h1>
           <figure class="position-absolute top-0 start-100 translate-middle pe-7 pb-4">
             <svg width="94.5px" height="67.6px" viewBox="0 0 94.5 67.6">
               <path class="fill-purple" d="M15.1,3.4c-0.3,0.4-0.4,1-0.1,1.5l2,3.2l-1.3,1.7c-1-0.2-1.9,0.2-2.5,1c-0.5,0.7-0.6,1.6-0.3,2.4l-9.2,9.5
@@ -39,20 +39,12 @@
 							C57.5,58.1,60.8,63.5,59.8,64.9z" />
             </svg>
           </figure>
-          <p>Online learning and teaching marketplace with 5K+ courses & 10M students. Taught by experts to help you
-            acquire new skills.</p>
+          <p>We build AI-powered tools for Islamic schools and deliver world-class technology education to students everywhere — rooted in Islamic values.</p>
 
           <div class="d-sm-flex align-items-center justify-content-center">
-            <a href="#" class="btn btn-lg btn-warning me-2 mb-4 mb-sm-0">View Courses
+            <router-link :to="{ name: 'courses.list' }" class="btn btn-lg btn-primary me-2 mb-4 mb-sm-0">View Courses
               <BIconArrowRight class="ms-2" />
-            </a>
-            <div class="d-flex align-items-center justify-content-center py-2 ms-0 ms-sm-4">
-              <CustomGLightbox link="https://www.youtube.com/embed/tXHviS-4ygo"
-                class="btn btn-lg btn-round btn-light mb-0 overflow-visible me-7">
-                <font-awesome-icon :icon="faPlay" />
-                <h6 class="mb-0 ms-2 fw-normal position-absolute start-100 top-50 translate-middle-y">Watch video</h6>
-              </CustomGLightbox>
-            </div>
+            </router-link>
           </div>
         </b-col>
 
@@ -66,15 +58,7 @@
               <img :src="bg02" class="rounded-3 mb-5" alt="">
               <img :src="bg03" class="rounded-3 mb-n5" alt="">
 
-              <b-card no-body
-                class="p-3 card-body shadow position-absolute top-0 start-0 translate-middle z-index-1 d-none d-xxl-block mt-6 ms-n7">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="icon-md text-bg-orange rounded-2 flex-shrink-0 flex-centered">
-                    <BIconStarFill />
-                  </div>
-                  <h6 class="mb-0 small mb-0 ms-3">Over 1M Students have given a five star review to their tutors</h6>
-                </div>
-              </b-card>
+
             </b-col>
 
             <b-col cols="3">
@@ -92,14 +76,15 @@ import CustomGLightbox from '@/components/CustomGLightbox.vue';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { BIconStarFill, BIconArrowRight } from 'bootstrap-icons-vue';
 
-import bg07 from '@/assets/images/bg/3by4/07.jpg';
-import bg06 from '@/assets/images/bg/3by4/06.jpg';
-import bg05 from '@/assets/images/bg/3by4/05.jpg';
-import bg01 from '@/assets/images/bg/3by4/01.jpg';
-import bg02 from '@/assets/images/bg/3by4/02.jpg';
-import bg03 from '@/assets/images/bg/3by4/03.jpg';
-import bg04 from '@/assets/images/bg/3by4/04.jpg';
-import bg08 from '@/assets/images/bg/3by4/08.jpg';
+// Hero collage — the images you added to bg/3by4/ (1,2,4,5,6,7,8).
+import bg01 from '@/assets/images/bg/3by4/1.jpg';
+import bg02 from '@/assets/images/bg/3by4/2.jpg';
+import bg03 from '@/assets/images/bg/3by4/4.jpg';
+import bg04 from '@/assets/images/bg/3by4/5.jpg';
+import bg05 from '@/assets/images/bg/3by4/6.jpg';
+import bg06 from '@/assets/images/bg/3by4/7.jpg';
+import bg07 from '@/assets/images/bg/3by4/8.jpg';
+import bg08 from '@/assets/images/bg/3by4/2.jpg';
 
 import element17 from '@/assets/images/element/17.svg';
 </script>
