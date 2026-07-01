@@ -59,9 +59,17 @@ const row2: Testimonial[] = [
   { text: 'Onsite training and ongoing support meant our teachers were confident from day one.', name: 'Omar T.', role: 'Vice Principal', color: '#EA580C' },
 ];
 
-// Duplicate each row so the marquee loops seamlessly
-const row1Loop = [...row1, ...row1];
-const row2Loop = [...row2, ...row2];
+// Repeat each row several times so that (a) one half is always wider than the
+// screen — no blank gap on wide monitors — and (b) the count stays even, so the
+// -50% slide lands exactly on an identical copy = seamless, gap-free loop.
+const REPEAT = 6;
+function loop(arr: Testimonial[]): Testimonial[] {
+  const out: Testimonial[] = [];
+  for (let i = 0; i < REPEAT; i++) out.push(...arr);
+  return out;
+}
+const row1Loop = loop(row1);
+const row2Loop = loop(row2);
 
 function initials(name: string) {
   const p = name.trim().split(/\s+/);
@@ -71,6 +79,8 @@ function initials(name: string) {
 <style scoped>
 .marquee {
   overflow: hidden;
+  /* vertical room so the cards' bottom border + shadow aren't clipped */
+  padding: 14px 0;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
@@ -99,11 +109,10 @@ function initials(name: string) {
   flex: 0 0 auto;
   width: 360px;
   margin-right: 1.5rem;
-  background: var(--bs-body-bg);
-  border: 1px solid var(--bs-border-color);
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.16);
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
 }
 .t-quote {
   font-size: 2.5rem;
