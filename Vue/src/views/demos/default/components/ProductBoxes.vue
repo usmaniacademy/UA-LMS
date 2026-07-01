@@ -2,14 +2,14 @@
   <div>
     <p class="fw-bold mb-3">We operate two core products:</p>
     <b-row class="g-3">
-      <b-col sm="6" v-for="p in products" :key="p.id">
+      <b-col cols="12" v-for="p in products" :key="p.id">
         <div class="product-card p-3 rounded-4 h-100" role="button" @click="open(p)">
           <div class="d-flex align-items-center gap-2 mb-1">
-            <span class="product-icon flex-shrink-0"><component :is="p.icon" /></span>
+            <img :src="p.favicon" class="product-fav flex-shrink-0" :alt="p.title">
             <h6 class="mb-0">{{ p.title }}</h6>
             <BIconArrowUpRight class="ms-auto text-primary" />
           </div>
-          <p class="mb-0 text-muted small">{{ p.cardText }}</p>
+          <p class="mb-0 product-text">{{ p.cardText }}</p>
         </div>
       </b-col>
     </b-row>
@@ -48,12 +48,12 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-  BIconArrowUpRight, BIconBuildingFill, BIconCpuFill, BIconCheckCircleFill, BIconX
-} from 'bootstrap-icons-vue';
+import { BIconArrowUpRight, BIconCheckCircleFill, BIconX } from 'bootstrap-icons-vue';
 
 import sarkaarImg from '@/assets/images/about/sarkaar.png';
 import roboImg from '@/assets/images/about/ai robo.png';
+import sarkaarFav from '@/assets/images/about/sarkaar-favicon.png';
+import roboFav from '@/assets/images/about/AI ROBOVISION-favicon.png';
 
 interface Product {
   id: string;
@@ -61,13 +61,13 @@ interface Product {
   cardText: string;
   heading: string;
   image: string;
+  favicon: string;
   description: string;
   featuresLabel: string;
   features: string[];
   footer: string;
   link: string;
   linkLabel: string;
-  icon: any;
 }
 
 const products: Product[] = [
@@ -77,6 +77,7 @@ const products: Product[] = [
     cardText: 'An AI-powered school management platform built specifically for Islamic and private schools.',
     heading: 'Sarkaar — AI-Powered School Management',
     image: sarkaarImg,
+    favicon: sarkaarFav,
     description:
       'Sarkaar is an agentic school management platform built for Islamic and private schools. From admissions and attendance to finance, parent communications, and academic analytics — Sarkaar handles the operations so your staff can focus on the students.',
     featuresLabel: 'What Sarkaar covers:',
@@ -101,6 +102,7 @@ const products: Product[] = [
     cardText: 'A K–12 curriculum marketplace covering AI, robotics, IoT, and immersive technology with Islamic ethical framing.',
     heading: 'AI RoboVision — K–12 Technology Curriculum',
     image: roboImg,
+    favicon: roboFav,
     description:
       'AI RoboVision is a curriculum marketplace for K–12 schools covering Artificial Intelligence, Robotics, IoT, and Immersive Technology. Designed with Islamic ethical framing, it gives schools a plug-and-play path to bring emerging tech into every grade level — with full teacher training and support included.',
     featuresLabel: 'What AI RoboVision includes:',
@@ -137,16 +139,17 @@ function open(p: Product) {
   background: rgba(var(--bs-primary-rgb), 0.1);
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
 }
-.product-icon {
+.product-fav {
   width: 40px;
   height: 40px;
-  border-radius: 0.7rem;
-  background: var(--bs-primary);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.05rem;
+  border-radius: 0.5rem;
+  object-fit: contain;
+  background: #fff;
+  padding: 3px;
+}
+.product-text {
+  color: #454545;
+  font-size: 0.9rem;
 }
 .btn-close-x {
   position: absolute;
