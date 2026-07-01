@@ -8,6 +8,8 @@
 
     <About />
 
+    <Products />
+
     <TrendingCourses />
 
     <OnFieldBanner />
@@ -26,6 +28,7 @@ import TopBar1 from '@/views/demos/default/components/TopBar1.vue';
 import HeroCarousel from '@/views/demos/default/components/HeroCarousel.vue';
 import Counter from '@/views/demos/default/components/Counter.vue';
 import About from '@/views/demos/school/components/About.vue';
+import Products from '@/views/demos/default/components/Products.vue';
 import TrendingCourses from '@/views/demos/default/components/TrendingCourses.vue';
 import OnFieldBanner from '@/views/demos/default/components/OnFieldBanner.vue';
 import Instructors from '@/views/demos/default/components/Instructors.vue';
