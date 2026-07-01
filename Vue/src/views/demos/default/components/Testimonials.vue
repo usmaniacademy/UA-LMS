@@ -76,7 +76,6 @@ function initials(name: string) {
 }
 .marquee__track {
   display: flex;
-  gap: 1.5rem;
   width: max-content;
 }
 .marquee__track--left {
@@ -99,6 +98,7 @@ function initials(name: string) {
 .t-card {
   flex: 0 0 auto;
   width: 360px;
+  margin-right: 1.5rem;
   background: var(--bs-body-bg);
   border: 1px solid var(--bs-border-color);
   border-radius: 1rem;
