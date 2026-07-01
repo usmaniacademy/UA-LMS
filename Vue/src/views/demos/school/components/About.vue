@@ -8,9 +8,6 @@
           <p class="mt-4 mb-0">Usmani Academy is an Islamic EdTech organization building the infrastructure for the next
             generation of Muslim education — in classrooms, on campuses, and online.
             <br><br>
-            We operate two core products — <b>Sarkaar</b> and <b>AI RoboVision</b> — that give Islamic schools the tools
-            to run smarter operations and deliver future-ready education, without compromising their values.
-            <br><br>
             Alongside our products, we offer online courses in Islamic Studies, Science, and Technology for learners
             worldwide — taught by qualified instructors with deep subject expertise. We are based in Wichita, Kansas, and
             have been deployed in Islamic schools across the United States.
@@ -57,13 +54,14 @@ import about26 from '@/assets/images/about/26.jpg';
 /* Overlap on tablet and up */
 @media (min-width: 768px) {
   .about-images {
-    min-height: 460px;
+    min-height: 540px;
   }
+  /* bottom image nudged down (top:44%) and ~5% smaller so it stays fully visible */
   .about-img--bottom {
     position: absolute;
     left: 0;
-    bottom: 0;
-    width: 70%;
+    top: 44%;
+    width: 65%;
     z-index: 1;
     margin: 0;
   }
@@ -71,7 +69,7 @@ import about26 from '@/assets/images/about/26.jpg';
     position: absolute;
     top: 0;
     right: 0;
-    width: 68%;
+    width: 64%;
     z-index: 2;
     margin: 0;
   }

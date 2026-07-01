@@ -3,22 +3,20 @@
     <b-container>
       <b-row class="mb-4">
         <b-col lg="8" class="mx-auto text-center">
-          <h2 class="fs-1 fw-bold">Our Two Core Products</h2>
-          <p class="mb-0">Built specifically for Islamic and private schools. Click a product to learn more.</p>
+          <h2 class="fs-1 fw-bold">We operate two core products</h2>
+          <p class="mb-0">Click a product to learn more.</p>
         </b-col>
       </b-row>
 
       <b-row class="g-4 justify-content-center">
         <b-col md="6" v-for="p in products" :key="p.id">
           <div class="product-card p-4 rounded-4 h-100" role="button" @click="open(p)">
-            <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-2 mb-2">
               <span class="product-icon flex-shrink-0"><component :is="p.icon" /></span>
-              <div>
-                <h5 class="mb-1">{{ p.title }}</h5>
-                <p class="mb-0 text-muted small">{{ p.subtitle }}</p>
-              </div>
+              <h5 class="mb-0">{{ p.title }}</h5>
               <BIconArrowUpRight class="ms-auto text-primary fs-5" />
             </div>
+            <p class="mb-0 text-muted">{{ p.cardText }}</p>
           </div>
         </b-col>
       </b-row>
@@ -69,6 +67,7 @@ interface Product {
   id: string;
   title: string;
   subtitle: string;
+  cardText: string;
   heading: string;
   image: string;
   description: string;
@@ -85,6 +84,7 @@ const products: Product[] = [
     id: 'sarkaar',
     title: 'Sarkaar',
     subtitle: 'AI-Powered School Management',
+    cardText: 'An AI-powered school management platform built specifically for Islamic and private schools.',
     heading: 'Sarkaar — AI-Powered School Management',
     image: sarkaarImg,
     description:
@@ -109,6 +109,7 @@ const products: Product[] = [
     id: 'robovision',
     title: 'AI RoboVision',
     subtitle: 'K–12 Technology Curriculum',
+    cardText: 'A K–12 curriculum marketplace covering AI, robotics, IoT, and immersive technology with Islamic ethical framing.',
     heading: 'AI RoboVision — K–12 Technology Curriculum',
     image: roboImg,
     description:
