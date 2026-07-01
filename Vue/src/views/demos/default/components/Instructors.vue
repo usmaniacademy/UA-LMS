@@ -13,9 +13,12 @@
           <div v-for="(item, idx) in instructors" :key="idx" class="px-2">
             <b-card no-body class="bg-transparent">
               <div class="position-relative overflow-hidden rounded-3">
-                <img :src="item.image" class="card-img" alt="instructor">
+                <img v-if="item.image" :src="item.image" class="instructor-img" :alt="item.name">
+                <div v-else class="instructor-img instructor-placeholder d-flex align-items-center justify-content-center">
+                  <span class="display-6 text-white fw-bold">{{ initials(item.name) }}</span>
+                </div>
               </div>
-              <b-card-body class="text-center">
+              <b-card-body class="text-center px-1">
                 <b-card-title tag="h5" class="mb-1">{{ item.name }}</b-card-title>
                 <p class="mb-0 text-primary">{{ item.subject }}</p>
               </b-card-body>
@@ -30,21 +33,24 @@
 import CustomTinySlider from '@/components/CustomTinySlider.vue';
 import type { TinySliderSettings } from 'tiny-slider';
 
-// Placeholder faculty — replace names, photos, and subjects with your real instructors.
-// Photos live in: Vue/src/assets/images/instructor/
-import instructor01 from '@/assets/images/instructor/01.jpg';
-import instructor02 from '@/assets/images/instructor/02.jpg';
-import instructor03 from '@/assets/images/instructor/03.jpg';
-import instructor04 from '@/assets/images/instructor/04.jpg';
-import instructor08 from '@/assets/images/instructor/08.jpg';
+// Instructor photos live in Vue/src/assets/images/instructor/
+import qasmi from '@/assets/images/instructor/Qari Muhammed Imran Qasmi.jpeg';
+import syed from '@/assets/images/instructor/Luqman Syed.jpeg';
+import khan from '@/assets/images/instructor/Sophia Khan.jpeg';
+import siddiqui from '@/assets/images/instructor/Irfan Siddiqui.jpeg';
 
 const instructors = [
-  { image: instructor02, name: 'Ustadha Sophia', subject: 'Islamic Studies' },
-  { image: instructor01, name: 'Ustadh Ahmad', subject: "Qur'an & Tajweed" },
-  { image: instructor08, name: 'Dr. Ibrahim', subject: 'Astronomy' },
-  { image: instructor04, name: 'Sr. Aisha', subject: 'Science' },
-  { image: instructor03, name: 'Br. Yusuf', subject: 'Technology' },
+  { name: 'Qari Muhammed Imran Qasmi', subject: 'Tajweed Al Quran — Brothers', image: qasmi },
+  { name: 'Luqman Syed', subject: 'Computer Networks', image: syed },
+  { name: 'Sophia Khan', subject: 'Asma Ul Husna', image: khan },
+  { name: 'Aisha Usmani', subject: 'Tajweed Al Quran — Sisters', image: '' }, // photo to be added later
+  { name: 'Irfan Siddiqui', subject: 'Eye in the Sky', image: siddiqui },
 ];
+
+function initials(name: string) {
+  const parts = name.trim().split(/\s+/);
+  return ((parts[0]?.[0] || '') + (parts[parts.length - 1]?.[0] || '')).toUpperCase();
+}
 
 const settings: TinySliderSettings = {
   arrowKeys: true,
@@ -67,3 +73,14 @@ const settings: TinySliderSettings = {
   },
 };
 </script>
+<style scoped>
+.instructor-img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+.instructor-placeholder {
+  background: var(--bs-primary);
+}
+</style>
