@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-6 pt-xxl-5 pb-0 overflow-hidden">
+  <section class="pt-5 pt-xxl-4 pb-0 overflow-hidden">
     <!-- Heading + text + CTA (centered) -->
     <b-container>
       <b-row class="justify-content-center text-center">
@@ -7,7 +7,7 @@
           <h1 class="display-5">Usmani Academy — Teaching and Learning for Understanding</h1>
           <p class="lead mb-4">We build AI-powered tools for Islamic schools and deliver world-class technology
             education to students everywhere — rooted in Islamic values.</p>
-          <div class="d-flex gap-2 justify-content-center mb-5">
+          <div class="d-flex gap-2 justify-content-center mb-0">
             <router-link :to="{ name: 'courses.list' }" class="btn btn-lg btn-primary mb-0">
               View Courses <BIconArrowRight class="ms-2" />
             </router-link>
@@ -49,6 +49,6 @@ const images = [...base, ...base];
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  padding: 2.5rem 0 3.5rem;
+  padding: 40px 0 3rem; /* ~40px gap between the content and the carousel */
 }
 </style>
