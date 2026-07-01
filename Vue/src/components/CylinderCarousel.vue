@@ -28,16 +28,20 @@ const props = withDefaults(
     animationDuration?: number
     /** Card width in pixels */
     cardWidth?: number
+    /** Card aspect ratio (width / height). Smaller = taller cards. */
+    cardAspect?: string
+    /** Min height of the stage in pixels (grow this when cards get taller). */
+    minHeight?: number
     /** Fade the left/right edges. Turn off to let cards run to the screen edges. */
     edgeFade?: boolean
   }>(),
-  { animationDuration: 32, cardWidth: 250, edgeFade: true }
+  { animationDuration: 32, cardWidth: 250, cardAspect: '7 / 10', minHeight: 525, edgeFade: true }
 )
 
 const n = computed(() => props.images.length || 1)
 
 const viewportStyle = computed(() => {
-  const style: Record<string, string> = { perspective: '70em' }
+  const style: Record<string, string> = { perspective: '70em', minHeight: `${props.minHeight}px` }
   if (props.edgeFade) {
     const mask = 'linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%)'
     style.maskImage = mask
@@ -57,7 +61,7 @@ function cardStyle(i: number) {
   return {
     '--i': String(i),
     width: 'var(--w)',
-    aspectRatio: '7 / 10',
+    aspectRatio: props.cardAspect,
     transform:
       'rotateY(calc(var(--i) * var(--ba))) translateZ(calc(-1 * (0.5 * var(--w) + 0.5em) / tan(0.5 * var(--ba))))'
   } as Record<string, string>
