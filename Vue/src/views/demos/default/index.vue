@@ -16,7 +16,7 @@
 
     <WhyUsmani />
 
-    <Reviews />
+    <Testimonials />
 
   </main>
   <Footer1 />
@@ -30,6 +30,6 @@ import TrendingCourses from '@/views/demos/default/components/TrendingCourses.vu
 import OnFieldBanner from '@/views/demos/default/components/OnFieldBanner.vue';
 import Instructors from '@/views/demos/default/components/Instructors.vue';
 import WhyUsmani from '@/views/demos/default/components/WhyUsmani.vue';
-import Reviews from '@/views/demos/default/components/Reviews.vue';
+import Testimonials from '@/views/demos/default/components/Testimonials.vue';
 import Footer1 from '@/views/demos/default/components/Footer1.vue';
 </script>
