@@ -35,9 +35,9 @@ const props = withDefaults(
 const n = computed(() => props.images.length || 1)
 
 const viewportStyle = computed(() => ({
-  perspective: '35em',
-  maskImage: 'linear-gradient(90deg, transparent, #000 20% 80%, transparent)',
-  WebkitMaskImage: 'linear-gradient(90deg, transparent, #000 20% 80%, transparent)'
+  perspective: '38em',
+  maskImage: 'linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%)',
+  WebkitMaskImage: 'linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%)'
 }))
 
 const ringStyle = computed(() => ({

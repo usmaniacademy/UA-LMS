@@ -41,10 +41,11 @@ const images = [
 ];
 </script>
 <style scoped>
-/* Full-bleed dark stage so the 3D carousel pops, like the reference */
+/* Full-bleed stage — stretches the carousel edge to edge, no background */
 .hero-stage {
-  width: 100%;
-  background: radial-gradient(120% 120% at 50% 0%, #12121a 0%, #0a0a0f 70%);
-  padding: 3.5rem 0 4.5rem;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 2.5rem 0 3.5rem;
 }
 </style>
