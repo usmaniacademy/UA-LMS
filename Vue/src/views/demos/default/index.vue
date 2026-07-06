@@ -55,4 +55,12 @@ import Footer1 from '@/views/demos/default/components/Footer1.vue';
 .home-bg > main {
   background-color: transparent;
 }
+
+/* Frosted-glass sticky header: translucent + blurred so the pattern shows
+   through it while the nav links stay readable (both static and stuck states). */
+.home-bg :deep(header.navbar-sticky) {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
 </style>

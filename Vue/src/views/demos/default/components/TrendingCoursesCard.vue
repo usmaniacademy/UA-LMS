@@ -1,5 +1,5 @@
 <template>
-  <b-card no-body class="action-trigger-hover border bg-transparent">
+  <b-card no-body class="action-trigger-hover border course-glass">
     <img :src="item.image" class="card-img-top" alt="course">
     <div class="ribbon mt-3" v-if="item.ribbon"><span>{{ item.ribbon }}</span></div>
     <b-card-body class="pb-0">
@@ -74,3 +74,12 @@ defineProps({
   }
 });
 </script>
+<style scoped>
+/* Frosted glass: translucent + blurred so the pattern shows through softly
+   while the card content stays readable. */
+.course-glass {
+  background-color: rgba(255, 255, 255, 0.65) !important;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+</style>

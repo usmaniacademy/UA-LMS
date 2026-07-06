@@ -134,13 +134,15 @@ function open(p: Product) {
 </script>
 <style scoped>
 .product-card {
-  background: rgba(var(--bs-primary-rgb), 0.06);
-  border: 1px solid rgba(var(--bs-primary-rgb), 0.15);
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(var(--bs-primary-rgb), 0.2);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 .product-card:hover {
   transform: translateY(-3px);
-  background: rgba(var(--bs-primary-rgb), 0.1);
+  background: rgba(255, 255, 255, 0.72);
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
 }
 .product-fav {
