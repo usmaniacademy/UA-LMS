@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-5 pt-xxl-4 pb-0 overflow-hidden">
+  <section class="pt-6 pt-xxl-7 pb-0 overflow-hidden">
     <!-- Heading + text + CTA (centered) -->
     <b-container>
       <b-row class="justify-content-center text-center">
