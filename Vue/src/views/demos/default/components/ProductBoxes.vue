@@ -134,9 +134,9 @@ function open(p: Product) {
 </script>
 <style scoped>
 .product-card {
-  background: rgba(255, 255, 255, 0.4);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.6);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   border: 1px solid rgba(var(--bs-primary-rgb), 0.2);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }

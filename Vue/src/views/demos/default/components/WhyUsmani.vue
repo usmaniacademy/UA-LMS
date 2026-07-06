@@ -6,7 +6,7 @@
         <b-col lg="6" class="mb-3 mb-lg-0">
           <b-row class="mt-4 mt-md-0">
             <b-col cols="12" class="position-relative">
-              <img class="rounded w-100" :src="about01" alt="">
+              <img class="rounded w-100" :src="about25" alt="">
             </b-col>
             <b-col cols="8" sm="5" class="mt-n6 align-items-end position-relative">
               <b-card no-body class="p-3 card-body shadow rounded-3 d-inline-block position-relative mt-n2">
@@ -54,7 +54,7 @@
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { BIconShieldCheck, BIconBuildingFill, BIconCpuFill, BIconPatchCheckFill, BIconLaptop } from 'bootstrap-icons-vue';
 
-import about01 from '@/assets/images/about/01.jpg';
+import about25 from '@/assets/images/about/25.jpg';
 
 const points = [
   {

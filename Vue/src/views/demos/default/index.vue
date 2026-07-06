@@ -63,4 +63,9 @@ import Footer1 from '@/views/demos/default/components/Footer1.vue';
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
+
+/* Breathing room between the last section and the footer */
+.home-bg :deep(footer) {
+  margin-top: 4rem;
+}
 </style>
