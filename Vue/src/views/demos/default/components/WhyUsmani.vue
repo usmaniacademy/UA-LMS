@@ -34,7 +34,7 @@
 
           <b-row class="g-4">
             <b-col cols="12" v-for="(point, i) in points" :key="i">
-              <div class="d-flex">
+              <div class="point-card d-flex align-items-center">
                 <div class="icon-md fs-5 text-white rounded flex-centered flex-shrink-0" :class="point.bg">
                   <component :is="point.icon" />
                 </div>
@@ -83,3 +83,15 @@ const points = [
   }
 ];
 </script>
+<style scoped>
+/* Frosted-glass card for each point (same treatment as the product cards),
+   with padding so the text is inset and doesn't run to the corners. */
+.point-card {
+  background: rgba(255, 255, 255, 0.6);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(var(--bs-primary-rgb), 0.2);
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+}
+</style>
