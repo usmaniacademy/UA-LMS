@@ -1,7 +1,7 @@
 <template>
   <section class="pt-0 pt-md-5">
     <b-container>
-      <b-row class="g-md-5 align-items-center">
+      <b-row class="gx-md-5 align-items-start">
         <!-- Left: decorative images -->
         <b-col lg="6" class="mb-3 mb-lg-0">
           <b-row class="mt-4 mt-md-0">
