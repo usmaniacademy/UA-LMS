@@ -48,4 +48,11 @@ import Footer1 from '@/views/demos/default/components/Footer1.vue';
   background-position: center center, center center;
   background-attachment: fixed, fixed;
 }
+
+/* The theme paints an opaque colour on <main>, which was hiding the pattern
+   everywhere except the footer. Make it transparent so the fixed pattern
+   shows through the whole page. */
+.home-bg > main {
+  background-color: transparent;
+}
 </style>
