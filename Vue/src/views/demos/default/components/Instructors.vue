@@ -11,14 +11,14 @@
       <b-row>
         <CustomTinySlider :settings="settings" id="ua-instructors">
           <div v-for="(item, idx) in instructors" :key="idx" class="px-2">
-            <b-card no-body class="bg-transparent">
-              <div class="position-relative overflow-hidden rounded-3">
+            <b-card no-body class="instructor-glass">
+              <div class="position-relative">
                 <img v-if="item.image" :src="item.image" class="instructor-img" :alt="item.name">
                 <div v-else class="instructor-img instructor-placeholder d-flex align-items-center justify-content-center">
                   <span class="display-6 text-white fw-bold">{{ initials(item.name) }}</span>
                 </div>
               </div>
-              <b-card-body class="text-center px-1">
+              <b-card-body class="text-center px-2 py-3">
                 <b-card-title tag="h5" class="mb-1">{{ item.name }}</b-card-title>
                 <p class="mb-0 text-primary">{{ item.subject }}</p>
               </b-card-body>
@@ -74,6 +74,14 @@ const settings: TinySliderSettings = {
 };
 </script>
 <style scoped>
+.instructor-glass {
+  background: rgba(255, 255, 255, 0.88);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
 .instructor-img {
   width: 100%;
   height: 300px;

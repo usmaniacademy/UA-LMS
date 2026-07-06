@@ -75,10 +75,13 @@ defineProps({
 });
 </script>
 <style scoped>
-/* Frosted glass: translucent + blurred so the pattern shows through softly
-   while the card content stays readable. */
+/* Frosted glass. NOTE: the cards live inside the tiny-slider's transformed
+   track, where backdrop-filter blur renders inconsistently (only the first
+   slide picked it up). So we lean on a fairly opaque translucent white — the
+   cards read as a consistent frosted panel across the whole carousel, and the
+   blur still softens things where the browser does honour it. */
 .course-glass {
-  background-color: rgba(255, 255, 255, 0.65) !important;
+  background-color: rgba(255, 255, 255, 0.88) !important;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
