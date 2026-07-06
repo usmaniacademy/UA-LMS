@@ -33,7 +33,7 @@
             school.</p>
 
           <b-row class="g-4">
-            <b-col cols="12" sm="6" v-for="(point, i) in points" :key="i">
+            <b-col cols="12" v-for="(point, i) in points" :key="i">
               <div class="d-flex">
                 <div class="icon-md fs-5 text-white rounded flex-centered flex-shrink-0" :class="point.bg">
                   <component :is="point.icon" />
