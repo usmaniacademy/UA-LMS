@@ -110,6 +110,11 @@ export const useAdminStore = defineStore('admin_store', () => {
     if (idx !== -1) users.value[idx].isActive = data.isActive
   }
 
+  // Full detail for one user (profile + enrolled courses + taught courses)
+  async function fetchUserDetail(userId: string) {
+    return await api.get(`/admin/users/${userId}`)
+  }
+
   async function fetchCourses(params: { status?: string; search?: string; page?: number } = {}) {
     loading.value = true
     try {
@@ -146,7 +151,7 @@ export const useAdminStore = defineStore('admin_store', () => {
   return {
     stats, users, instructors, courses, revenue, loading, error,
     usersPagination, coursesPagination,
-    fetchStats, fetchUsers, toggleUserActive,
+    fetchStats, fetchUsers, toggleUserActive, fetchUserDetail,
     fetchCourses, approveCourse, rejectCourse, fetchRevenue,
     fetchInstructors, createInstructor, createCourse, deleteCourse
   }

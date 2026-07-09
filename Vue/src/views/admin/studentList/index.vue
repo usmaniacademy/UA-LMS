@@ -52,7 +52,11 @@
                       </span>
                     </div>
                     <div class="mb-0 ms-3">
-                      <h6 class="mb-0">{{ user.firstName }} {{ user.lastName }}</h6>
+                      <h6 class="mb-0">
+                        <router-link :to="{ name: 'admin.user.detail', params: { id: user.id } }" class="text-reset text-primary-hover">
+                          {{ user.firstName }} {{ user.lastName }}
+                        </router-link>
+                      </h6>
                       <span class="badge" :class="user.isActive ? 'bg-success-soft text-success' : 'bg-danger-soft text-danger'">
                         {{ user.isActive ? 'Active' : 'Blocked' }}
                       </span>

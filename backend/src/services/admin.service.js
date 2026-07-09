@@ -81,6 +81,46 @@ export async function changeUserRole(userId, role) {
   })
 }
 
+// Full detail for one user: profile + the courses they're enrolled in (as a
+// student) and the courses they teach (as an instructor).
+export async function getUserDetail(userId) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true, firstName: true, lastName: true, email: true, role: true,
+      isActive: true, avatarUrl: true, bio: true, createdAt: true
+    }
+  })
+  if (!user) throw Object.assign(new Error('User not found'), { status: 404 })
+
+  const enrollments = await prisma.enrollment.findMany({
+    where: { studentId: userId },
+    select: {
+      id: true, enrolledAt: true,
+      course: {
+        select: {
+          id: true, title: true, slug: true, thumbnailUrl: true, category: true, level: true,
+          instructor: { select: { firstName: true, lastName: true } }
+        }
+      }
+    },
+    orderBy: { enrolledAt: 'desc' }
+  })
+
+  const taughtCourses = user.role === 'instructor'
+    ? await prisma.course.findMany({
+        where: { instructorId: userId, status: { not: 'archived' } },
+        select: {
+          id: true, title: true, slug: true, thumbnailUrl: true, category: true,
+          level: true, status: true, _count: { select: { enrollments: true } }
+        },
+        orderBy: { createdAt: 'desc' }
+      })
+    : []
+
+  return { user, enrollments, taughtCourses }
+}
+
 export async function listCourses({ status, search, page = 1, limit = 20 }) {
   const where = {}
   // Default view hides archived (deleted) courses; admins can still pick "Archived" in the filter.

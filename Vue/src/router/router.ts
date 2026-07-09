@@ -531,6 +531,15 @@ const adminRoutes = [
     component: () => import("@/views/admin/studentList/index.vue"),
   },
   {
+    path: "/admin/users/:id",
+    name: "admin.user.detail",
+    meta: {
+      title: setTitle("User Detail"),
+      authRequired: true
+    },
+    component: () => import("@/views/admin/userDetail/index.vue"),
+  },
+  {
     path: "/admin/instructor-list",
     name: "admin.instructor.list",
     meta: {

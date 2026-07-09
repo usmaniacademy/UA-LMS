@@ -26,6 +26,13 @@ export async function toggleUserActive(req, res, next) {
   } catch (e) { next(e) }
 }
 
+export async function getUserDetail(req, res, next) {
+  try {
+    const data = await adminService.getUserDetail(req.params.userId)
+    res.json(data)
+  } catch (e) { next(e) }
+}
+
 export async function createInstructor(req, res, next) {
   try {
     const { email, password, firstName, lastName } = req.body

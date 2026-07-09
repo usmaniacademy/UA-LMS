@@ -81,7 +81,11 @@
                         {{ initials(user) }}
                       </span>
                     </div>
-                    <h6 class="mb-0 ms-2">{{ user.firstName }} {{ user.lastName }}</h6>
+                    <h6 class="mb-0 ms-2">
+                      <router-link :to="{ name: 'admin.user.detail', params: { id: user.id } }" class="text-reset text-primary-hover">
+                        {{ user.firstName }} {{ user.lastName }}
+                      </router-link>
+                    </h6>
                   </div>
                 </td>
                 <td>{{ user.email }}</td>
