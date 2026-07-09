@@ -147,8 +147,8 @@ export async function publishCourse(courseId, instructorId, isAdmin = false) {
   const course = await prisma.course.findUnique({ where: { id: courseId } })
   if (!course) throw ApiError.notFound('Course not found')
   if (!isAdmin && course.instructorId !== instructorId) throw ApiError.forbidden()
-  if (course.status === 'archived') throw ApiError.badRequest('Cannot publish an archived course')
 
+  // Publishing an archived course restores it (un-archives and publishes).
   return prisma.course.update({
     where: { id: courseId },
     data: { status: 'published', isPublished: true }
