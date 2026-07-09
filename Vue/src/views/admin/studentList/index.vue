@@ -2,23 +2,20 @@
   <AdminLayout>
     <b-row class="mb-3">
       <b-col cols="12">
-        <h1 class="h3 mb-2 mb-sm-0">Users</h1>
+        <h1 class="h3 mb-2 mb-sm-0">Students</h1>
       </b-col>
     </b-row>
 
     <b-card no-body class="bg-transparent">
       <b-card-header class="bg-transparent border-bottom px-0">
         <b-row class="g-3 align-items-center justify-content-between">
-          <b-col md="5">
+          <b-col md="6">
             <b-form class="rounded position-relative" @submit.prevent="search">
-              <b-form-input v-model="searchQuery" class="bg-transparent" type="search" placeholder="Search by name or email" />
+              <b-form-input v-model="searchQuery" class="bg-transparent" type="search" placeholder="Search students by name or email" />
               <button class="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset" type="submit">
                 <font-awesome-icon :icon="faSearch" class="fs-6" />
               </button>
             </b-form>
-          </b-col>
-          <b-col md="3">
-            <b-form-select v-model="roleFilter" @change="load" :options="roleOptions" />
           </b-col>
         </b-row>
       </b-card-header>
@@ -120,23 +117,15 @@ function initials(first: string, last: string) {
   return ((first?.[0] || '') + (last?.[0] || '')).toUpperCase()
 }
 const searchQuery = ref('')
-const roleFilter = ref('')
 const page = ref(1)
 const acting = ref<string | null>(null)
-
-const roleOptions = [
-  { value: '', text: 'All Roles' },
-  { value: 'student', text: 'Students' },
-  { value: 'instructor', text: 'Instructors' },
-  { value: 'admin', text: 'Admins' }
-]
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
 }
 
 function load() {
-  adminStore.fetchUsers({ role: roleFilter.value || undefined, search: searchQuery.value || undefined, page: page.value })
+  adminStore.fetchUsers({ role: 'student', search: searchQuery.value || undefined, page: page.value })
 }
 
 function search() { page.value = 1; load() }

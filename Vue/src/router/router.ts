@@ -513,7 +513,7 @@ const adminRoutes = [
     component: () => import("@/views/admin/courses/category/index.vue"),
   },
   {
-    path: "/admin/course-detail",
+    path: "/admin/course-detail/:id",
     name: "admin.course.detail",
     meta: {
       title: setTitle("Course detail"),

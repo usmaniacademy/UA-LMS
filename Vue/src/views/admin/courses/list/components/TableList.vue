@@ -41,7 +41,7 @@
                     <img :src="course.thumbnailUrl || defaultThumb" class="rounded" alt="" />
                   </div>
                   <h6 class="table-responsive-title mb-0 ms-2">
-                    <router-link :to="{ name: 'course.detail.slug', params: { slug: course.slug } }"
+                    <router-link :to="{ name: 'admin.course.detail', params: { id: course.id } }"
                       class="text-reset text-primary-hover">
                       {{ course.title }}
                     </router-link>

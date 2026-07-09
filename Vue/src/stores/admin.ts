@@ -115,6 +115,12 @@ export const useAdminStore = defineStore('admin_store', () => {
     return await api.get(`/admin/users/${userId}`)
   }
 
+  // Full detail for one course (info + instructor + sections/lessons) for the admin detail page
+  async function fetchCourseForAdmin(courseId: string) {
+    const data = await api.get(`/courses/manage/${courseId}`)
+    return data.course
+  }
+
   async function fetchCourses(params: { status?: string; search?: string; page?: number } = {}) {
     loading.value = true
     try {
@@ -152,7 +158,7 @@ export const useAdminStore = defineStore('admin_store', () => {
     stats, users, instructors, courses, revenue, loading, error,
     usersPagination, coursesPagination,
     fetchStats, fetchUsers, toggleUserActive, fetchUserDetail,
-    fetchCourses, approveCourse, rejectCourse, fetchRevenue,
+    fetchCourses, fetchCourseForAdmin, approveCourse, rejectCourse, fetchRevenue,
     fetchInstructors, createInstructor, createCourse, deleteCourse
   }
 })
