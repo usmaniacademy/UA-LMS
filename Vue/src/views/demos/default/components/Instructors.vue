@@ -3,8 +3,8 @@
     <b-container>
       <b-row class="mb-4">
         <b-col lg="8" class="mx-auto text-center">
-          <h2 class="fs-1 fw-bold mb-3">Taught By Educators Who Care</h2>
-          <p class="mb-0">Every course is led by a qualified instructor invested in your understanding.</p>
+          <h2 class="fs-1 fw-bold mb-3">{{ heading }}</h2>
+          <p class="mb-0">{{ subtitle }}</p>
         </b-col>
       </b-row>
 
@@ -32,6 +32,11 @@
 <script setup lang="ts">
 import CustomTinySlider from '@/components/CustomTinySlider.vue';
 import type { TinySliderSettings } from 'tiny-slider';
+
+withDefaults(defineProps<{ heading?: string; subtitle?: string }>(), {
+  heading: 'Taught By Educators Who Care',
+  subtitle: 'Every course is led by a qualified instructor invested in your understanding.'
+});
 
 // Instructor photos live in Vue/src/assets/images/instructor/
 import qasmi from '@/assets/images/instructor/Qari Muhammed Imran Qasmi.jpeg';
