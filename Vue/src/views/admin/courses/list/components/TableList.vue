@@ -40,7 +40,12 @@
                   <div class="w-60px">
                     <img :src="course.thumbnailUrl || defaultThumb" class="rounded" alt="" />
                   </div>
-                  <h6 class="table-responsive-title mb-0 ms-2">{{ course.title }}</h6>
+                  <h6 class="table-responsive-title mb-0 ms-2">
+                    <router-link :to="{ name: 'course.detail.slug', params: { slug: course.slug } }"
+                      class="text-reset text-primary-hover">
+                      {{ course.title }}
+                    </router-link>
+                  </h6>
                 </div>
               </td>
               <td>
