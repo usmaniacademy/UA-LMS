@@ -40,6 +40,13 @@
   border-radius: $border-radius;
 }
 
+// Muted text was near-invisible (#cfd3d7 on white) — make it a readable dark grey
+// site-wide (e.g. emails in the admin user table).
+.text-muted {
+  --bs-text-opacity: 1;
+  color: #292929 !important;
+}
+
 // [data-bs-theme="dark"] {
 //   --bs-primary: #19f032 !important;
 //   --bs-primary-rgb: 25, 240, 50 !important; 

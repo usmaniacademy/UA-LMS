@@ -45,7 +45,11 @@
                 <td>
                   <div class="d-flex align-items-center">
                     <div class="avatar avatar-md">
-                      <img :src="user.avatarUrl || defaultAvatar" class="rounded-circle" alt="" />
+                      <img v-if="user.avatarUrl" :src="user.avatarUrl" class="avatar-img rounded-circle" alt="" />
+                      <span v-else
+                        class="avatar-img rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold">
+                        {{ initials(user.firstName, user.lastName) }}
+                      </span>
                     </div>
                     <div class="mb-0 ms-3">
                       <h6 class="mb-0">{{ user.firstName }} {{ user.lastName }}</h6>
@@ -105,9 +109,12 @@ import { ref, onMounted } from 'vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useAdminStore } from '@/stores/admin'
 import { faSearch, faBan, faCheck, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
-import defaultAvatar from '@/assets/images/avatar/01.jpg'
 
 const adminStore = useAdminStore()
+
+function initials(first: string, last: string) {
+  return ((first?.[0] || '') + (last?.[0] || '')).toUpperCase()
+}
 const searchQuery = ref('')
 const roleFilter = ref('')
 const page = ref(1)

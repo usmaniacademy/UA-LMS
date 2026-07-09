@@ -569,11 +569,6 @@ export const ADMIN_MENU_ITEMS: MenuItemType[] = [
     route: { name: "admin.dashboard" },
   },
   {
-    key: "pages",
-    label: "Pages",
-    isTitle: true,
-  },
-  {
     key: "courses",
     icon: faBasketShopping,
     label: "Courses",
@@ -588,12 +583,6 @@ export const ADMIN_MENU_ITEMS: MenuItemType[] = [
         key: "course-category",
         label: "Course Category",
         route: { name: "admin.course.category" },
-        parentKey: "courses",
-      },
-      {
-        key: "course-detail",
-        label: "Course Detail",
-        route: { name: "admin.course.detail" },
         parentKey: "courses",
       },
     ],
@@ -627,37 +616,6 @@ export const ADMIN_MENU_ITEMS: MenuItemType[] = [
     icon: faUserCog,
     label: "Admin Settings",
     route: { name: "admin.setting" },
-  },
-  {
-    key: "auth",
-    icon: faLock,
-    label: "Authentication",
-    children: [
-      {
-        key: "auth-sign-up",
-        label: "Sign Up",
-        route: { name: "auth.sign-up" },
-        parentKey: "auth",
-      },
-      {
-        key: "auth-sign-in",
-        label: "Sign In",
-        route: { name: "auth.sign-in" },
-        parentKey: "auth",
-      },
-      {
-        key: "auth-forgot-password",
-        label: "Forgot Password",
-        route: { name: "auth.forgot-password" },
-        parentKey: "auth",
-      },
-      {
-        key: "auth-error-404",
-        label: "Error 404",
-        route: { name: "admin.error-404" },
-        parentKey: "auth",
-      },
-    ],
   }
 ];
 
