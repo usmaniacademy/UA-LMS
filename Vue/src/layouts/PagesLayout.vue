@@ -3,11 +3,11 @@
   <main>
     <slot />
   </main>
-  <Footer4 />
+  <Footer1 />
 </template>
 <script setup lang="ts">
 import TopBar8 from '@/layouts/components/TopBar8.vue';
-import Footer4 from '@/layouts/components/Footer4.vue';
+import Footer1 from '@/views/demos/default/components/Footer1.vue';
 
 type PageLayoutPropType = {
   showShopCart?: boolean;
