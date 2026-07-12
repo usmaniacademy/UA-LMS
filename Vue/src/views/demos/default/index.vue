@@ -70,6 +70,14 @@ import Footer1 from '@/views/demos/default/components/Footer1.vue';
   backdrop-filter: blur(9px);
 }
 
+/* Once the header pins on scroll, make it a bit more white (it sits over
+   scrolling content, so a more opaque bar reads cleaner). */
+.home-bg :deep(header.navbar-sticky-on) {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)),
+    url('../../../assets/images/pattern-islamic.svg');
+}
+
 /* Breathing room between the last section and the footer */
 .home-bg :deep(footer) {
   margin-top: 4rem;

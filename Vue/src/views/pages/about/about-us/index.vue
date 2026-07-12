@@ -152,6 +152,12 @@ const offerings = [
   -webkit-backdrop-filter: blur(9px);
   backdrop-filter: blur(9px);
 }
+/* Once the header pins on scroll, make it a bit more white for readability. */
+.about-bg :deep(header.navbar-sticky-on) {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)),
+    url('../../../../assets/images/pattern-islamic.svg');
+}
 .about-bg :deep(footer) {
   margin-top: 4rem;
 }
