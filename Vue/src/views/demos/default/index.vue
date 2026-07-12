@@ -61,7 +61,7 @@ import Footer1 from '@/views/demos/default/components/Footer1.vue';
 .home-bg :deep(header.navbar-sticky) {
   background-color: transparent !important;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
+    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
     url('../../../assets/images/pattern-islamic.svg');
   background-repeat: repeat, repeat;
   background-size: cover, 120px 120px;
