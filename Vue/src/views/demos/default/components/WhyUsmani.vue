@@ -1,27 +1,25 @@
 <template>
   <section class="pt-0 pt-md-5">
     <b-container>
-      <b-row class="gx-md-5 align-items-start">
-        <!-- Left: decorative images -->
-        <b-col lg="6" class="mb-3 mb-lg-0">
-          <b-row class="mt-4 mt-md-0">
-            <b-col cols="12" class="position-relative">
-              <img class="rounded w-100" :src="about25" alt="">
-            </b-col>
-            <b-col cols="8" sm="5" class="mt-n6 align-items-end position-relative">
-              <b-card no-body class="p-3 card-body shadow rounded-3 d-inline-block position-relative mt-n2">
-                <h6 class="mb-2">Deployed &amp; Proven
-                  <span class="ms-1">
-                    <font-awesome-icon :icon="faCheckCircle" class="text-success" />
-                  </span>
-                </h6>
-                <p class="mb-0 small">Active in Islamic schools across the U.S.</p>
-                <div class="icon-lg bg-primary rounded-circle position-absolute top-100 start-100 translate-middle">
-                  <BIconShieldCheck class="text-white" />
-                </div>
-              </b-card>
-            </b-col>
-          </b-row>
+      <b-row class="gx-md-5 align-items-stretch">
+        <!-- Left: image that fills the column height so it lines up with the cards -->
+        <b-col lg="6" class="mb-4 mb-lg-0">
+          <div class="why-media">
+            <div class="why-img-wrap">
+              <img class="why-img" :src="about25" alt="Usmani Academy at an event">
+            </div>
+            <b-card no-body class="why-inset p-3 shadow rounded-3">
+              <h6 class="mb-2">Deployed &amp; Proven
+                <span class="ms-1">
+                  <font-awesome-icon :icon="faCheckCircle" class="text-success" />
+                </span>
+              </h6>
+              <p class="mb-0 small">Active in Islamic schools across the U.S.</p>
+              <div class="icon-lg bg-primary rounded-circle position-absolute top-100 start-100 translate-middle">
+                <BIconShieldCheck class="text-white" />
+              </div>
+            </b-card>
+          </div>
         </b-col>
 
         <!-- Right: content -->
@@ -84,6 +82,39 @@ const points = [
 ];
 </script>
 <style scoped>
+/* Left image fills the column so it matches the height of the cards on the right */
+.why-media {
+  position: relative;
+  min-height: 420px;
+}
+.why-img-wrap {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+.why-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.why-inset {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  max-width: 66%;
+  background: #fff !important;
+  z-index: 2;
+}
+@media (min-width: 992px) {
+  .why-media {
+    min-height: 0;
+    height: 100%;
+  }
+}
+
 /* Frosted-glass card for each point (same treatment as the product cards),
    with padding so the text is inset and doesn't run to the corners. */
 .point-card {
