@@ -121,7 +121,7 @@
 
                 <div class="mt-4 text-center">
                   Already have an account?
-                  <router-link :to="{ name: 'auth.sign-in' }">Sign in here</router-link>
+                  <router-link :to="{ name: 'auth.sign-in', query: route.query }">Sign in here</router-link>
                 </div>
               </b-col>
             </b-row>
@@ -168,10 +168,13 @@ async function handleSignUp() {
   loading.value = true
   try {
     await auth.register(form)
-    successMsg.value = 'Account created! Redirecting to sign in...'
-    // Preserve any post-login redirect (e.g. the course the user wanted to enrol in)
+    // Auto sign-in with the credentials just created, so the user isn't asked
+    // to log in a second time — then continue to wherever they were headed.
+    await auth.login(form.email, form.password)
+    successMsg.value = 'Account created! Taking you in…'
     const redirectedFrom = route.query.redirectedFrom as string | undefined
-    setTimeout(() => router.push({ name: 'auth.sign-in', query: redirectedFrom ? { redirectedFrom } : {} }), 1500)
+    if (redirectedFrom) router.push(redirectedFrom)
+    else router.push({ name: 'student.dashboard' })
   } catch (e: any) {
     errorMsg.value = e.message || 'Registration failed. Please try again.'
   } finally {

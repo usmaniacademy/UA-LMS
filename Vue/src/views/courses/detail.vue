@@ -354,8 +354,16 @@ async function copyLink() {
   setTimeout(() => (copied.value = false), 2000)
 }
 
-onMounted(() => {
-  store.fetchCourseBySlug(route.params.slug as string)
+onMounted(async () => {
+  await store.fetchCourseBySlug(route.params.slug as string)
+  // Resume an enrolment the user started before signing up / in: if they arrived
+  // with ?enroll=1, are now signed in, and aren't already enrolled, continue
+  // automatically (free → enrol + open; paid → checkout). Strip the flag so a
+  // back-navigation doesn't re-trigger it.
+  if (route.query.enroll && auth.isAuthenticated() && course.value && !course.value.isEnrolled) {
+    router.replace({ query: {} })
+    enroll()
+  }
 })
 
 function openLesson(lesson: any) {
@@ -363,9 +371,10 @@ function openLesson(lesson: any) {
 }
 
 function enroll() {
-  // Guests must create an account first, then return to this course
+  // Guests must create an account first. Remember the course AND the intent to
+  // enrol (?enroll=1) so we can resume it automatically once they're signed in.
   if (!auth.isAuthenticated()) {
-    router.push({ name: 'auth.sign-up', query: { redirectedFrom: route.fullPath } })
+    router.push({ name: 'auth.sign-up', query: { redirectedFrom: `${route.path}?enroll=1` } })
     return
   }
   // Admins / instructors don't enroll — let them preview the player
