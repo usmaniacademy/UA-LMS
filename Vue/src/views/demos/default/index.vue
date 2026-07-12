@@ -59,9 +59,15 @@ import Footer1 from '@/views/demos/default/components/Footer1.vue';
 /* Frosted-glass sticky header: translucent + blurred so the pattern shows
    through it while the nav links stay readable (both static and stuck states). */
 .home-bg :deep(header.navbar-sticky) {
-  background-color: rgba(255, 255, 255, 0.6) !important;
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  background-color: transparent !important;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
+    url('../../../assets/images/pattern-islamic.svg');
+  background-repeat: repeat, repeat;
+  background-size: cover, 120px 120px;
+  background-attachment: fixed, fixed;
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
 }
 
 /* Breathing room between the last section and the footer */

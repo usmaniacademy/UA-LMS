@@ -87,6 +87,7 @@ const points = [
 /* Frosted-glass card for each point (same treatment as the product cards),
    with padding so the text is inset and doesn't run to the corners. */
 .point-card {
+  min-height: 104px;
   background: rgba(255, 255, 255, 0.6);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);

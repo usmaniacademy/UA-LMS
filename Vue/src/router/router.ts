@@ -1,7 +1,7 @@
 const setTitle = (pageName?: string) => {
   return pageName
-    ? `${pageName} | Eduport Vue - LMS, Education and Course Theme`
-    : 'Eduport Vue | LMS, Education and Course Theme';
+    ? `${pageName} | Usmani Academy`
+    : 'Usmani Academy — Teaching and Learning for Understanding';
 };
 
 const demoRoutes = [
