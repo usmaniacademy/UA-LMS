@@ -2,14 +2,14 @@
   <div class="contact-bg">
     <TopBar1 />
     <main>
-      <!-- ─── Hero ──────────────────────────────────────────────── -->
-      <section class="pt-6 pt-xxl-7 pb-4 text-center">
+      <!-- ─── Hero banner (coloured, rounded bottom) ────────────── -->
+      <section class="contact-hero text-center text-white">
         <b-container>
           <b-row class="justify-content-center">
             <b-col lg="8">
-              <span class="badge bg-primary bg-opacity-10 text-primary mb-3 px-3 py-2">Get in Touch</span>
-              <h1 class="display-5 fw-bold mb-3">Contact Us</h1>
-              <p class="lead mb-0">Have a question, or want to bring Usmani Academy to your school?
+              <span class="badge bg-white bg-opacity-25 text-white mb-3 px-3 py-2 rounded-pill">Get in Touch</span>
+              <h1 class="display-4 fw-bold mb-3 text-white">Contact Us</h1>
+              <p class="lead mb-0 opacity-75">Have a question, or want to bring Usmani Academy to your school?
                 We'd love to hear from you.</p>
             </b-col>
           </b-row>
@@ -145,6 +145,16 @@ function send() {
 }
 .contact-bg :deep(footer) {
   margin-top: 4rem;
+}
+
+/* Coloured hero banner with a rounded bottom */
+.contact-hero {
+  padding: 5.5rem 1rem 5rem;
+  background:
+    radial-gradient(circle at 25% 15%, rgba(255, 255, 255, 0.14), transparent 55%),
+    linear-gradient(135deg, var(--bs-primary), var(--bs-dark));
+  border-bottom-left-radius: 2.5rem;
+  border-bottom-right-radius: 2.5rem;
 }
 
 /* Frosted cards over the pattern (same treatment as the home/About pages) */
