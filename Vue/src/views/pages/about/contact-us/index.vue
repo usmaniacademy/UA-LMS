@@ -3,7 +3,7 @@
     <TopBar1 />
     <main>
       <!-- ─── Hero banner (coloured, rounded bottom) ────────────── -->
-      <section class="contact-hero text-center text-white">
+      <section class="hero-banner text-center text-white">
         <b-container>
           <b-row class="justify-content-center">
             <b-col lg="8">
@@ -145,16 +145,6 @@ function send() {
 }
 .contact-bg :deep(footer) {
   margin-top: 4rem;
-}
-
-/* Coloured hero banner with a rounded bottom */
-.contact-hero {
-  padding: 5.5rem 1rem 5rem;
-  background:
-    radial-gradient(circle at 25% 15%, rgba(255, 255, 255, 0.14), transparent 55%),
-    linear-gradient(135deg, var(--bs-primary), var(--bs-dark));
-  border-bottom-left-radius: 2.5rem;
-  border-bottom-right-radius: 2.5rem;
 }
 
 /* Frosted cards over the pattern (same treatment as the home/About pages) */

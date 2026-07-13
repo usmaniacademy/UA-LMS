@@ -1,11 +1,14 @@
 <template>
   <PagesLayout>
-    <section class="py-5 bg-dark position-relative" style="min-height:180px">
-      <b-container class="d-flex align-items-center" style="min-height:180px">
-        <div>
-          <h1 class="text-white mb-1">All Courses</h1>
-          <p class="text-white-50 mb-0">Explore live courses in Islamic Studies, Astronomy and Technology.</p>
-        </div>
+    <section class="hero-banner text-center text-white">
+      <b-container>
+        <b-row class="justify-content-center">
+          <b-col lg="8">
+            <span class="badge bg-white bg-opacity-25 text-white mb-3 px-3 py-2 rounded-pill">Explore</span>
+            <h1 class="display-4 fw-bold mb-2 text-white">All Courses</h1>
+            <p class="lead mb-0 opacity-75">Live courses in Islamic Studies, Astronomy and Technology.</p>
+          </b-col>
+        </b-row>
       </b-container>
     </section>
 

@@ -3,13 +3,13 @@
     <TopBar1 />
     <main>
       <!-- ─── Hero ──────────────────────────────────────────────── -->
-      <section class="pt-6 pt-xxl-7 pb-5 text-center">
+      <section class="hero-banner text-center text-white">
         <b-container>
           <b-row class="justify-content-center">
             <b-col lg="9" xl="8">
-              <span class="badge bg-primary bg-opacity-10 text-primary mb-3 px-3 py-2">Who We Are</span>
-              <h1 class="display-5 fw-bold mb-3">About Usmani Academy</h1>
-              <p class="lead mb-0">Usmani Academy is a dedicated educational platform committed to providing
+              <span class="badge bg-white bg-opacity-25 text-white mb-3 px-3 py-2 rounded-pill">Who We Are</span>
+              <h1 class="display-4 fw-bold mb-3 text-white">About Usmani Academy</h1>
+              <p class="lead mb-0 opacity-75">Usmani Academy is a dedicated educational platform committed to providing
                 high-quality learning experiences that blend traditional Islamic education with modern knowledge and
                 skills. Our mission is to empower individuals with the tools they need to excel spiritually,
                 intellectually, and professionally.</p>
