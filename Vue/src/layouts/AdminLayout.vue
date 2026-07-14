@@ -3,7 +3,7 @@
     <nav class="navbar sidebar navbar-expand-xl navbar-dark bg-dark">
       <div class="d-flex align-items-center">
         <router-link class="navbar-brand" :to="{ name: 'demos.default' }">
-          <img class="navbar-brand-item" :src="logolight" alt="">
+          <img :src="uaLogo" alt="Usmani Academy" style="height:44px;max-width:100%;object-fit:contain">
         </router-link>
       </div>
 
@@ -11,19 +11,6 @@
         :class="offcanvas && 'show'" data-bs-backdrop="true" tabindex="-1" id="offcanvasSidebar">
         <div class="offcanvas-body sidebar-content d-flex flex-column bg-dark">
           <AdminMenu />
-          <div class="px-3 mt-auto pt-3">
-            <div class="d-flex align-items-center justify-content-between text-primary-hover">
-              <router-link class="h5 mb-0 text-body" :to="{ name: 'admin.setting' }" v-b-tooltip.hover.top="'Settings'">
-                <BIconGearFill />
-              </router-link>
-              <router-link class="h5 mb-0 text-body" :to="{ name: 'demos.default' }" v-b-tooltip.hover.top="'Home'">
-                <BIconGlobe />
-              </router-link>
-              <a href="#" class="h5 mb-0 text-body" @click.prevent="logout" v-b-tooltip.hover.top="'Sign out'">
-                <BIconPower />
-              </a>
-            </div>
-          </div>
         </div>
       </OverlayScrollbarsComponent>
     </nav>
@@ -106,17 +93,13 @@ import ProfileDropdown from '@/components/ProfileDropdown.vue';
 import MobileNavbarToggler from '@/components/MobileNavbarToggler.vue';
 import AdminMenu from '@/components/navbar/AdminMenu/index.vue';
 import { OverlayScrollbarsComponent } from "overlayscrollbars-vue";
-import { useAuthStore } from '@/stores/auth';
 
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { BIconGearFill, BIconGlobe, BIconPower, BIconTextRight, BIconBell } from 'bootstrap-icons-vue';
+import { BIconTextRight, BIconBell } from 'bootstrap-icons-vue';
 
-import logolight from '@/assets/images/logo-light.svg';
+import uaLogo from '@/assets/images/ua-logo-light.png.png';
 import logoMobile from '@/assets/images/logo-mobile.svg';
 import logoMobilelight from '@/assets/images/logo-mobile-light.svg';
-
-const auth = useAuthStore();
-const logout = () => auth.logout();
 
 const offcanvas = ref(false);
 
