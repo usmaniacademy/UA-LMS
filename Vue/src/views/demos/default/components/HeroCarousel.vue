@@ -1,13 +1,16 @@
 <template>
-  <section class="pt-6 pt-xxl-7 pb-0 overflow-hidden">
+  <section class="pt-6 pt-xxl-7 pb-0 overflow-hidden" :class="{ 'hero-reveal': revealed }">
     <!-- Heading + text + CTA (centered) -->
     <b-container>
       <b-row class="justify-content-center text-center">
         <b-col lg="9" xl="8">
-          <h1 class="display-5">Usmani Academy<br>Teaching and Learning for Understanding</h1>
-          <p class="lead mb-4">We build AI-powered tools for Islamic schools and deliver world-class technology
+          <h1 class="display-5 hero-heading">
+            <span class="hero-line"><span>Usmani Academy</span></span>
+            <span class="hero-line"><span>Teaching and Learning for Understanding</span></span>
+          </h1>
+          <p class="lead mb-4 hero-sub">We build AI-powered tools for Islamic schools and deliver world-class technology
             education to students everywhere — rooted in Islamic values.</p>
-          <div class="d-flex gap-2 justify-content-center mb-0">
+          <div class="d-flex gap-2 justify-content-center mb-0 hero-cta">
             <router-link :to="{ name: 'courses.list' }" class="btn btn-lg btn-primary mb-0">
               View Courses <BIconArrowRight class="ms-2" />
             </router-link>
@@ -24,8 +27,23 @@
   </section>
 </template>
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import CylinderCarousel from '@/components/CylinderCarousel.vue';
 import { BIconArrowRight } from 'bootstrap-icons-vue';
+
+// Liquid text reveal: play as the splash curtain lifts. If there's no splash
+// (e.g. navigating to Home from another page), just play shortly after mount.
+const revealed = ref(false);
+onMounted(() => {
+  if (document.getElementById('splash-screen')) {
+    window.addEventListener('ua-splash-reveal', () => {
+      setTimeout(() => { revealed.value = true; }, 600);
+    }, { once: true });
+    setTimeout(() => { revealed.value = true; }, 4000); // fallback if the event is missed
+  } else {
+    setTimeout(() => { revealed.value = true; }, 120);
+  }
+});
 
 // Usmani Academy photos (bg/3by4). Add/replace files there and update this list.
 import p1 from '@/assets/images/bg/3by4/1.jpg';
@@ -45,6 +63,60 @@ const base = [
 const images = [...base, ...base, ...base];
 </script>
 <style scoped>
+/* ─── Liquid text reveal ─────────────────────────────────────────
+   Heading lines rise from behind a mask while sharpening from blur;
+   subtext + buttons follow, staggered. Triggered by `.hero-reveal`. */
+.hero-heading .hero-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+.hero-heading .hero-line > span {
+  display: inline-block;
+  transform: translateY(115%);
+  opacity: 0;
+  filter: blur(8px);
+  will-change: transform, filter, opacity;
+}
+.hero-sub,
+.hero-cta {
+  opacity: 0;
+  transform: translateY(26px);
+  filter: blur(8px);
+  will-change: transform, filter, opacity;
+}
+
+.hero-reveal .hero-heading .hero-line > span {
+  animation: heroLineIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.hero-reveal .hero-heading .hero-line:nth-child(2) > span {
+  animation-delay: 0.12s;
+}
+.hero-reveal .hero-sub {
+  animation: heroFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.34s forwards;
+}
+.hero-reveal .hero-cta {
+  animation: heroFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+}
+
+@keyframes heroLineIn {
+  to { transform: translateY(0); opacity: 1; filter: blur(0); }
+}
+@keyframes heroFadeUp {
+  to { transform: translateY(0); opacity: 1; filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-heading .hero-line > span,
+  .hero-sub,
+  .hero-cta {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none;
+  }
+}
+
 /* Full-bleed stage — stretches the carousel edge to edge, no background */
 .hero-stage {
   width: 100vw;
