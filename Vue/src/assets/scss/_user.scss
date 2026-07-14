@@ -58,6 +58,61 @@
   border-bottom-right-radius: 2.5rem;
 }
 
+// ── Reveals ──────────────────────────────────────────────────────────
+// Section headings do a subtle "liquid" blur reveal as they scroll into view.
+// Pure CSS (scroll-driven animations); browsers without support just show the
+// headings normally — so there's no risk of hidden text.
+@supports (animation-timeline: view()) {
+  main h2.fs-1 {
+    animation: sectionHeadingReveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 45%;
+  }
+}
+@keyframes sectionHeadingReveal {
+  from { opacity: 0; transform: translateY(24px); filter: blur(8px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+
+// Hero-banner text (About / Courses / Contact) rises + sharpens as the intro
+// splash lifts (`.site-revealed` on <html>). Transform + blur only (no opacity)
+// so it never fights the banner's own opacity utilities; `.js-anim` gates it so
+// the text is always visible if JS doesn't run.
+.js-anim .hero-banner .badge,
+.js-anim .hero-banner h1,
+.js-anim .hero-banner .lead {
+  transform: translateY(26px);
+  filter: blur(8px);
+}
+.js-anim.site-revealed .hero-banner .badge {
+  animation: bannerRise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0s forwards;
+}
+.js-anim.site-revealed .hero-banner h1 {
+  animation: bannerRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.12s forwards;
+}
+.js-anim.site-revealed .hero-banner .lead {
+  animation: bannerRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.26s forwards;
+}
+@keyframes bannerRise {
+  to { transform: none; filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main h2.fs-1 {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .js-anim .hero-banner .badge,
+  .js-anim .hero-banner h1,
+  .js-anim .hero-banner .lead {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
 // [data-bs-theme="dark"] {
 //   --bs-primary: #19f032 !important;
 //   --bs-primary-rgb: 25, 240, 50 !important; 

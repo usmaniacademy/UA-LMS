@@ -5,8 +5,17 @@
       <b-row class="justify-content-center text-center">
         <b-col lg="9" xl="8">
           <h1 class="display-5 hero-heading">
-            <span class="hero-line"><span>Usmani Academy</span></span>
-            <span class="hero-line"><span>Teaching and Learning for Understanding</span></span>
+            <span class="hero-line">
+              <span class="w" style="--i:0">Usmani</span>
+              <span class="w" style="--i:1">Academy</span>
+            </span>
+            <span class="hero-line">
+              <span class="w" style="--i:2">Teaching</span>
+              <span class="w" style="--i:3">and</span>
+              <span class="w" style="--i:4">Learning</span>
+              <span class="w" style="--i:5">for</span>
+              <span class="w" style="--i:6">Understanding</span>
+            </span>
           </h1>
           <p class="lead mb-4 hero-sub">We build AI-powered tools for Islamic schools and deliver world-class technology
             education to students everywhere — rooted in Islamic values.</p>
@@ -69,9 +78,9 @@ const images = [...base, ...base, ...base];
 .hero-heading .hero-line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.08em;
+  padding-bottom: 0.1em;
 }
-.hero-heading .hero-line > span {
+.hero-heading .w {
   display: inline-block;
   transform: translateY(115%);
   opacity: 0;
@@ -86,20 +95,19 @@ const images = [...base, ...base, ...base];
   will-change: transform, filter, opacity;
 }
 
-.hero-reveal .hero-heading .hero-line > span {
-  animation: heroLineIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-.hero-reveal .hero-heading .hero-line:nth-child(2) > span {
-  animation-delay: 0.12s;
+/* Words rise left-to-right (staggered by --i) for a flowing, curved reveal */
+.hero-reveal .hero-heading .w {
+  animation: heroWordIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 0.06s);
 }
 .hero-reveal .hero-sub {
-  animation: heroFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.34s forwards;
-}
-.hero-reveal .hero-cta {
   animation: heroFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
 }
+.hero-reveal .hero-cta {
+  animation: heroFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.64s forwards;
+}
 
-@keyframes heroLineIn {
+@keyframes heroWordIn {
   to { transform: translateY(0); opacity: 1; filter: blur(0); }
 }
 @keyframes heroFadeUp {
@@ -107,7 +115,7 @@ const images = [...base, ...base, ...base];
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-heading .hero-line > span,
+  .hero-heading .w,
   .hero-sub,
   .hero-cta {
     opacity: 1;
