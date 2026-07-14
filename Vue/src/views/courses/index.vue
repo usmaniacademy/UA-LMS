@@ -144,10 +144,8 @@ onMounted(load)
 .courses-bg :deep(footer) {
   margin-top: 4rem;
 }
-/* Frosted course cards over the pattern (matches the rest of the site) */
+/* Translucent course cards over the pattern (no live blur — keeps scrolling smooth) */
 .courses-bg :deep(.course-card) {
-  background: rgba(255, 255, 255, 0.7) !important;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9) !important;
 }
 </style>

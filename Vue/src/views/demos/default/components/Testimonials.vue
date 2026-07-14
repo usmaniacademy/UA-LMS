@@ -109,9 +109,7 @@ function initials(name: string) {
   flex: 0 0 auto;
   width: 360px;
   margin-right: 1.5rem;
-  background: rgba(255, 255, 255, 0.6);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.82);
   border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: 1rem;
   padding: 1.5rem;

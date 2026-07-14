@@ -85,14 +85,12 @@ const images = [...base, ...base, ...base];
   transform: translateY(115%);
   opacity: 0;
   filter: blur(8px);
-  will-change: transform, filter, opacity;
 }
 .hero-sub,
 .hero-cta {
   opacity: 0;
   transform: translateY(26px);
   filter: blur(8px);
-  will-change: transform, filter, opacity;
 }
 
 /* Words rise left-to-right (staggered by --i) for a flowing, curved reveal */
