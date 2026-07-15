@@ -142,7 +142,8 @@ async function saveCourse(publish: boolean) {
         : new Date(props.form.discountEndsAt).toISOString(),
       promoVideoUrl: props.form.promoVideoUrl || undefined,
       learningPoints: cleanedLearningPoints.length ? cleanedLearningPoints : undefined,
-      thumbnailUrl: props.form.thumbnailUrl || undefined
+      thumbnailUrl: props.form.thumbnailUrl || undefined,
+      instructorId: props.form.instructorId || undefined
     }
 
     let course

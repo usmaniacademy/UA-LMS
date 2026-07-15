@@ -59,6 +59,34 @@
           <b-button variant="primary" @click="addSection" :disabled="!newSectionTitle.trim()">Add Section</b-button>
         </div>
       </div>
+
+      <!-- Quizzes -->
+      <hr class="my-4">
+      <h5 class="mb-3">Quizzes</h5>
+      <div v-for="quiz in quizStore.courseQuizzes" :key="quiz.id" class="border rounded-3 mb-3 overflow-hidden">
+        <div class="bg-light px-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <h6 class="mb-0 fw-semibold">{{ quiz.title }}</h6>
+            <small class="text-muted">
+              {{ quiz.questions.length }} question{{ quiz.questions.length !== 1 ? 's' : '' }} · Pass at {{ quiz.passPercentage }}%
+            </small>
+          </div>
+          <div class="d-flex gap-2">
+            <b-button size="sm" variant="outline-primary" @click="openQuestions(quiz)">Manage Questions</b-button>
+            <b-button size="sm" variant="outline-danger" @click="removeQuiz(quiz.id)">Delete</b-button>
+          </div>
+        </div>
+      </div>
+
+      <div class="border border-dashed rounded-3 p-3 mb-4">
+        <div class="d-flex gap-2 flex-wrap">
+          <b-form-input v-model="newQuizTitle" placeholder="New quiz title (e.g. Module 1 Check)" class="flex-fill" />
+          <b-input-group prepend="Pass %" style="max-width:160px">
+            <b-form-input v-model.number="newQuizPass" type="number" min="1" max="100" />
+          </b-input-group>
+          <b-button variant="primary" @click="addQuiz" :disabled="!newQuizTitle.trim()">Add Quiz</b-button>
+        </div>
+      </div>
     </template>
 
     <div class="d-flex justify-content-between mt-2">
@@ -159,6 +187,49 @@
         </div>
       </b-form>
     </b-modal>
+
+    <!-- Quiz questions modal -->
+    <b-modal v-model="questionsModal" :title="activeQuiz ? `Questions — ${activeQuiz.title}` : 'Questions'" hide-footer size="lg">
+      <div v-if="activeQuiz">
+        <div v-if="!activeQuiz.questions.length" class="text-muted small mb-3">No questions yet — add the first one below.</div>
+        <div v-for="(q, qi) in activeQuiz.questions" :key="q.id" class="border rounded-3 p-3 mb-2">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-fill">
+              <div class="fw-semibold mb-2">{{ qi + 1 }}. {{ q.questionText }}</div>
+              <ul class="list-unstyled mb-0 small">
+                <li v-for="opt in q.options" :key="opt" :class="opt === q.correctAnswer ? 'text-success fw-semibold' : 'text-muted'">
+                  <BIconCheckCircleFill v-if="opt === q.correctAnswer" class="me-1" />
+                  {{ opt }}
+                </li>
+              </ul>
+            </div>
+            <b-button size="sm" variant="outline-danger" @click="removeQuestion(q.id)">✕</b-button>
+          </div>
+        </div>
+
+        <hr>
+        <h6 class="mb-3">Add a question</h6>
+        <div v-if="questionError" class="alert alert-danger py-2 mb-3">{{ questionError }}</div>
+        <b-form-group label="Question text">
+          <b-form-textarea v-model="newQuestionText" rows="2" placeholder="e.g. What is the first pillar of Islam?" />
+        </b-form-group>
+        <b-form-group label="Options (select the correct one)">
+          <div v-for="(opt, oi) in newQuestionOptions" :key="oi" class="d-flex align-items-center gap-2 mb-2">
+            <input type="radio" class="form-check-input mt-0" name="correct-opt"
+              :checked="newQuestionCorrectIdx === oi" @change="newQuestionCorrectIdx = oi">
+            <b-form-input v-model="newQuestionOptions[oi]" :placeholder="`Option ${oi + 1}`" />
+            <b-button v-if="newQuestionOptions.length > 2" size="sm" variant="outline-danger" @click="removeOption(oi)">✕</b-button>
+          </div>
+          <b-button v-if="newQuestionOptions.length < 6" size="sm" variant="outline-primary" @click="addQuestionOption">+ Add option</b-button>
+        </b-form-group>
+        <div class="d-flex justify-content-end">
+          <b-button variant="primary" @click="submitQuestion" :disabled="questionSaving">
+            <span v-if="questionSaving" class="spinner-border spinner-border-sm me-1" />
+            Add Question
+          </b-button>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -166,6 +237,8 @@
 import { ref, reactive, watch } from 'vue'
 import { useCourseStore } from '@/stores/course'
 import { useZoomStore } from '@/stores/zoom'
+import { useQuizStore } from '@/stores/quiz'
+import { BIconCheckCircleFill } from 'bootstrap-icons-vue'
 
 const props = defineProps<{
   courseId: string | null
@@ -176,9 +249,90 @@ const props = defineProps<{
 
 const courseStore = useCourseStore()
 const zoomStore = useZoomStore()
+const quizStore = useQuizStore()
 
 const localSections = ref<any[]>([])
 const newSectionTitle = ref('')
+
+// ─── Quizzes ────────────────────────────────────────────────────────────────
+const newQuizTitle = ref('')
+const newQuizPass = ref(70)
+const questionsModal = ref(false)
+const activeQuiz = ref<any>(null)
+const newQuestionText = ref('')
+const newQuestionOptions = ref<string[]>(['', ''])
+const newQuestionCorrectIdx = ref(0)
+const questionSaving = ref(false)
+const questionError = ref('')
+
+watch(
+  () => props.courseId,
+  (id) => { if (id) quizStore.fetchCourseQuizzes(id) },
+  { immediate: true }
+)
+
+async function addQuiz() {
+  if (!props.courseId || !newQuizTitle.value.trim()) return
+  await quizStore.createQuiz(props.courseId, { title: newQuizTitle.value.trim(), passPercentage: newQuizPass.value || 70 })
+  newQuizTitle.value = ''
+  newQuizPass.value = 70
+}
+
+async function removeQuiz(quizId: string) {
+  if (!confirm('Delete this quiz and all its questions?')) return
+  await quizStore.deleteQuiz(quizId)
+}
+
+function resetQuestionForm() {
+  newQuestionText.value = ''
+  newQuestionOptions.value = ['', '']
+  newQuestionCorrectIdx.value = 0
+  questionError.value = ''
+}
+
+function openQuestions(quiz: any) {
+  activeQuiz.value = quiz
+  resetQuestionForm()
+  questionsModal.value = true
+}
+
+function addQuestionOption() {
+  if (newQuestionOptions.value.length < 6) newQuestionOptions.value.push('')
+}
+
+function removeOption(idx: number) {
+  if (newQuestionOptions.value.length <= 2) return
+  newQuestionOptions.value.splice(idx, 1)
+  if (newQuestionCorrectIdx.value >= newQuestionOptions.value.length) newQuestionCorrectIdx.value = 0
+}
+
+async function submitQuestion() {
+  questionError.value = ''
+  const options = newQuestionOptions.value.map((o) => o.trim()).filter(Boolean)
+  if (!newQuestionText.value.trim() || options.length < 2) {
+    questionError.value = 'Add a question and at least 2 options.'
+    return
+  }
+  const correctAnswer = newQuestionOptions.value[newQuestionCorrectIdx.value]?.trim()
+  if (!correctAnswer) {
+    questionError.value = 'Select which option is correct.'
+    return
+  }
+  questionSaving.value = true
+  try {
+    await quizStore.addQuestion(activeQuiz.value.id, { questionText: newQuestionText.value.trim(), options, correctAnswer })
+    resetQuestionForm()
+  } catch (e: any) {
+    questionError.value = e.message || 'Failed to add question'
+  } finally {
+    questionSaving.value = false
+  }
+}
+
+async function removeQuestion(questionId: string) {
+  if (!confirm('Delete this question?')) return
+  await quizStore.deleteQuestion(questionId, activeQuiz.value.id)
+}
 
 // Populate curriculum when editing an existing course
 watch(

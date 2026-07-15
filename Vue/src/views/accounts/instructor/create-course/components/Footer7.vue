@@ -3,12 +3,12 @@
     <b-container>
       <b-row class="align-items-center">
         <b-col md="4" class="text-center text-md-start mb-3 mb-md-0">
-          <router-link :to="{ name: 'demos.default' }"> <img class="h-20px" :src="logolight" alt="logo"> </router-link>
+          <router-link :to="{ name: 'demos.default' }"> <img class="h-30px" :src="logolight" alt="Usmani Academy"> </router-link>
         </b-col>
 
         <b-col md="4" class="mb-3 mb-md-0">
           <div class="text-center text-white text-primary-hover">
-            Copyrights ©{{ currentYear }} Eduport. Build by
+            Copyrights ©{{ currentYear }} Usmani Academy. Developed by
             <a :href="developedByLink" target="_blank" class="text-white">{{ developedBy }}</a>.
           </div>
         </b-col>
@@ -29,7 +29,7 @@
 import { currentYear, developedByLink, developedBy } from '@/helpers/constants';
 import { faFacebook, faInstagram, faTwitter, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 
-import logolight from '@/assets/images/logo-light.svg';
+import logolight from '@/assets/images/ua-logo-light.png.png';
 
 const socialLink = [faFacebook, faInstagram, faLinkedinIn, faTwitter];
 </script>

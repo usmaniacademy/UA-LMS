@@ -41,6 +41,18 @@
         </b-form-group>
       </b-col>
 
+      <b-col cols="12" v-if="isAdmin">
+        <b-form-group label="Assign Instructor *">
+          <b-form-select v-model="form.instructorId" size="lg">
+            <option value="">Select instructor</option>
+            <option v-for="i in adminStore.instructors" :key="i.id" :value="i.id">
+              {{ i.firstName }} {{ i.lastName }} ({{ i.email }})
+            </option>
+          </b-form-select>
+          <div class="form-text">The course will appear on this instructor's dashboard.</div>
+        </b-form-group>
+      </b-col>
+
       <b-col cols="12">
         <b-form-group label="Thumbnail URL">
           <b-form-input v-model="form.thumbnailUrl" type="url" placeholder="https://..." size="lg" />
@@ -70,14 +82,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useAdminStore } from '@/stores/admin'
 
 const props = defineProps<{ form: any; nextPage: () => void }>()
+
+const auth = useAuthStore()
+const adminStore = useAdminStore()
+const isAdmin = computed(() => auth.getUser()?.role === 'admin')
+
+onMounted(() => {
+  if (isAdmin.value && !adminStore.instructors.length) adminStore.fetchInstructors()
+})
 
 const canProceed = computed(() =>
   props.form.title?.trim().length >= 3 &&
   props.form.category &&
-  (props.form.category !== 'Other' || props.form.customCategory?.trim().length >= 2)
+  (props.form.category !== 'Other' || props.form.customCategory?.trim().length >= 2) &&
+  (!isAdmin.value || props.form.instructorId)
 )
 
 function handleNext() {

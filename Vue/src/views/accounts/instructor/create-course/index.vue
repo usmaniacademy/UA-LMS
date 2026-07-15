@@ -118,7 +118,8 @@ const form = reactive({
   discountEndsAt: '',
   thumbnailUrl: '',
   promoVideoUrl: '',
-  learningPoints: ['', '']
+  learningPoints: ['', ''],
+  instructorId: ''
 })
 
 // Created after first save in Step4 (or preset in edit mode)
@@ -141,6 +142,7 @@ async function loadCourseForEdit(id: string) {
   form.discountEndsAt = course.discountEndsAt ? new Date(course.discountEndsAt).toISOString().slice(0, 10) : ''
   form.promoVideoUrl = course.promoVideoUrl || ''
   form.thumbnailUrl = course.thumbnailUrl || ''
+  form.instructorId = course.instructor?.id || ''
   if (Array.isArray(course.learningPoints) && course.learningPoints.length) {
     form.learningPoints = course.learningPoints
   }

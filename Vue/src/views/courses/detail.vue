@@ -11,30 +11,26 @@
 
     <template v-else>
       <!-- ─── Page intro ─────────────────────────────────────────────── -->
-      <section class="py-0 py-sm-5" style="background-color:#F5F7F9">
+      <section class="course-hero py-0 py-sm-5">
         <b-container>
           <b-row class="py-5">
             <b-col lg="8">
-              <h6 v-if="course.category" class="mb-3 font-base bg-primary text-white py-2 px-4 rounded-2 d-inline-block">
+              <h6 v-if="course.category" class="mb-3 font-base bg-white text-primary py-2 px-4 rounded-pill d-inline-block">
                 {{ course.category }}
               </h6>
-              <h1>{{ course.title }}</h1>
-              <p>{{ course.description }}</p>
+              <h1 class="text-white">{{ course.title }}</h1>
+              <p class="text-white opacity-75 mb-3">{{ course.description }}</p>
               <ul class="list-inline mb-0">
-                <li class="list-inline-item h6 me-3 mb-1 mb-sm-0">
+                <li class="list-inline-item h6 fw-light text-white me-3 mb-1 mb-sm-0">
                   <font-awesome-icon :icon="faStar" class="text-warning me-1" />
                   {{ course.ratingAvg ? Number(course.ratingAvg).toFixed(1) : 'New' }}
                 </li>
-                <li class="list-inline-item h6 me-3 mb-1 mb-sm-0">
-                  <font-awesome-icon :icon="faUserGraduate" class="text-orange me-1" />
-                  {{ course.totalStudents }} Enrolled
-                </li>
-                <li class="list-inline-item h6 me-3 mb-1 mb-sm-0">
-                  <font-awesome-icon :icon="faSignal" class="text-success me-1" />
+                <li class="list-inline-item h6 fw-light text-white me-3 mb-1 mb-sm-0">
+                  <font-awesome-icon :icon="faSignal" class="me-1" />
                   <span class="text-capitalize">{{ course.level }}</span>
                 </li>
-                <li class="list-inline-item h6 mb-0">
-                  <font-awesome-icon :icon="faGlobe" class="text-info me-1" />
+                <li class="list-inline-item h6 fw-light text-white mb-0">
+                  <font-awesome-icon :icon="faGlobe" class="me-1" />
                   English
                 </li>
               </ul>
@@ -278,7 +274,7 @@ import { useAuthStore } from '@/stores/auth'
 import { api } from '@/helpers/api'
 import CustomGLightbox from '@/components/CustomGLightbox.vue'
 import { BIconPatchCheckFill, BIconCameraVideoFill } from 'bootstrap-icons-vue'
-import { faStar, faUserGraduate, faSignal, faGlobe, faPlay, faLock, faBookOpen, faStopwatch, faShareAlt, faCopy } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faSignal, faGlobe, faPlay, faLock, faBookOpen, faStopwatch, faShareAlt, faCopy } from '@fortawesome/free-solid-svg-icons'
 import { faTwitterSquare, faFacebookSquare, faLinkedinIn } from '@fortawesome/free-brands-svg-icons'
 import defaultThumb from '@/assets/images/courses/4by3/08.jpg'
 
@@ -417,4 +413,11 @@ async function enrollFree() {
 
 <style scoped>
 .lesson-row:hover .h6 { color: var(--bs-primary); }
+
+/* Header banner: same green gradient + rounded corner treatment used site-wide */
+.course-hero {
+  background: radial-gradient(circle at 25% 15%, rgba(255,255,255,0.14), transparent 55%), linear-gradient(135deg, var(--bs-primary), var(--bs-dark));
+  border-bottom-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+}
 </style>

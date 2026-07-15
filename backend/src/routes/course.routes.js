@@ -27,7 +27,7 @@ router.get('/manage/:id', authenticate, authorize('instructor', 'admin'), getMan
 router.post('/', authenticate, authorize('instructor', 'admin'), validate(createCourseSchema), createCourse)
 router.put('/:id', authenticate, authorize('instructor', 'admin'), validate(updateCourseSchema), updateCourse)
 router.post('/:id/publish', authenticate, authorize('instructor', 'admin'), publishCourse)
-router.delete('/:id', authenticate, authorize('instructor', 'admin'), archiveCourse)
+router.delete('/:id', authenticate, authorize('admin'), archiveCourse)
 
 // ─── Sections ─────────────────────────────────────────────────────────────────
 router.post('/:courseId/sections', authenticate, authorize('instructor', 'admin'), validate(createSectionSchema), createSection)

@@ -6,7 +6,7 @@ export const currentYear = new Date().getFullYear()
 
 export const developedByLink = '#'
 
-export const developedBy = 'Stackbros'
+export const developedBy = 'Acom Digital'
 
 export const buyLink = ''
 

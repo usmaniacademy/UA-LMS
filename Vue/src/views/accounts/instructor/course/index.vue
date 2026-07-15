@@ -82,13 +82,6 @@
                           @click="publish(course.id)"
                           title="Publish"
                         >Publish</b-button>
-                        <b-button
-                          v-if="course.status !== 'archived'"
-                          size="sm"
-                          variant="outline-danger"
-                          @click="archive(course.id)"
-                          title="Archive"
-                        >Archive</b-button>
                       </div>
                     </td>
                   </tr>
@@ -115,10 +108,5 @@ onMounted(() => store.fetchMyCourses())
 async function publish(id: string) {
   if (!confirm('Publish this course? It will be visible to all students.')) return
   await store.publishCourse(id)
-}
-
-async function archive(id: string) {
-  if (!confirm('Archive this course? It will be hidden from students.')) return
-  await store.archiveCourse(id)
 }
 </script>
