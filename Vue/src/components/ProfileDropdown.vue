@@ -31,12 +31,6 @@
       <li v-if="editProfileRoute"><router-link class="dropdown-item" :to="{ name: editProfileRoute }">
           <BIconPerson class="fa-fw me-2" />Edit Profile
         </router-link></li>
-      <li v-if="settingsRoute"><router-link class="dropdown-item" :to="{ name: settingsRoute }">
-          <BIconGear class="fa-fw me-2" />Account Settings
-        </router-link></li>
-      <li><router-link class="dropdown-item" :to="{ name: 'about.contact.us' }">
-          <BIconInfoCircle class="fa-fw me-2" />Help
-        </router-link></li>
       <li><a class="dropdown-item bg-danger-soft-hover" href="#" @click.prevent="handleSignOut">
           <BIconPower class="fa-fw me-2" />Sign Out
         </a></li>
@@ -65,7 +59,7 @@ import { useAuthStore } from '@/stores/auth';
 import type { ThemeModeType } from '@/types/layout';
 import { toSentenceCase } from '@/helpers/change-casing';
 
-import { BIconPerson, BIconGear, BIconInfoCircle, BIconPower, BIconSun, BIconMoonStars, BIconCircleHalf, BIconSpeedometer2 } from 'bootstrap-icons-vue';
+import { BIconPerson, BIconPower, BIconSun, BIconMoonStars, BIconCircleHalf, BIconSpeedometer2 } from 'bootstrap-icons-vue';
 
 const useLayout = useLayoutStore();
 const auth = useAuthStore();
@@ -99,13 +93,6 @@ const editProfileRoute = computed(() => {
     case 'instructor': return 'instructor.edit.profile';
     case 'student': return 'student.edit.profile';
     default: return null;
-  }
-});
-
-const settingsRoute = computed(() => {
-  switch (user.value?.role) {
-    case 'instructor': return 'instructor.settings';
-    default: return null; // admin & student manage everything from Edit Profile
   }
 });
 

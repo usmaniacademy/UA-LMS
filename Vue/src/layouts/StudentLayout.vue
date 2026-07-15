@@ -3,8 +3,8 @@
 	<main>
 		<section class="pt-0">
 			<b-container fluid class="px-0">
-				<b-card no-body class="bg-blue h-100px h-md-200px rounded-0"
-					:style="`background:url(${pattern04}) no-repeat center center; background-size:cover;`">
+				<b-card no-body class="h-100px h-md-200px rounded-0"
+					style="background: radial-gradient(circle at 25% 15%, rgba(255,255,255,0.14), transparent 55%), linear-gradient(135deg, var(--bs-primary), var(--bs-dark));">
 				</b-card>
 			</b-container>
 			<b-container class="mt-n4">
@@ -97,7 +97,9 @@
 			</b-container>
 		</section>
 	</main>
-	<Footer7 />
+	<div class="account-footer-bg">
+		<Footer1 />
+	</div>
 </template>
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
@@ -108,9 +110,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useCourseStore } from '@/stores/course';
 
 import TopBar8 from '@/layouts/components/TopBar8.vue';
-import Footer7 from '@/layouts/components/Footer7.vue';
-
-import pattern04 from '@/assets/images/pattern/04.png';
+import Footer1 from '@/views/demos/default/components/Footer1.vue';
 
 import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
 
@@ -140,3 +140,15 @@ onMounted(() => {
 	if (!store.enrolledCourses.length) store.fetchEnrolledCourses();
 });
 </script>
+<style scoped>
+/* Give the shared site footer the same frosted Islamic-pattern backdrop it has
+   on the public pages, so it matches the rest of the site. */
+.account-footer-bg {
+	background-color: #fff;
+	background-image:
+		linear-gradient(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.82)),
+		url('../assets/images/pattern-islamic.svg');
+	background-repeat: repeat, repeat;
+	background-size: cover, 120px 120px;
+}
+</style>

@@ -646,11 +646,6 @@ export const INSTRUCTOR_MENU_ITEMS = [
     icon: BIconPencilSquare
   },
   {
-    title: 'Settings',
-    route: { name: 'instructor.settings' },
-    icon: BIconGear
-  },
-  {
     title: 'Sign Out',
     route: { name: 'auth.sign-in' },
     icon: BIconBoxArrowRight

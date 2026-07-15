@@ -683,14 +683,6 @@ const accountsRoutes = [
     component: () => import("@/views/accounts/instructor/edit-profile/index.vue"),
   },
   {
-    path: "/instructor/settings",
-    name: "instructor.settings",
-    meta: {
-      title: setTitle("Settings")
-    },
-    component: () => import("@/views/accounts/instructor/settings.vue"),
-  },
-  {
     path: "/instructor/payout",
     name: "instructor.payout",
     meta: {
