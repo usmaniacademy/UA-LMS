@@ -43,7 +43,7 @@ export async function createCheckoutSession(userId, courseId) {
   if (!user) throw ApiError.notFound('User not found')
   if (!course) throw ApiError.notFound('Course not found')
   if (course.isFree) throw ApiError.badRequest('This course is free — no subscription needed')
-  if (!course.stripePriceId) throw ApiError.badRequest('This course does not have a Stripe price configured yet')
+  if (!course.price || course.price <= 0) throw ApiError.badRequest('This course does not have a price set yet')
 
   // Check for existing active subscription
   const existing = await prisma.subscription.findFirst({
@@ -57,7 +57,18 @@ export async function createCheckoutSession(userId, courseId) {
     customer: customerId,
     mode: 'subscription',
     payment_method_types: ['card'],
-    line_items: [{ price: course.stripePriceId, quantity: 1 }],
+    // Inline pricing: Stripe bills the course's monthly price directly, so we
+    // never have to pre-create a Product/Price in the Stripe Dashboard per course.
+    // Stripe auto-creates the Product/Price behind the scenes from these values.
+    line_items: [{
+      price_data: {
+        currency: 'usd',
+        unit_amount: Math.round(course.price * 100), // dollars -> cents
+        recurring: { interval: 'month' },
+        product_data: { name: course.title }
+      },
+      quantity: 1
+    }],
     success_url: `${env.frontendUrl}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${env.frontendUrl}/courses/${course.slug}`,
     metadata: { userId, courseId },

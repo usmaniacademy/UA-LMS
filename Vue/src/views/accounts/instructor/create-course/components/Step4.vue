@@ -50,13 +50,6 @@
             Discount preview: <strong>{{ discountPercent }}% off</strong> — ${{ form.price }} (was ${{ form.originalPrice }})
           </div>
         </b-col>
-
-        <b-col cols="12">
-          <b-form-group label="Stripe Price ID (optional — paste after creating in Stripe Dashboard)">
-            <b-form-input v-model="form.stripePriceId" placeholder="price_..." />
-            <div class="form-text">Leave blank for now — you can add this after setting up the price in Stripe.</div>
-          </b-form-group>
-        </b-col>
       </template>
 
       <!-- Course summary -->
@@ -149,8 +142,7 @@ async function saveCourse(publish: boolean) {
         : new Date(props.form.discountEndsAt).toISOString(),
       promoVideoUrl: props.form.promoVideoUrl || undefined,
       learningPoints: cleanedLearningPoints.length ? cleanedLearningPoints : undefined,
-      thumbnailUrl: props.form.thumbnailUrl || undefined,
-      stripePriceId: props.form.stripePriceId || undefined
+      thumbnailUrl: props.form.thumbnailUrl || undefined
     }
 
     let course
