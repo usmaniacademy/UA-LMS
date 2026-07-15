@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-0 pt-md-5">
+  <section class="pt-4 pt-md-5">
     <b-container>
       <b-row class="gx-md-5 align-items-stretch">
         <!-- Left: image that fills the column height so it lines up with the cards -->

@@ -7,7 +7,7 @@
           <b-col cols="12" lg="6"
             class="d-md-flex align-items-center justify-content-center bg-primary bg-opacity-10 vh-lg-100">
             <div class="p-4 p-lg-5 text-center">
-              <img :src="uaLogo" class="img-fluid mb-4" style="max-width: 440px;" alt="Usmani Academy">
+              <img :src="uaLogo" class="auth-logo mb-4" alt="Usmani Academy">
               <p class="mb-0 h5 fw-light">Modern learning, rooted in Islamic values.</p>
             </div>
           </b-col>
@@ -168,6 +168,10 @@ async function handleSignUp() {
 </script>
 
 <style scoped>
+.auth-logo {
+  max-width: min(440px, 100%);
+  height: auto;
+}
 .role-card {
   cursor: pointer;
   transition: all 0.2s ease;
