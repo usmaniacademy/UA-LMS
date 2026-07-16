@@ -7,53 +7,30 @@
           <p class="mb-0">Islamic Studies, Science, and Technology — taught by qualified instructors.</p>
         </b-col>
       </b-row>
-      <b-row>
-        <div class="arrow-round arrow-blur arrow-hover">
-          <CustomTinySlider :settings="settings" id="trending-courses" class="pb-1">
-            <div v-for="(item, idx) in trendingCourse" :key="idx">
-              <TrendingCoursesCard :item="item" />
-            </div>
-          </CustomTinySlider>
+
+      <div v-if="store.loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+
+      <template v-else-if="store.courses.length">
+        <b-row class="g-4">
+          <b-col sm="6" xl="4" v-for="course in store.courses" :key="course.id">
+            <CourseCard :course="course" />
+          </b-col>
+        </b-row>
+        <div class="text-center mt-4">
+          <router-link :to="{ name: 'courses.list' }" class="btn btn-outline-primary">View all courses</router-link>
         </div>
-      </b-row>
+      </template>
     </b-container>
   </section>
 </template>
 <script setup lang="ts">
-import CustomTinySlider from '@/components/CustomTinySlider.vue';
-import type { TinySliderSettings } from 'tiny-slider';
+import { onMounted } from 'vue';
+import { useCourseStore } from '@/stores/course';
+import CourseCard from '@/views/courses/CourseCard.vue';
 
-import { trendingCourse } from '@/views/demos/default/components/data';
-import TrendingCoursesCard from '@/views/demos/default/components/TrendingCoursesCard.vue';
+const store = useCourseStore();
 
-const settings: TinySliderSettings = {
-  arrowKeys: true,
-  gutter: 30,
-  autoplayButton: false,
-  autoplayButtonOutput: false,
-  nested: 'inner',
-  autoplay: true,
-  controls: true,
-  edgePadding: 2,
-
-  items: 3,
-  nav: false,
-  responsive: {
-    1: {
-      items: 1,
-    },
-    576: {
-      items: 1,
-    },
-    768: {
-      items: 2,
-    },
-    992: {
-      items: 2,
-    },
-    1200: {
-      items: 3,
-    },
-  },
-};
+onMounted(() => store.fetchPublicCourses({ limit: 6 }));
 </script>
