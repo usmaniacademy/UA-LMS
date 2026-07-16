@@ -115,6 +115,9 @@ function send() {
 </script>
 <style scoped>
 .contact-bg {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background-color: #fff;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
@@ -125,6 +128,7 @@ function send() {
   background-attachment: fixed, fixed;
 }
 .contact-bg > main {
+  flex: 1 0 auto;
   background-color: transparent;
 }
 .contact-bg :deep(header.navbar-sticky) {

@@ -34,6 +34,9 @@ import Footer1 from '@/views/demos/default/components/Footer1.vue';
 </script>
 <style scoped>
 .home-bg {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background-color: #fff;
   /* White veil (first layer) keeps the Islamic pattern subtle so the content
      stays readable; the pattern stays fixed while the content scrolls over it. */
@@ -50,6 +53,7 @@ import Footer1 from '@/views/demos/default/components/Footer1.vue';
    everywhere except the footer. Make it transparent so the fixed pattern
    shows through the whole page. */
 .home-bg > main {
+  flex: 1 0 auto;
   background-color: transparent;
 }
 

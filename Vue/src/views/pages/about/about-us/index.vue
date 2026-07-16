@@ -129,6 +129,9 @@ const offerings = [
 </script>
 <style scoped>
 .about-bg {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background-color: #fff;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
@@ -139,6 +142,7 @@ const offerings = [
   background-attachment: fixed, fixed;
 }
 .about-bg > main {
+  flex: 1 0 auto;
   background-color: transparent;
 }
 .about-bg :deep(header.navbar-sticky) {

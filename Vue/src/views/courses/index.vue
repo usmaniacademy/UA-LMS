@@ -113,6 +113,9 @@ onMounted(load)
 </script>
 <style scoped>
 .courses-bg {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background-color: #fff;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
@@ -123,6 +126,7 @@ onMounted(load)
   background-attachment: fixed, fixed;
 }
 .courses-bg > main {
+  flex: 1 0 auto;
   background-color: transparent;
 }
 .courses-bg :deep(header.navbar-sticky) {
