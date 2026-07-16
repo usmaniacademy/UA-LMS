@@ -37,6 +37,17 @@ export const env = {
     clientId: process.env.ZOOM_CLIENT_ID || '',
     clientSecret: process.env.ZOOM_CLIENT_SECRET || '',
     webhookSecretToken: process.env.ZOOM_WEBHOOK_SECRET_TOKEN || ''
+  },
+
+  r2: {
+    accountId: process.env.R2_ACCOUNT_ID || '',
+    accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+    bucketName: process.env.R2_BUCKET_NAME || '',
+    // Public base URL for reading images back (r2.dev toggle, or a custom
+    // domain once one's attached). Leave blank to serve images through our
+    // own backend proxy instead of a public R2 URL.
+    publicUrl: process.env.R2_PUBLIC_URL || ''
   }
 }
 
