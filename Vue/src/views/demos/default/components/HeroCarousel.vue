@@ -85,6 +85,10 @@ const images = [...base, ...base, ...base];
   padding-bottom: 0.1em;
 }
 .hero-heading .w {
+  /* Each word is its own <span> for the per-word reveal, split across
+     lines in the template — Vue's compiler strips that whitespace
+     entirely, so the gap has to come from margin, not a text-node space. */
+  margin-right: 0.25em;
   display: inline-block;
   transform: translateY(115%);
   opacity: 0;
