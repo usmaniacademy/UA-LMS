@@ -5,8 +5,6 @@
 
       <HeroCarousel />
 
-      <Counter />
-
       <About />
 
       <TrendingCourses />
@@ -26,7 +24,6 @@
 <script setup lang="ts">
 import TopBar1 from '@/views/demos/default/components/TopBar1.vue';
 import HeroCarousel from '@/views/demos/default/components/HeroCarousel.vue';
-import Counter from '@/views/demos/default/components/Counter.vue';
 import About from '@/views/demos/school/components/About.vue';
 import TrendingCourses from '@/views/demos/default/components/TrendingCourses.vue';
 import OnFieldBanner from '@/views/demos/default/components/OnFieldBanner.vue';
