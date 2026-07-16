@@ -66,7 +66,7 @@ const settings: TinySliderSettings = {
   nested: 'inner',
   autoplay: true,
   controls: true,
-  edgePadding: 2,
+  edgePadding: 28,
   items: 4,
   nav: false,
   responsive: {
@@ -89,7 +89,7 @@ const settings: TinySliderSettings = {
 }
 .instructor-img {
   width: 100%;
-  height: 300px;
+  height: 340px;
   object-fit: cover;
   display: block;
 }

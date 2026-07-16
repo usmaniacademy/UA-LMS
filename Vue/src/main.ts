@@ -6,7 +6,6 @@ import { BootstrapIconsPlugin } from 'bootstrap-icons-vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { OhVueIcon, addIcons } from 'oh-vue-icons';
 import { FcGoogle } from 'oh-vue-icons/icons';
-import VueApexCharts from "vue3-apexcharts";
 import App from './App.vue';
 
 import 'tiny-slider/dist/tiny-slider.css';
@@ -30,7 +29,6 @@ app.component('v-icon', OhVueIcon);
 app.use(createPinia());
 app.use(router);
 app.use(createBootstrap());
-app.use(VueApexCharts);
 app.use(BootstrapIconsPlugin);
 
 app.mount('#app');

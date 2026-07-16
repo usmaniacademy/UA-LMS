@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-4 pt-md-5">
+  <section class="pt-5">
     <b-container>
       <b-row class="align-items-center g-4 g-lg-5">
         <b-col lg="6">
@@ -39,6 +39,10 @@ import about26 from '@/assets/images/about/26.jpg';
 <style scoped>
 .about-images {
   position: relative;
+  /* The inset photo overflows below this box (see .about-img-inset's
+     negative bottom offset) — reserve that space so the next section's
+     background doesn't paint over/clip it. */
+  margin-bottom: 5rem;
 }
 /* Big image fills the space */
 .about-img-main {

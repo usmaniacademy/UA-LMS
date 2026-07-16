@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-4 pt-lg-5">
+  <section class="pt-5">
     <b-container>
       <b-row class="mb-4">
         <b-col cols="12" class="text-center">
@@ -68,3 +68,13 @@ const settings: TinySliderSettings = {
   nav: true,
 };
 </script>
+<style scoped>
+/* arrow-hover (see _tiny-slider.scss) parks the arrows off-screen until
+   :hover — a state touch devices can never trigger, so on mobile they were
+   simply invisible. Below the desktop breakpoint, pin them to the visible
+   "hovered" position permanently instead. */
+@media (max-width: 991.98px) {
+  :deep(.arrow-hover [data-controls='prev']) { left: 0 !important; }
+  :deep(.arrow-hover [data-controls='next']) { right: 0 !important; }
+}
+</style>
