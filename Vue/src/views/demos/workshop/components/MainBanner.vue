@@ -77,14 +77,14 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { BIconStarFill, BIconArrowRight } from 'bootstrap-icons-vue';
 
 // Hero collage — the images you added to bg/3by4/ (1,2,4,5,6,7,8).
-import bg01 from '@/assets/images/bg/3by4/1.jpg';
-import bg02 from '@/assets/images/bg/3by4/2.jpg';
-import bg03 from '@/assets/images/bg/3by4/4.jpg';
-import bg04 from '@/assets/images/bg/3by4/5.jpg';
-import bg05 from '@/assets/images/bg/3by4/6.jpg';
-import bg06 from '@/assets/images/bg/3by4/7.jpg';
-import bg07 from '@/assets/images/bg/3by4/8.jpg';
-import bg08 from '@/assets/images/bg/3by4/2.jpg';
+import bg01 from '@/assets/images/bg/3by4/optimized-1.webp';
+import bg02 from '@/assets/images/bg/3by4/optimized-2.webp';
+import bg03 from '@/assets/images/bg/3by4/optimized-4.webp';
+import bg04 from '@/assets/images/bg/3by4/optimized-5.webp';
+import bg05 from '@/assets/images/bg/3by4/optimized-6.webp';
+import bg06 from '@/assets/images/bg/3by4/optimized-7.webp';
+import bg07 from '@/assets/images/bg/3by4/optimized-8.webp';
+import bg08 from '@/assets/images/bg/3by4/optimized-2.webp';
 
 import element17 from '@/assets/images/element/17.svg';
 </script>

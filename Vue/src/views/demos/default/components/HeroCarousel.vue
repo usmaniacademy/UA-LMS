@@ -55,13 +55,13 @@ onMounted(() => {
 });
 
 // Usmani Academy photos (bg/3by4). Add/replace files there and update this list.
-import p1 from '@/assets/images/bg/3by4/1.jpg';
-import p2 from '@/assets/images/bg/3by4/2.jpg';
-import p4 from '@/assets/images/bg/3by4/4.jpg';
-import p5 from '@/assets/images/bg/3by4/5.jpg';
-import p6 from '@/assets/images/bg/3by4/6.jpg';
-import p7 from '@/assets/images/bg/3by4/7.jpg';
-import p8 from '@/assets/images/bg/3by4/8.jpg';
+import p1 from '@/assets/images/bg/3by4/optimized-1.webp';
+import p2 from '@/assets/images/bg/3by4/optimized-2.webp';
+import p4 from '@/assets/images/bg/3by4/optimized-4.webp';
+import p5 from '@/assets/images/bg/3by4/optimized-5.webp';
+import p6 from '@/assets/images/bg/3by4/optimized-6.webp';
+import p7 from '@/assets/images/bg/3by4/optimized-7.webp';
+import p8 from '@/assets/images/bg/3by4/optimized-8.webp';
 
 // More cards in the ring → a bigger radius, so the front arc is flatter and
 // stretches wider — reaching the left/right screen edges on large monitors,
