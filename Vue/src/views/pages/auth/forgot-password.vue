@@ -5,29 +5,9 @@
         <b-row>
           <b-col cols="12" lg="6"
             class="d-md-flex align-items-center justify-content-center bg-primary bg-opacity-10 vh-lg-100">
-            <div class="p-3 p-lg-5">
-              <div class="text-center">
-                <h2 class="fw-bold">Welcome to our largest community</h2>
-                <p class="mb-0 h6 fw-light">Let's learn something new today!</p>
-              </div>
-              <img :src="element02" class="mt-5" alt="">
-              <div class="d-sm-flex mt-5 align-items-center justify-content-center">
-                <ul class="avatar-group mb-2 mb-sm-0">
-                  <li class="avatar avatar-sm">
-                    <img class="avatar-img rounded-circle" :src="avatar01" alt="avatar">
-                  </li>
-                  <li class="avatar avatar-sm">
-                    <img class="avatar-img rounded-circle" :src="avatar02" alt="avatar">
-                  </li>
-                  <li class="avatar avatar-sm">
-                    <img class="avatar-img rounded-circle" :src="avatar03" alt="avatar">
-                  </li>
-                  <li class="avatar avatar-sm">
-                    <img class="avatar-img rounded-circle" :src="avatar04" alt="avatar">
-                  </li>
-                </ul>
-                <p class="mb-0 h6 fw-light ms-0 ms-sm-3">4k+ Students joined us, now it's your turn.</p>
-              </div>
+            <div class="p-4 p-lg-5 text-center">
+              <img :src="uaLogo" class="img-fluid mb-4" style="max-width: min(440px, 100%);" alt="Usmani Academy">
+              <p class="mb-0 h5 fw-light">Modern learning, rooted in Islamic values.</p>
             </div>
           </b-col>
           <b-col cols="12" lg="6" class="d-flex justify-content-center">
@@ -64,11 +44,6 @@
   </main>
 </template>
 <script setup lang="ts">
-import avatar01 from '@/assets/images/avatar/01.jpg';
-import avatar02 from '@/assets/images/avatar/02.jpg';
-import avatar03 from '@/assets/images/avatar/03.jpg';
-import avatar04 from '@/assets/images/avatar/04.jpg';
-
-import element02 from '@/assets/images/element/02.svg';
+import uaLogo from '@/assets/images/ua-logo-dark.png.png';
 import { BIconEnvelopeFill } from 'bootstrap-icons-vue';
 </script>

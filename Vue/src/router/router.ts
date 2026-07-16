@@ -18,171 +18,9 @@ const demoRoutes = [
     },
     component: () => import('@/views/demos/default/index.vue')
   },
-  {
-    path: '/demos/education',
-    name: 'demos.education',
-    meta: {
-      title: setTitle('Education')
-    },
-    component: () => import('@/views/demos/education/index.vue')
-  },
-  {
-    path: '/demos/academy',
-    name: 'demos.academy',
-    meta: {
-      title: setTitle('Academy')
-    },
-    component: () => import('@/views/demos/academy/index.vue')
-  },
-  {
-    path: '/demos/course',
-    name: 'demos.course',
-    meta: {
-      title: setTitle('Course')
-    },
-    component: () => import('@/views/demos/course/index.vue')
-  },
-  {
-    path: '/demos/university',
-    name: 'demos.university',
-    meta: {
-      title: setTitle('University')
-    },
-    component: () => import('@/views/demos/university/index.vue')
-  },
-  {
-    path: '/demos/kindergarten',
-    name: 'demos.kindergarten',
-    meta: {
-      title: setTitle('Kindergarten')
-    },
-    component: () => import('@/views/demos/kindergarten/index.vue')
-  },
-  {
-    path: '/demos/landing',
-    name: 'demos.landing',
-    meta: {
-      title: setTitle('Landing')
-    },
-    component: () => import('@/views/demos/landing/index.vue')
-  },
-  {
-    path: '/demos/tutor',
-    name: 'demos.tutor',
-    meta: {
-      title: setTitle('Tutor')
-    },
-    component: () => import('@/views/demos/tutor/index.vue')
-  },
-  {
-    path: '/demos/school',
-    name: 'demos.school',
-    meta: {
-      title: setTitle('School')
-    },
-    component: () => import('@/views/demos/school/index.vue')
-  },
-  {
-    path: '/demos/abroad',
-    name: 'demos.abroad',
-    meta: {
-      title: setTitle('Abroad')
-    },
-    component: () => import('@/views/demos/abroad/index.vue')
-  },
-  {
-    path: '/demos/workshop',
-    name: 'demos.workshop',
-    meta: {
-      title: setTitle('Workshop')
-    },
-    component: () => import('@/views/demos/workshop/index.vue')
-  },
 ];
 
 const pagesRoutes = [
-
-  // Course
-  {
-    path: '/course/categories',
-    name: 'course.categories',
-    meta: {
-      title: setTitle('Course Categories')
-    },
-    component: () => import('@/views/pages/course/categories/index.vue')
-  },
-  {
-    path: '/course/grid',
-    name: 'course.grid.classic',
-    meta: {
-      title: setTitle('Grid Classic')
-    },
-    component: () => import('@/views/pages/course/grid-classic/index.vue')
-  },
-  {
-    path: '/course/grid-2',
-    name: 'course.grid.minimal',
-    meta: {
-      title: setTitle('Grid Minimal')
-    },
-    component: () => import('@/views/pages/course/grid-minimal/index.vue')
-  },
-  {
-    path: '/course/list',
-    name: 'course.list.classic',
-    meta: {
-      title: setTitle('List Classic')
-    },
-    component: () => import('@/views/pages/course/list-classic/index.vue')
-  },
-  {
-    path: '/course/list-2',
-    name: 'course.list.minimal',
-    meta: {
-      title: setTitle('List Minimal')
-    },
-    component: () => import('@/views/pages/course/list-minimal/index.vue')
-  },
-  {
-    path: '/course/detail',
-    name: 'course.detail',
-    meta: {
-      title: setTitle('Detail Classic')
-    },
-    component: () => import('@/views/pages/course/detail-classic/index.vue')
-  },
-  {
-    path: '/course/detail-min',
-    name: 'course.detail.minimal',
-    meta: {
-      title: setTitle('Detail Minimal')
-    },
-    component: () => import('@/views/pages/course/detail-minimal/index.vue')
-  },
-  {
-    path: '/course/detail-adv',
-    name: 'course.detail.advance',
-    meta: {
-      title: setTitle('Detail Advance')
-    },
-    component: () => import('@/views/pages/course/detail-advance/index.vue')
-  },
-  {
-    path: '/course/detail-module',
-    name: 'course.detail.module',
-    meta: {
-      title: setTitle('Detail Module')
-    },
-    component: () => import('@/views/pages/course/detail-module/index.vue')
-  },
-  {
-    path: '/course/video-player',
-    name: 'course.video.player',
-    meta: {
-      title: setTitle('Course Video')
-    },
-    component: () => import('@/views/pages/course/coursevideo/index.vue')
-  },
 
   // Products
   {
@@ -212,30 +50,6 @@ const pagesRoutes = [
     component: () => import('@/views/pages/about/contact-us/index.vue')
   },
   {
-    path: '/about/blog-grid',
-    name: 'about.blog.grid',
-    meta: {
-      title: setTitle('Blog Grid')
-    },
-    component: () => import('@/views/pages/about/blog-grid/index.vue')
-  },
-  {
-    path: '/about/blog-masonry',
-    name: 'about.blog.masonry',
-    meta: {
-      title: setTitle('Blog Masonry')
-    },
-    component: () => import('@/views/pages/about/blog-masonry/index.vue')
-  },
-  {
-    path: '/about/blog-detail',
-    name: 'about.blog.detail',
-    meta: {
-      title: setTitle('Blog Detail')
-    },
-    component: () => import('@/views/pages/about/blog-detail/index.vue')
-  },
-  {
     path: '/about/pricing',
     name: 'about.pricing',
     meta: {
@@ -244,93 +58,7 @@ const pagesRoutes = [
     component: () => import('@/views/pages/about/pricing/index.vue')
   },
 
-  // Hero
-  {
-    path: '/hero/form',
-    name: 'hero.form',
-    meta: {
-      title: setTitle('Form')
-    },
-    component: () => import('@/views/pages/heroBanner/form/index.vue')
-  },
-  {
-    path: '/hero/vector',
-    name: 'hero.vector',
-    meta: {
-      title: setTitle('Vector')
-    },
-    component: () => import('@/views/pages/heroBanner/vector/index.vue')
-  },
-
-  // Shop
-  {
-    path: '/shop',
-    name: 'shop.grid',
-    meta: {
-      title: setTitle('Shop')
-    },
-    component: () => import('@/views/pages/shop/shop/index.vue')
-  },
-  {
-    path: "/shop/:id",
-    name: "shop.product.detail",
-    params: { id: "3001" },
-    meta: {
-      title: setTitle("Shop Details")
-    },
-    component: () => import("@/views/pages/shop/shop/[id]/index.vue"),
-  },
-  {
-    path: '/shop/cart',
-    name: 'shop.cart',
-    meta: {
-      title: setTitle('Cart')
-    },
-    component: () => import('@/views/pages/shop/cart/index.vue')
-  },
-  {
-    path: '/shop/checkout',
-    name: 'shop.checkout',
-    meta: {
-      title: setTitle('Checkout')
-    },
-    component: () => import('@/views/pages/shop/checkout/index.vue')
-  },
-  {
-    path: '/shop/empty-cart',
-    name: 'shop.empty-cart',
-    meta: {
-      title: setTitle('Empty Cart')
-    },
-    component: () => import('@/views/pages/shop/empty-cart/index.vue')
-  },
-  {
-    path: '/shop/wishlist',
-    name: 'shop.wishlist',
-    meta: {
-      title: setTitle('Wishlist')
-    },
-    component: () => import('@/views/pages/shop/wishlist/index.vue')
-  },
-
   // Help
-  {
-    path: '/help-center',
-    name: 'help.center',
-    meta: {
-      title: setTitle('Help Center')
-    },
-    component: () => import('@/views/pages/help/help-center/index.vue')
-  },
-  {
-    path: "/help-center/:id",
-    name: "help.center.single",
-    params: { id: "3001" },
-    meta: {
-      title: setTitle("Help Center Details")
-    },
-    component: () => import("@/views/pages/help/help-center/[id]/index.vue"),
-  },
   {
     path: "/faq",
     name: "help.faq",
@@ -366,40 +94,6 @@ const pagesRoutes = [
     component: () => import("@/views/pages/auth/forgot-password.vue"),
   },
 
-  // Form
-  {
-    path: "/form/request-demo",
-    name: "form.request.demo",
-    meta: {
-      title: setTitle("Request Demo")
-    },
-    component: () => import("@/views/pages/form/request-demo.vue"),
-  },
-  {
-    path: "/form/book-class",
-    name: "form.book.class",
-    meta: {
-      title: setTitle("Book Class")
-    },
-    component: () => import("@/views/pages/form/book-class.vue"),
-  },
-  {
-    path: "/form/request-access",
-    name: "form.request.access",
-    meta: {
-      title: setTitle("Request Access")
-    },
-    component: () => import("@/views/pages/form/request-access/index.vue"),
-  },
-  {
-    path: "/form/admission-form",
-    name: "form.admission.form",
-    meta: {
-      title: setTitle("Admission Form")
-    },
-    component: () => import("@/views/pages/form/admission-form.vue"),
-  },
-
   // Specialty
   {
     path: "/error-404",
@@ -408,64 +102,6 @@ const pagesRoutes = [
       title: setTitle("Error 404")
     },
     component: () => import("@/views/pages/specialty/error-404.vue"),
-  },
-  {
-    path: "/coming-soon",
-    name: "specialty.coming.soon",
-    meta: {
-      title: setTitle("Coming Soon")
-    },
-    component: () => import("@/views/pages/specialty/coming-soon.vue"),
-  },
-
-  {
-    path: "/instructor-list",
-    name: "instructor.list",
-    meta: {
-      title: setTitle("Instructor List")
-    },
-    component: () => import("@/views/pages/instructors/index.vue"),
-  },
-  {
-    path: "/instructor/:id",
-    name: "instructor.single",
-    params: { id: "3001" },
-    meta: {
-      title: setTitle("Instructor Details")
-    },
-    component: () => import("@/views/pages/instructors/[id]/index.vue"),
-  },
-  {
-    path: "/become-instructor",
-    name: "become.instructor",
-    meta: {
-      title: setTitle("Become an Instructor")
-    },
-    component: () => import("@/views/pages/become-instructor/index.vue"),
-  },
-  {
-    path: "/abroad-single",
-    name: "abroad.single",
-    meta: {
-      title: setTitle("Abroad Single")
-    },
-    component: () => import("@/views/pages/abroad-single/index.vue"),
-  },
-  {
-    path: "/workshop-detail",
-    name: "workshop.detail",
-    meta: {
-      title: setTitle("Abroad Single")
-    },
-    component: () => import("@/views/pages/workshop-detail/index.vue"),
-  },
-  {
-    path: "/event-detail",
-    name: "event.detail",
-    meta: {
-      title: setTitle("Abroad Single")
-    },
-    component: () => import("@/views/pages/event-detail/index.vue"),
   },
   // ─── UA LMS — Course Routes ───────────────────────────────────────────────
   {
@@ -637,14 +273,6 @@ const accountsRoutes = [
     component: () => import("@/views/accounts/instructor/zoom/index.vue"),
   },
   {
-    path: "/instructor/course-added",
-    name: "instructor.course.added",
-    meta: {
-      title: setTitle("Course Added")
-    },
-    component: () => import("@/views/accounts/instructor/course-added.vue"),
-  },
-  {
     path: "/instructor/quiz",
     name: "instructor.quiz",
     meta: {
@@ -675,14 +303,6 @@ const accountsRoutes = [
       title: setTitle("Orders")
     },
     component: () => import("@/views/accounts/instructor/orders/index.vue"),
-  },
-  {
-    path: "/instructor/review",
-    name: "instructor.review",
-    meta: {
-      title: setTitle("Reviews")
-    },
-    component: () => import("@/views/accounts/instructor/reviews/index.vue"),
   },
   {
     path: "/instructor/edit-profile",

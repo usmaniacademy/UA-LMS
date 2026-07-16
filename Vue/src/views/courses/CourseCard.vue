@@ -19,11 +19,17 @@
 
         <div v-if="course.instructor" class="d-flex align-items-center gap-2 mb-3">
           <img
-            :src="course.instructor.avatarUrl || defaultAvatar"
+            v-if="course.instructor.avatarUrl"
+            :src="course.instructor.avatarUrl"
             class="rounded-circle"
             style="width:24px;height:24px;object-fit:cover"
             :alt="`${course.instructor.firstName} ${course.instructor.lastName}`"
           />
+          <span
+            v-else
+            class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
+            style="width:24px;height:24px;font-size:0.65rem"
+          >{{ instructorInitials }}</span>
           <span class="small text-muted">{{ course.instructor.firstName }} {{ course.instructor.lastName }}</span>
         </div>
 
@@ -40,11 +46,17 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { Course } from '@/stores/course'
 import defaultThumb from '@/assets/images/courses/4by3/08.jpg'
-import defaultAvatar from '@/assets/images/avatar/01.jpg'
 
-defineProps<{ course: Course }>()
+const props = defineProps<{ course: Course }>()
+
+const instructorInitials = computed(() => {
+  const i = props.course.instructor
+  if (!i) return ''
+  return [(i.firstName || '')[0], (i.lastName || '')[0]].filter(Boolean).join('').toUpperCase()
+})
 </script>
 
 <style scoped>

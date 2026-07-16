@@ -70,6 +70,6 @@
 </template>
 <script setup lang="ts">
 import { BIconCart3, BIconXLg } from 'bootstrap-icons-vue';
-import book02 from '@/assets/images/book/02.jpg';
-import book04 from '@/assets/images/book/04.jpg';
+import book02 from '@/assets/images/courses/4by3/08.jpg';
+import book04 from '@/assets/images/courses/4by3/08.jpg';
 </script>

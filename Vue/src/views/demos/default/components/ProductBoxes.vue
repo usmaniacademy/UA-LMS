@@ -21,8 +21,8 @@
     <!-- Popup: only the round X (no header X, no OK/Cancel) -->
     <b-modal v-model="show" no-header no-footer centered size="lg" body-class="p-0">
       <template v-if="active">
-        <div class="position-relative">
-          <img :src="active.image" class="w-100 rounded-top" style="max-height:300px;object-fit:cover" :alt="active.title">
+        <div class="position-relative popup-logo-wrap">
+          <img :src="active.image" class="popup-logo" :alt="active.title">
           <button type="button" class="btn-close-x" aria-label="Close" @click="show = false">
             <BIconX />
           </button>
@@ -144,6 +144,20 @@ function open(p: Product) {
   transform: translateY(-3px);
   background: rgba(255, 255, 255, 0.72);
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+}
+.popup-logo-wrap {
+  padding: 2rem 1.5rem 1rem;
+  background: #f8f9fa;
+  border-top-left-radius: var(--bs-modal-border-radius);
+  border-top-right-radius: var(--bs-modal-border-radius);
+}
+.popup-logo {
+  display: block;
+  max-width: 220px;
+  max-height: 90px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
 .product-fav {
   width: 52px;

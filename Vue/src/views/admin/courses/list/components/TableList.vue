@@ -51,7 +51,10 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-xs flex-shrink-0">
-                    <img class="avatar-img rounded-circle" :src="course.instructor?.avatarUrl || defaultAvatar" alt="" />
+                    <img v-if="course.instructor?.avatarUrl" class="avatar-img rounded-circle" :src="course.instructor.avatarUrl" alt="" />
+                    <span v-else class="avatar-img rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="font-size:0.65rem">
+                      {{ instructorInitials(course.instructor) }}
+                    </span>
                   </div>
                   <div class="ms-2">
                     <h6 class="mb-0 fw-light">{{ course.instructor?.firstName }} {{ course.instructor?.lastName }}</h6>
@@ -125,7 +128,11 @@ import { ref, onMounted } from 'vue'
 import { faSearch, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import { useAdminStore } from '@/stores/admin'
 import defaultThumb from '@/assets/images/courses/4by3/08.jpg'
-import defaultAvatar from '@/assets/images/avatar/01.jpg'
+
+function instructorInitials(instructor?: { firstName?: string; lastName?: string }) {
+  if (!instructor) return ''
+  return [(instructor.firstName || '')[0], (instructor.lastName || '')[0]].filter(Boolean).join('').toUpperCase()
+}
 
 const adminStore = useAdminStore()
 const searchQuery = ref('')
