@@ -15,6 +15,11 @@ export const APP_MENU_ITEMS: MenuItemType[] = [
     route: { name: 'courses.list' }
   },
   {
+    key: 'products',
+    label: 'Our Products',
+    route: { name: 'products' }
+  },
+  {
     key: 'about',
     label: 'About Us',
     route: { name: 'about' }

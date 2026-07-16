@@ -184,6 +184,16 @@ const pagesRoutes = [
     component: () => import('@/views/pages/course/coursevideo/index.vue')
   },
 
+  // Products
+  {
+    path: '/products',
+    name: 'products',
+    meta: {
+      title: setTitle('Our Products')
+    },
+    component: () => import('@/views/pages/products/index.vue')
+  },
+
   // About
   {
     path: '/about/about-us',
