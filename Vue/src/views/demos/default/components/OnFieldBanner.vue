@@ -9,7 +9,7 @@
 
       <b-row>
         <b-col cols="12">
-          <div class="arrow-round arrow-blur arrow-hover rounded-3 overflow-hidden">
+          <div class="arrow-blur arrow-hover dots-inside dots-white rounded-3 overflow-hidden">
             <CustomTinySlider :settings="settings" id="onfield-slider">
               <b-card
                 v-for="(slide, i) in slides"

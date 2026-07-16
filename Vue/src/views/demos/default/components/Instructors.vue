@@ -9,22 +9,24 @@
       </b-row>
 
       <b-row>
-        <CustomTinySlider :settings="settings" id="ua-instructors">
-          <div v-for="(item, idx) in instructors" :key="idx" class="px-2">
-            <b-card no-body class="instructor-glass">
-              <div class="position-relative">
-                <img v-if="item.image" :src="item.image" class="instructor-img" :alt="item.name">
-                <div v-else class="instructor-img instructor-placeholder d-flex align-items-center justify-content-center">
-                  <span class="display-6 text-white fw-bold">{{ initials(item.name) }}</span>
+        <div class="arrow-blur arrow-hover rounded-3 overflow-hidden">
+          <CustomTinySlider :settings="settings" id="ua-instructors">
+            <div v-for="(item, idx) in instructors" :key="idx" class="px-2">
+              <b-card no-body class="instructor-glass">
+                <div class="position-relative">
+                  <img v-if="item.image" :src="item.image" class="instructor-img" :alt="item.name">
+                  <div v-else class="instructor-img instructor-placeholder d-flex align-items-center justify-content-center">
+                    <span class="display-6 text-white fw-bold">{{ initials(item.name) }}</span>
+                  </div>
                 </div>
-              </div>
-              <b-card-body class="text-center px-2 py-3">
-                <b-card-title tag="h5" class="mb-1">{{ item.name }}</b-card-title>
-                <p class="mb-0 text-primary">{{ item.subject }}</p>
-              </b-card-body>
-            </b-card>
-          </div>
-        </CustomTinySlider>
+                <b-card-body class="text-center px-2 py-3">
+                  <b-card-title tag="h5" class="mb-1">{{ item.name }}</b-card-title>
+                  <p class="mb-0 text-primary">{{ item.subject }}</p>
+                </b-card-body>
+              </b-card>
+            </div>
+          </CustomTinySlider>
+        </div>
       </b-row>
     </b-container>
   </section>
@@ -98,5 +100,12 @@ const settings: TinySliderSettings = {
 }
 .instructor-placeholder {
   background: var(--bs-primary);
+}
+
+/* arrow-hover parks the arrows off-screen until :hover — a state touch
+   devices can never trigger. Pin them visible below the desktop breakpoint. */
+@media (max-width: 991.98px) {
+  :deep(.arrow-hover [data-controls='prev']) { left: 0 !important; }
+  :deep(.arrow-hover [data-controls='next']) { right: 0 !important; }
 }
 </style>
