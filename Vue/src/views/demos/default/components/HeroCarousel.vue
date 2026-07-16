@@ -45,8 +45,12 @@ import { BIconArrowRight } from 'bootstrap-icons-vue';
 const revealed = ref(false);
 onMounted(() => {
   if (document.getElementById('splash-screen')) {
+    // Start the reveal the instant the splash door begins to open (it stays
+    // covering the screen for ~0.95s while sliding away), so the heading is
+    // already visible/settled by the time the door has cleared — instead of
+    // the viewer watching it animate in well after the splash is gone.
     window.addEventListener('ua-splash-reveal', () => {
-      setTimeout(() => { revealed.value = true; }, 600);
+      setTimeout(() => { revealed.value = true; }, 100);
     }, { once: true });
     setTimeout(() => { revealed.value = true; }, 4000); // fallback if the event is missed
   } else {
@@ -95,8 +99,8 @@ const images = [...base, ...base, ...base];
 
 /* Words rise left-to-right (staggered by --i) for a flowing, curved reveal */
 .hero-reveal .hero-heading .w {
-  animation: heroWordIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: calc(var(--i, 0) * 0.06s);
+  animation: heroWordIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 0.045s);
 }
 .hero-reveal .hero-sub {
   animation: heroFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
