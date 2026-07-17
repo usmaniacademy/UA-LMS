@@ -48,7 +48,7 @@ export async function listPublishedCourses({ category, level, search, page = 1, 
       select: {
         id: true, title: true, slug: true, description: true,
         thumbnailUrl: true, category: true, language: true, level: true,
-        isFree: true, price: true, totalStudents: true, ratingAvg: true,
+        isFree: true, price: true, originalPrice: true, totalStudents: true, ratingAvg: true,
         instructor: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } },
         sections: { select: { lessons: { select: { duration: true } } } }
       }

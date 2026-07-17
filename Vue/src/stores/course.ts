@@ -13,6 +13,7 @@ export interface Course {
   level: 'beginner' | 'intermediate' | 'advanced'
   isFree: boolean
   price?: number
+  originalPrice?: number
   status: 'draft' | 'published' | 'archived'
   isPublished: boolean
   totalStudents: number

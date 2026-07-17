@@ -25,39 +25,48 @@
       <b-card-body class="d-flex flex-column">
         <h5 class="fw-bold mb-2 text-dark course-card-title">{{ course.title }}</h5>
 
-        <!-- Price -->
-        <div class="mb-2">
-          <span v-if="course.isFree" class="fw-bold text-success fs-6">Free</span>
-          <span v-else class="fw-bold text-primary fs-6">
-            ${{ course.price || 26 }}<span class="text-muted small fw-normal">/mo</span>
-          </span>
+        <!-- Price (with discount) -->
+        <div class="mb-3 d-flex align-items-baseline flex-wrap gap-2">
+          <span v-if="course.isFree" class="course-price fw-bold text-success">Free</span>
+          <template v-else>
+            <span class="course-price fw-bold text-primary">
+              ${{ course.price || 26 }}<span class="course-price-unit text-muted fw-normal">/mo</span>
+            </span>
+            <span v-if="hasDiscount" class="course-price-old text-muted text-decoration-line-through">
+              ${{ course.originalPrice }}
+            </span>
+            <span v-if="hasDiscount" class="badge bg-danger-subtle text-danger fw-semibold">
+              Save {{ discountPercent }}%
+            </span>
+          </template>
         </div>
 
-        <!-- Language + duration tags -->
-        <div class="d-flex flex-wrap gap-2 mb-3">
-          <span class="badge course-tag">
-            <font-awesome-icon :icon="faGlobe" class="me-1" />{{ course.language || 'English' }}
-          </span>
-          <span v-if="durationLabel" class="badge course-tag">
-            <font-awesome-icon :icon="faClock" class="me-1" />{{ durationLabel }}
-          </span>
-        </div>
+        <!-- Instructor (left) + language/duration tags (right) -->
+        <div class="d-flex align-items-center gap-2 mt-auto pt-3 border-top">
+          <template v-if="course.instructor">
+            <img
+              v-if="course.instructor.avatarUrl"
+              :src="course.instructor.avatarUrl"
+              class="rounded-circle flex-shrink-0"
+              style="width:26px;height:26px;object-fit:cover"
+              :alt="`${course.instructor.firstName} ${course.instructor.lastName}`"
+            />
+            <span
+              v-else
+              class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
+              style="width:26px;height:26px;font-size:0.7rem"
+            >{{ instructorInitials }}</span>
+            <span class="small text-muted text-truncate">{{ course.instructor.firstName }} {{ course.instructor.lastName }}</span>
+          </template>
 
-        <!-- Instructor -->
-        <div v-if="course.instructor" class="d-flex align-items-center gap-2 mt-auto pt-2 border-top">
-          <img
-            v-if="course.instructor.avatarUrl"
-            :src="course.instructor.avatarUrl"
-            class="rounded-circle"
-            style="width:26px;height:26px;object-fit:cover"
-            :alt="`${course.instructor.firstName} ${course.instructor.lastName}`"
-          />
-          <span
-            v-else
-            class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
-            style="width:26px;height:26px;font-size:0.7rem"
-          >{{ instructorInitials }}</span>
-          <span class="small text-muted">{{ course.instructor.firstName }} {{ course.instructor.lastName }}</span>
+          <div class="ms-auto d-flex align-items-center gap-2 flex-shrink-0">
+            <span v-if="durationLabel" class="badge course-tag">
+              <font-awesome-icon :icon="faClock" class="me-1" />{{ durationLabel }}
+            </span>
+            <span class="badge course-tag">
+              <font-awesome-icon :icon="faGlobe" class="me-1" />{{ course.language || 'English' }}
+            </span>
+          </div>
         </div>
       </b-card-body>
     </b-card>
@@ -92,6 +101,17 @@ const durationLabel = computed(() => {
   const m = mins % 60
   return m ? `${h}h ${m}m` : `${h}h`
 })
+
+const hasDiscount = computed(() => {
+  const p = props.course.price || 0
+  const o = props.course.originalPrice || 0
+  return !props.course.isFree && o > p && p > 0
+})
+
+const discountPercent = computed(() => {
+  if (!hasDiscount.value) return 0
+  return Math.round((1 - (props.course.price! / props.course.originalPrice!)) * 100)
+})
 </script>
 
 <style scoped>
@@ -117,6 +137,16 @@ const durationLabel = computed(() => {
   -webkit-box-orient: vertical;
   overflow: hidden;
   min-height: 2.95rem;
+}
+.course-price {
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+.course-price-unit {
+  font-size: 0.9rem;
+}
+.course-price-old {
+  font-size: 1rem;
 }
 .course-tag {
   background: var(--bs-light);
