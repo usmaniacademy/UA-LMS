@@ -13,6 +13,12 @@ enum Role {
   admin
   instructor
   student
+  content_writer
+}
+
+enum BlogStatus {
+  draft
+  published
 }
 
 enum CourseLevel {
@@ -81,6 +87,7 @@ model User {
   quizAttempts  QuizAttempt[]
   reviews       Review[]
   notifications Notification[]
+  blogPosts     BlogPost[]
 
   @@map("users")
 }
@@ -144,6 +151,7 @@ model Lesson {
   title         String
   contentType   ContentType @default(video)
   contentUrl    String?
+  textContent   String?     @db.Text // sanitized HTML body for text/reading lessons
   duration      Int?        // in seconds
   orderIndex    Int         @default(0)
   isFree        Boolean     @default(false)
@@ -277,6 +285,36 @@ model Review {
 
   @@unique([studentId, courseId])
   @@map("reviews")
+}
+
+// ─── Blog ─────────────────────────────────────────────────────────────────────
+
+model BlogPost {
+  id             String     @id @default(uuid())
+  title          String
+  slug           String     @unique
+  excerpt        String?    // short summary for listing cards + fallback meta description
+  content        String     @db.Text // sanitized HTML body
+  featuredImage  String?
+  category       String?
+  tags           String[]   @default([])
+  status         BlogStatus @default(draft)
+  publishedAt    DateTime?
+
+  // SEO overrides — fall back to title/excerpt when blank
+  seoTitle       String?
+  seoDescription String?
+  seoKeywords    String?
+
+  authorId   String?
+  authorName String?  // display name; used as-is when authorId is null (migrated posts)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author User? @relation(fields: [authorId], references: [id])
+
+  @@map("blog_posts")
 }
 
 // ─── Notifications ────────────────────────────────────────────────────────────

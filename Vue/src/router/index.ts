@@ -42,6 +42,7 @@ const router = createRouter({
 function dashboardForRole(role: string | null) {
   if (role === 'admin') return { name: 'admin.dashboard' }
   if (role === 'instructor') return { name: 'instructor.dashboard' }
+  if (role === 'content_writer') return { name: 'content.posts' }
   return { name: 'student.dashboard' }
 }
 

@@ -657,6 +657,34 @@ export const INSTRUCTOR_MENU_ITEMS = [
   },
 ];
 
+export const CONTENT_MENU_ITEMS = [
+  {
+    title: 'All Posts',
+    route: { name: 'content.posts' },
+    icon: BIconJournals
+  },
+  {
+    title: 'New Post',
+    route: { name: 'content.post.new' },
+    icon: BIconFileEarmarkPlusFill
+  },
+  {
+    title: 'View Blog',
+    route: { name: 'blog.list' },
+    icon: BIconFileEarmarkText
+  },
+  {
+    title: 'Edit Profile',
+    route: { name: 'content.edit.profile' },
+    icon: BIconPencilSquare
+  },
+  {
+    title: 'Sign Out',
+    route: { name: 'auth.sign-in' },
+    icon: BIconBoxArrowRight
+  },
+];
+
 export const STUDENT_MENU_ITEMS = [
   {
     title: 'Dashboard',

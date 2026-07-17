@@ -1,18 +1,26 @@
 import prisma from '../config/prisma.js'
 import bcrypt from 'bcryptjs'
 
-export async function createInstructor({ email, password, firstName, lastName }) {
+async function createStaffAccount({ email, password, firstName, lastName, role }) {
   const existing = await prisma.user.findUnique({ where: { email } })
   if (existing) throw Object.assign(new Error('An account with this email already exists'), { status: 409 })
   const passwordHash = await bcrypt.hash(password, 12)
   return prisma.user.create({
-    data: { email, passwordHash, firstName, lastName, role: 'instructor' },
+    data: { email, passwordHash, firstName, lastName, role },
     select: {
       id: true, email: true, firstName: true, lastName: true,
       role: true, isActive: true, avatarUrl: true, createdAt: true,
       _count: { select: { enrollments: true } }
     }
   })
+}
+
+export async function createInstructor({ email, password, firstName, lastName }) {
+  return createStaffAccount({ email, password, firstName, lastName, role: 'instructor' })
+}
+
+export async function createContentWriter({ email, password, firstName, lastName }) {
+  return createStaffAccount({ email, password, firstName, lastName, role: 'content_writer' })
 }
 
 export async function getStats() {

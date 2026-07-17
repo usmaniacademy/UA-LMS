@@ -29,6 +29,7 @@ export const createLessonSchema = z.object({
   title: z.string().min(1, 'Lesson title is required'),
   contentType: z.enum(['video', 'text', 'zoom']).default('video'),
   contentUrl: z.string().optional(),
+  textContent: z.string().optional(),
   duration: z.number().int().min(0).optional(),
   orderIndex: z.number().int().min(0).default(0),
   isFree: z.boolean().default(false),

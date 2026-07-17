@@ -120,6 +120,7 @@ async function handleSignIn() {
 
     if (user.role === 'admin') return router.push({ name: 'admin.dashboard' })
     if (user.role === 'instructor') return router.push({ name: 'instructor.dashboard' })
+    if (user.role === 'content_writer') return router.push({ name: 'content.posts' })
     router.push({ name: 'student.dashboard' })
   } catch (e: any) {
     errorMsg.value = e.message || 'Login failed. Please try again.'

@@ -160,7 +160,7 @@
 
           <!-- TEXT -->
           <div v-else>
-            <div v-if="selected.contentUrl" class="lesson-text" v-html="selected.contentUrl"></div>
+            <div v-if="selected.textContent" class="lesson-text article-body" v-html="selected.textContent"></div>
             <div v-else class="text-muted">No content added to this lesson yet.</div>
           </div>
         </template>
@@ -330,6 +330,17 @@ onMounted(async () => {
 .zoom-card { background: #F5F7F9; border: 1px solid var(--bs-border-color); }
 .zoom-lbl { color: #454545; white-space: nowrap; }
 .lms-locked { padding: 4rem 1rem; }
+/* Rendered rich-text lesson body */
+.lesson-text { font-size: 1.05rem; line-height: 1.8; color: var(--bs-body-color); max-width: 820px; }
+.lesson-text :deep(h2) { font-size: 1.5rem; font-weight: 700; margin: 1.8rem 0 .85rem; }
+.lesson-text :deep(h3) { font-size: 1.25rem; font-weight: 700; margin: 1.5rem 0 .7rem; }
+.lesson-text :deep(h4) { font-size: 1.1rem; font-weight: 700; margin: 1.25rem 0 .6rem; }
+.lesson-text :deep(p) { margin-bottom: 1rem; }
+.lesson-text :deep(ul), .lesson-text :deep(ol) { margin-bottom: 1rem; padding-left: 1.5rem; }
+.lesson-text :deep(li) { margin-bottom: .4rem; }
+.lesson-text :deep(a) { color: var(--bs-primary); text-decoration: underline; }
+.lesson-text :deep(img) { max-width: 100%; height: auto; border-radius: .5rem; margin: 1rem 0; }
+.lesson-text :deep(blockquote) { border-left: 4px solid var(--bs-primary); padding-left: 1rem; color: #555; font-style: italic; margin: 1rem 0; }
 @media (max-width: 768px) {
   .lms-player__body { flex-direction: column; }
   .lms-player__sidebar { width: 100%; max-height: 300px; }

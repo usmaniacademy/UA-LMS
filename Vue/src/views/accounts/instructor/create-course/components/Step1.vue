@@ -54,13 +54,31 @@
       </b-col>
 
       <b-col cols="12">
-        <b-form-group label="Thumbnail URL">
-          <b-form-input v-model="form.thumbnailUrl" type="url" placeholder="https://..." size="lg" />
-          <div class="form-text">Paste a direct image URL. Image upload will be added in a future update.</div>
+        <b-form-group label="Thumbnail image">
+          <div class="d-flex align-items-start gap-3 flex-wrap">
+            <div v-if="form.thumbnailUrl" class="position-relative">
+              <img :src="form.thumbnailUrl" class="rounded border" style="width:220px;height:132px;object-fit:cover;" alt="Thumbnail preview" />
+              <b-button size="sm" variant="danger" class="position-absolute top-0 end-0 m-1 py-0 px-2"
+                @click="form.thumbnailUrl = ''">&times;</b-button>
+            </div>
+            <div v-else class="rounded border border-dashed d-flex align-items-center justify-content-center text-muted"
+              style="width:220px;height:132px;">
+              <span class="small">No image</span>
+            </div>
+            <div>
+              <b-button variant="primary" :disabled="uploadingThumb" @click="triggerThumbUpload">
+                <span v-if="uploadingThumb" class="spinner-border spinner-border-sm me-2" />
+                {{ form.thumbnailUrl ? 'Replace image' : 'Upload image' }}
+              </b-button>
+              <input ref="thumbInput" type="file" accept="image/*" class="d-none" @change="onThumbSelected" />
+              <p class="small text-muted mb-2 mt-2">JPG, PNG or WebP. Max 8MB.</p>
+              <div v-if="thumbError" class="small text-danger">{{ thumbError }}</div>
+            </div>
+          </div>
+          <div class="mt-3">
+            <b-form-input v-model="form.thumbnailUrl" type="url" placeholder="…or paste a direct image URL" />
+          </div>
         </b-form-group>
-        <div v-if="form.thumbnailUrl" class="mt-2">
-          <img :src="form.thumbnailUrl" class="rounded" style="max-height:140px;object-fit:cover;" alt="Thumbnail preview" />
-        </div>
       </b-col>
 
       <b-col cols="12">
@@ -82,15 +100,48 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useAdminStore } from '@/stores/admin'
+import { useCourseStore } from '@/stores/course'
 
 const props = defineProps<{ form: any; nextPage: () => void }>()
 
 const auth = useAuthStore()
 const adminStore = useAdminStore()
+const courseStore = useCourseStore()
 const isAdmin = computed(() => auth.getUser()?.role === 'admin')
+
+// ─── Thumbnail upload ─────────────────────────────────────────────────────────
+const thumbInput = ref<HTMLInputElement | null>(null)
+const uploadingThumb = ref(false)
+const thumbError = ref('')
+
+function triggerThumbUpload() {
+  thumbInput.value?.click()
+}
+
+async function onThumbSelected(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (!file) return
+  thumbError.value = ''
+  uploadingThumb.value = true
+  try {
+    const dataUrl: string = await new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(String(reader.result))
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
+    const { url } = await courseStore.uploadImage(dataUrl, file.name)
+    props.form.thumbnailUrl = url
+  } catch (err: any) {
+    thumbError.value = err.message || 'Image upload failed'
+  } finally {
+    uploadingThumb.value = false
+    if (thumbInput.value) thumbInput.value.value = ''
+  }
+}
 
 onMounted(() => {
   if (isAdmin.value && !adminStore.instructors.length) adminStore.fetchInstructors()

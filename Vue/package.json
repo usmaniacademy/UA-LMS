@@ -18,6 +18,7 @@
     "@fortawesome/free-solid-svg-icons": "7.1.0",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@popperjs/core": "^2.11.8",
+    "@unhead/vue": "^3.1.8",
     "@vueup/vue-quill": "^1.2.0",
     "@vueuse/core": "14.1.0",
     "aos": "^2.3.4",

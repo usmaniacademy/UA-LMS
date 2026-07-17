@@ -1,5 +1,6 @@
 import prisma from '../config/prisma.js'
 import { ApiError } from '../utils/ApiError.js'
+import { sanitizeContent } from '../utils/sanitizeContent.js'
 
 function slugify(title) {
   return title
@@ -67,7 +68,7 @@ export async function getCourseBySlug(slug, userId = null) {
         include: {
           lessons: {
             orderBy: { orderIndex: 'asc' },
-            select: { id: true, title: true, contentType: true, duration: true, orderIndex: true, isFree: true, contentUrl: true, zoomMeetingId: true }
+            select: { id: true, title: true, contentType: true, duration: true, orderIndex: true, isFree: true, contentUrl: true, textContent: true, zoomMeetingId: true }
           }
         }
       },
@@ -96,7 +97,8 @@ export async function getCourseBySlug(slug, userId = null) {
     ...section,
     lessons: section.lessons.map((lesson) => ({
       ...lesson,
-      contentUrl: lesson.isFree || isEnrolled ? lesson.contentUrl : null
+      contentUrl: lesson.isFree || isEnrolled ? lesson.contentUrl : null,
+      textContent: lesson.isFree || isEnrolled ? lesson.textContent : null
     }))
   }))
 
@@ -200,6 +202,7 @@ export async function createLesson(sectionId, instructorId, data, isAdmin = fals
   const section = await prisma.courseSection.findUnique({ where: { id: sectionId }, include: { course: true } })
   if (!section) throw ApiError.notFound('Section not found')
   if (!isAdmin && section.course.instructorId !== instructorId) throw ApiError.forbidden()
+  if (data.textContent !== undefined) data.textContent = sanitizeContent(data.textContent)
   return prisma.lesson.create({ data: { sectionId, ...data } })
 }
 
@@ -210,6 +213,7 @@ export async function updateLesson(lessonId, instructorId, data, isAdmin = false
   })
   if (!lesson) throw ApiError.notFound('Lesson not found')
   if (!isAdmin && lesson.section.course.instructorId !== instructorId) throw ApiError.forbidden()
+  if (data.textContent !== undefined) data.textContent = sanitizeContent(data.textContent)
   return prisma.lesson.update({ where: { id: lessonId }, data })
 }
 
@@ -262,7 +266,7 @@ export async function getCourseForEdit(courseId, userId, isAdmin = false) {
         include: {
           lessons: {
             orderBy: { orderIndex: 'asc' },
-            select: { id: true, title: true, contentType: true, duration: true, orderIndex: true, isFree: true, contentUrl: true, zoomMeetingId: true }
+            select: { id: true, title: true, contentType: true, duration: true, orderIndex: true, isFree: true, contentUrl: true, textContent: true, zoomMeetingId: true }
           }
         }
       }

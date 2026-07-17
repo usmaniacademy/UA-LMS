@@ -9,7 +9,7 @@ export interface AuthUser {
   email: string
   firstName: string
   lastName: string
-  role: 'admin' | 'instructor' | 'student'
+  role: 'admin' | 'instructor' | 'student' | 'content_writer'
   avatarUrl?: string
 }
 

@@ -44,6 +44,17 @@ export async function createInstructor(req, res, next) {
   } catch (e) { next(e) }
 }
 
+export async function createContentWriter(req, res, next) {
+  try {
+    const { email, password, firstName, lastName } = req.body
+    if (!email || !password || password.length < 8 || !firstName || !lastName) {
+      return res.status(400).json({ error: 'Name, email, and a password of at least 8 characters are required' })
+    }
+    const user = await adminService.createContentWriter({ email, password, firstName, lastName })
+    res.status(201).json({ user })
+  } catch (e) { next(e) }
+}
+
 export async function changeUserRole(req, res, next) {
   try {
     const data = await adminService.changeUserRole(req.params.userId, req.body.role)

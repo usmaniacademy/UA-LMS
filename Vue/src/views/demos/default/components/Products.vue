@@ -23,7 +23,7 @@
     </b-container>
 
     <!-- Popup (cross to close, no footer buttons) -->
-    <b-modal v-model="show" hide-footer hide-header centered size="lg" body-class="p-0">
+    <b-modal v-model="show" no-header no-footer centered size="lg" body-class="p-0">
       <template v-if="active">
         <div class="position-relative">
           <img :src="active.image" class="w-100 rounded-top" style="max-height:300px;object-fit:cover" :alt="active.title">

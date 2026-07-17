@@ -42,6 +42,23 @@ export async function deleteImage(key) {
   await client.send(new DeleteObjectCommand({ Bucket: env.r2.bucketName, Key: key }))
 }
 
+// Decode a base64 data URL, size-check it, and upload under `folder/`.
+// Shared by the blog portal and the course builder.
+export async function uploadDataUrl(dataUrl, filename, folder = 'uploads') {
+  const match = (dataUrl || '').match(/^data:image\/(\w+);base64,(.+)$/)
+  if (!match) throw ApiError.badRequest('Invalid image data')
+  const [, ext, base64] = match
+  const buffer = Buffer.from(base64, 'base64')
+
+  const MAX_BYTES = 8 * 1024 * 1024 // 8MB
+  if (buffer.length > MAX_BYTES) throw ApiError.badRequest('Image is too large (max 8MB)')
+
+  const safeName = (filename || 'image').replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9-]/g, '-').slice(0, 40) || 'image'
+  const key = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeName}.${ext}`
+  const url = await uploadImage(buffer, key, `image/${ext}`)
+  return { url, key }
+}
+
 // ─── Proxy read (used only when R2_PUBLIC_URL isn't set) ──────────────────────
 
 export async function getImageStream(key) {

@@ -127,6 +127,20 @@ const pagesRoutes = [
     name: 'subscription.success',
     meta: { title: setTitle('Subscription Successful') },
     component: () => import('@/views/subscription/success.vue')
+  },
+
+  // ─── UA LMS — Blog Routes ─────────────────────────────────────────────────
+  {
+    path: '/blog',
+    name: 'blog.list',
+    meta: { title: setTitle('Blog') },
+    component: () => import('@/views/blog/index.vue')
+  },
+  {
+    path: '/blog/:slug',
+    name: 'blog.detail',
+    meta: { title: setTitle('Blog') },
+    component: () => import('@/views/blog/detail.vue')
   }
 ];
 
@@ -393,6 +407,32 @@ const accountsRoutes = [
       title: setTitle("Edit Profile")
     },
     component: () => import("@/views/accounts/student/edit-profile/index.vue"),
+  },
+
+  // ─── Content Writer (blog portal — content_writer + admin) ────────────────
+  {
+    path: "/content/posts",
+    name: "content.posts",
+    meta: { title: setTitle("All Posts"), authRequired: true, role: ['content_writer', 'admin'] },
+    component: () => import("@/views/accounts/content/posts/index.vue"),
+  },
+  {
+    path: "/content/posts/new",
+    name: "content.post.new",
+    meta: { title: setTitle("New Post"), authRequired: true, role: ['content_writer', 'admin'] },
+    component: () => import("@/views/accounts/content/editor/index.vue"),
+  },
+  {
+    path: "/content/posts/edit/:id",
+    name: "content.post.edit",
+    meta: { title: setTitle("Edit Post"), authRequired: true, role: ['content_writer', 'admin'] },
+    component: () => import("@/views/accounts/content/editor/index.vue"),
+  },
+  {
+    path: "/content/edit-profile",
+    name: "content.edit.profile",
+    meta: { title: setTitle("Edit Profile"), authRequired: true, role: ['content_writer', 'admin'] },
+    component: () => import("@/views/accounts/content/edit-profile/index.vue"),
   }
 ];
 

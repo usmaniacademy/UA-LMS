@@ -113,12 +113,23 @@
           </b-form-select>
         </b-form-group>
 
-        <!-- Video / Text fields -->
-        <template v-if="lessonForm.contentType !== 'zoom'">
-          <b-form-group label="Content URL">
+        <!-- Video fields -->
+        <template v-if="lessonForm.contentType === 'video'">
+          <b-form-group label="Video URL">
             <b-form-input v-model="lessonForm.contentUrl" placeholder="https://..." />
           </b-form-group>
           <b-form-group label="Duration (minutes)">
+            <b-form-input v-model.number="lessonForm.durationMin" type="number" min="0" />
+          </b-form-group>
+        </template>
+
+        <!-- Text / reading fields -->
+        <template v-else-if="lessonForm.contentType === 'text'">
+          <b-form-group label="Lesson content" description="Write the reading material. Use the toolbar for headings, bold, italic, and bullet lists.">
+            <RichTextEditor v-model="lessonForm.textContent" :upload-fn="courseStore.uploadImage" :min-height="260"
+              placeholder="Write the lesson text here..." />
+          </b-form-group>
+          <b-form-group label="Estimated reading time (minutes)">
             <b-form-input v-model.number="lessonForm.durationMin" type="number" min="0" />
           </b-form-group>
         </template>
@@ -239,6 +250,7 @@ import { useCourseStore } from '@/stores/course'
 import { useZoomStore } from '@/stores/zoom'
 import { useQuizStore } from '@/stores/quiz'
 import { BIconCheckCircleFill } from 'bootstrap-icons-vue'
+import RichTextEditor from '@/components/RichTextEditor.vue'
 
 const props = defineProps<{
   courseId: string | null
@@ -359,6 +371,7 @@ const lessonForm = reactive({
   title: '',
   contentType: 'video',
   contentUrl: '',
+  textContent: '',
   durationMin: 60,
   isFree: false,
   // Zoom-specific
@@ -395,7 +408,7 @@ function openAddLesson(section: any) {
   editingLesson.value = false
   zoomError.value = ''
   Object.assign(lessonForm, {
-    title: '', contentType: 'video', contentUrl: '', durationMin: 60, isFree: false,
+    title: '', contentType: 'video', contentUrl: '', textContent: '', durationMin: 60, isFree: false,
     zoomTopic: '', zoomStartTime: '', zoomTimezone: 'America/Chicago',
     zoomAgenda: '', zoomWaitingRoom: true, zoomAutoRecording: false,
     zoomJoinUrl: '', zoomMeetingId: ''
@@ -414,6 +427,7 @@ function openEditLesson(section: any, lesson: any) {
     title: lesson.title,
     contentType: lesson.contentType,
     contentUrl: lesson.contentUrl || '',
+    textContent: lesson.textContent || '',
     durationMin: zm?.duration || (lesson.duration ? Math.round(lesson.duration / 60) : 60),
     isFree: lesson.isFree,
     zoomTopic: zm?.topic || '',
@@ -467,6 +481,7 @@ async function saveLesson(evt: Event) {
       title: lessonForm.title,
       contentType: lessonForm.contentType,
       contentUrl,
+      textContent: lessonForm.contentType === 'text' ? lessonForm.textContent : undefined,
       duration: lessonForm.durationMin * 60,
       isFree: lessonForm.isFree,
       orderIndex: editingLesson.value

@@ -5,6 +5,8 @@ import zoomRoutes from './zoom.routes.js'
 import stripeRoutes from './stripe.routes.js'
 import adminRoutes from './admin.routes.js'
 import quizRoutes from './quiz.routes.js'
+import blogRoutes from './blog.routes.js'
+import uploadRoutes from './upload.routes.js'
 
 const router = Router()
 
@@ -18,5 +20,7 @@ router.use('/zoom', zoomRoutes)
 router.use('/stripe', stripeRoutes)
 router.use('/admin', adminRoutes)
 router.use('/quizzes', quizRoutes)
+router.use('/blog', blogRoutes)
+router.use('/uploads', uploadRoutes)
 
 export default router

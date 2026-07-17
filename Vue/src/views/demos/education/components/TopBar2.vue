@@ -52,7 +52,6 @@
     <nav class="navbar navbar-expand-xl">
       <b-container>
         <AppMenu :menu-items="menuItems" ul-class="mx-auto" logo-class="me-0">
-          <AdvanceMenu />
         </AppMenu>
         <NavSearchDropdown />
         <ProfileDropdown className='ms-1 ms-lg-0' />
@@ -64,7 +63,6 @@
 import StickyHeader from '@/components/StickyHeader.vue';
 import ProfileDropdown from '@/components/ProfileDropdown.vue';
 import NavSearchDropdown from '@/components/NavSearchDropdown.vue';
-import AdvanceMenu from '@/components/AdvanceMenu.vue';
 
 import { faHeadset, faGlobe, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';

@@ -33,6 +33,7 @@ export interface Lesson {
   title: string
   contentType: 'video' | 'text' | 'zoom'
   contentUrl?: string
+  textContent?: string
   duration?: number
   orderIndex: number
   isFree: boolean
@@ -227,12 +228,17 @@ export const useCourseStore = defineStore('course_store', () => {
     await api.delete(`/courses/lessons/${lessonId}`)
   }
 
+  // Shared image upload (course thumbnails, text-lesson inline images, etc.)
+  async function uploadImage(dataUrl: string, filename?: string): Promise<{ url: string; key: string }> {
+    return api.post('/uploads/image', { dataUrl, filename })
+  }
+
   return {
     courses, currentCourse, myCourses, loading, error, pagination,
     instructorStats, enrolledCourses, instructorStudents,
     fetchPublicCourses, fetchCourseBySlug, fetchMyCourses, fetchInstructorStats, fetchManageCourse, fetchEnrolledCourses, fetchInstructorStudents,
     createCourse, updateCourse, publishCourse, archiveCourse,
     createSection, updateSection, deleteSection,
-    createLesson, updateLesson, deleteLesson
+    createLesson, updateLesson, deleteLesson, uploadImage
   }
 })
