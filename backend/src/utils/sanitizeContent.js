@@ -1,24 +1,26 @@
-import sanitizeHtml from 'sanitize-html'
+import xss from 'xss'
 
-// Allowlist matches what the WordPress migration + the Quill rich-text editor
-// in the content-writer portal actually produce — nothing more.
-const OPTIONS = {
-  allowedTags: [
-    'p', 'br', 'hr', 'div', 'span',
-    'h2', 'h3', 'h4',
-    'strong', 'em', 'a',
-    'ul', 'ol', 'li',
-    'figure', 'figcaption', 'img',
-    'table', 'thead', 'tbody', 'tr', 'th', 'td'
-  ],
-  allowedAttributes: {
+// Pure-CommonJS sanitizer (no ESM sub-deps) so it bundles cleanly on Vercel's
+// serverless runtime. Allowlist matches what the WordPress migration + the
+// Quill rich-text editor actually produce — nothing more. Disallowed tags are
+// stripped; <script>/<style> bodies are removed entirely.
+const { FilterXSS } = xss
+
+const filter = new FilterXSS({
+  whiteList: {
+    p: ['class'], br: [], hr: [], div: ['class'], span: ['class'],
+    h2: ['class'], h3: ['class'], h4: ['class'],
+    strong: [], em: [], b: [], i: [], u: [],
     a: ['href', 'target', 'rel'],
-    img: ['src', 'alt', 'class'],
-    '*': ['class']
+    ul: ['class'], ol: ['class'], li: ['class'],
+    blockquote: ['class'],
+    figure: ['class'], figcaption: ['class'], img: ['src', 'alt', 'class'],
+    table: ['class'], thead: [], tbody: [], tr: [], th: [], td: []
   },
-  allowedSchemes: ['http', 'https', 'mailto']
-}
+  stripIgnoreTag: true,
+  stripIgnoreTagBody: ['script', 'style']
+})
 
 export function sanitizeContent(html) {
-  return sanitizeHtml(html || '', OPTIONS)
+  return filter.process(html || '')
 }
