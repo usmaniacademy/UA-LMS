@@ -209,6 +209,15 @@ const adminRoutes = [
     component: () => import("@/views/admin/instructors/list/index.vue"),
   },
   {
+    path: "/admin/content-writers",
+    name: "admin.content-writers",
+    meta: {
+      title: setTitle("Content Writers"),
+      authRequired: true
+    },
+    component: () => import("@/views/admin/contentWriters/list/index.vue"),
+  },
+  {
     path: "/admin/review",
     name: "admin.review",
     meta: {

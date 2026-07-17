@@ -30,7 +30,7 @@
                     <ul class="list-inline mb-0">
                       <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0">
                         <font-awesome-icon :icon="faPenNib" class="text-purple me-1" />
-                        Content Writer
+                        {{ roleLabel }}
                       </li>
                     </ul>
                   </div>
@@ -139,6 +139,7 @@ const initials = computed(() => {
   return [(u.firstName || '')[0], (u.lastName || '')[0]].filter(Boolean).join('').toUpperCase() || u.email[0].toUpperCase();
 });
 const avatarUrl = computed(() => user.value?.avatarUrl || '');
+const roleLabel = computed(() => user.value?.role === 'admin' ? 'Administrator' : 'Content Writer');
 
 const currentRouteName = computed(() => router.currentRoute.value.name);
 const menuItems = CONTENT_MENU_ITEMS;

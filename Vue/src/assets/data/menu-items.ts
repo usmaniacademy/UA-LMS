@@ -1,6 +1,6 @@
 import type { MenuItemType } from '@/helpers/menu';
 import { BIconGridFill, BIconBasketFill, BIconFileEarmarkPlusFill, BIconFileCheckFill, BIconQuestionDiamond, BIconCartCheckFill, BIconStarFill, BIconCardChecklist, BIconCreditCard2FrontFill, BIconHouse, BIconBasket, BIconUiChecksGrid, BIconGraphUp, BIconPeople, BIconFolderCheck, BIconStar, BIconPencilSquare, BIconWallet2, BIconGear, BIconTrash, BIconCreditCard2Front, BIconCartCheck, BIconJournals, BIconSpeedometer2, BIconWallet, BIconMortarboardFill, BIconFileEarmarkText, BIconPersonFillGear, BIconGearFill, BIconTrashFill, BIconPersonFill, BIconBoxArrowRight } from 'bootstrap-icons-vue';
-import { faUserGraduate, faUserCog, faUserTie, faLock, faHouse, faBasketShopping } from '@fortawesome/free-solid-svg-icons';
+import { faUserGraduate, faUserCog, faUserTie, faLock, faHouse, faBasketShopping, faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import { faCommentDots, faChartBar } from '@fortawesome/free-regular-svg-icons';
 
 export const APP_MENU_ITEMS: MenuItemType[] = [
@@ -18,6 +18,11 @@ export const APP_MENU_ITEMS: MenuItemType[] = [
     key: 'products',
     label: 'Our Products',
     route: { name: 'products' }
+  },
+  {
+    key: 'blog',
+    label: 'Blog',
+    route: { name: 'blog.list' }
   },
   {
     key: 'about',
@@ -589,6 +594,31 @@ export const ADMIN_MENU_ITEMS: MenuItemType[] = [
         label: "Course Category",
         route: { name: "admin.course.category" },
         parentKey: "courses",
+      },
+    ],
+  },
+  {
+    key: "blog",
+    icon: faNewspaper,
+    label: "Blog",
+    children: [
+      {
+        key: "blog-posts",
+        label: "All Posts",
+        route: { name: "content.posts" },
+        parentKey: "blog",
+      },
+      {
+        key: "blog-new",
+        label: "New Post",
+        route: { name: "content.post.new" },
+        parentKey: "blog",
+      },
+      {
+        key: "content-writers",
+        label: "Content Writers",
+        route: { name: "admin.content-writers" },
+        parentKey: "blog",
       },
     ],
   },

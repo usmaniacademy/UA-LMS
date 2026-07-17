@@ -62,6 +62,12 @@ export const useAdminStore = defineStore('admin_store', () => {
     return data.user
   }
 
+  // Admin creates a content_writer account for the blog portal
+  async function createContentWriter(payload: { firstName: string; lastName: string; email: string; password: string }) {
+    const data = await api.post('/admin/content-writers', payload)
+    return data.user
+  }
+
   // Instructors for the "assign course" dropdown (kept separate from `users`)
   async function fetchInstructors() {
     try {
