@@ -41,6 +41,16 @@
         </b-form-group>
       </b-col>
 
+      <b-col md="6">
+        <b-form-group label="Language *">
+          <b-form-select v-model="form.language" size="lg">
+            <option value="English">English</option>
+            <option value="Urdu">Urdu</option>
+            <option value="Arabic">Arabic</option>
+          </b-form-select>
+        </b-form-group>
+      </b-col>
+
       <b-col cols="12" v-if="isAdmin">
         <b-form-group label="Assign Instructor *">
           <b-form-select v-model="form.instructorId" size="lg">

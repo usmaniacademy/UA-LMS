@@ -39,7 +39,7 @@ export async function listPublishedCourses({ category, level, search, page = 1, 
     })
   }
 
-  const [courses, total] = await Promise.all([
+  const [rawCourses, total] = await Promise.all([
     prisma.course.findMany({
       where,
       skip: (page - 1) * limit,
@@ -47,13 +47,21 @@ export async function listPublishedCourses({ category, level, search, page = 1, 
       orderBy: { createdAt: 'desc' },
       select: {
         id: true, title: true, slug: true, description: true,
-        thumbnailUrl: true, category: true, level: true,
+        thumbnailUrl: true, category: true, language: true, level: true,
         isFree: true, price: true, totalStudents: true, ratingAvg: true,
-        instructor: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } }
+        instructor: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } },
+        sections: { select: { lessons: { select: { duration: true } } } }
       }
     }),
     prisma.course.count({ where })
   ])
+
+  // Fold the per-lesson durations into one course total (seconds); drop the
+  // sections payload — the card only needs the aggregate.
+  const courses = rawCourses.map(({ sections, ...c }) => ({
+    ...c,
+    totalDuration: sections.reduce((sum, s) => sum + s.lessons.reduce((ls, l) => ls + (l.duration || 0), 0), 0)
+  }))
 
   return { courses, total, page, limit, totalPages: Math.ceil(total / limit) }
 }

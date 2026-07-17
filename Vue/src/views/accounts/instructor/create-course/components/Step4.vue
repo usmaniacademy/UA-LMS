@@ -133,6 +133,7 @@ async function saveCourse(publish: boolean) {
       description: props.form.description,
       fullDescription: props.form.fullDescription || undefined,
       category: props.form.category === 'Other' ? props.form.customCategory : props.form.category,
+      language: props.form.language || 'English',
       level: props.form.level,
       isFree: props.form.isFree,
       price: props.form.isFree ? undefined : (props.form.price || undefined),

@@ -31,7 +31,7 @@
                 </li>
                 <li class="list-inline-item h6 fw-light text-white mb-0">
                   <font-awesome-icon :icon="faGlobe" class="me-1" />
-                  English
+                  {{ course.language || 'English' }}
                 </li>
               </ul>
             </b-col>
@@ -230,6 +230,14 @@
                         <span v-if="enrolling || subscribing" class="spinner-border spinner-border-sm me-1" />Enroll now
                       </b-button>
                     </div>
+                    <b-button
+                      variant="outline-danger"
+                      class="w-100 mt-2 mb-0"
+                      @click="toggle(course.id)"
+                    >
+                      <font-awesome-icon :icon="isSaved(course.id) ? faHeartSolid : faHeartRegular" class="me-1" />
+                      {{ isSaved(course.id) ? 'Saved to Wishlist' : 'Add to Wishlist' }}
+                    </b-button>
                   </div>
                 </b-card-body>
               </b-card>
@@ -251,7 +259,7 @@
                   </li>
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="h6 fw-light mb-0"><font-awesome-icon :icon="faGlobe" class="fa-fw text-primary" /> Language</span>
-                    <span>English</span>
+                    <span>{{ course.language || 'English' }}</span>
                   </li>
                 </ul>
               </b-card>
@@ -274,14 +282,17 @@ import { useAuthStore } from '@/stores/auth'
 import { api } from '@/helpers/api'
 import CustomGLightbox from '@/components/CustomGLightbox.vue'
 import { BIconPatchCheckFill, BIconCameraVideoFill } from 'bootstrap-icons-vue'
-import { faStar, faSignal, faGlobe, faPlay, faLock, faBookOpen, faStopwatch, faShareAlt, faCopy } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faSignal, faGlobe, faPlay, faLock, faBookOpen, faStopwatch, faShareAlt, faCopy, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
+import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons'
 import { faTwitterSquare, faFacebookSquare, faLinkedinIn } from '@fortawesome/free-brands-svg-icons'
 import defaultThumb from '@/assets/images/courses/4by3/08.jpg'
+import { useWishlist } from '@/composables/useWishlist'
 
 const route = useRoute()
 const store = useCourseStore()
 const subStore = useSubscriptionStore()
 const auth = useAuthStore()
+const { isSaved, toggle } = useWishlist()
 const course = computed(() => store.currentCourse as any)
 const slug = computed(() => route.params.slug as string)
 const tab = ref(1)

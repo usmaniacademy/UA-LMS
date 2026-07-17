@@ -5,6 +5,7 @@ export const createCourseSchema = z.object({
   description: z.string().optional(),
   fullDescription: z.string().optional(),
   category: z.string().optional(),
+  language: z.enum(['English', 'Urdu', 'Arabic']).optional(),
   level: z.enum(['beginner', 'intermediate', 'advanced']).default('beginner'),
   isFree: z.boolean().default(false),
   price: z.number().int().positive().optional(),

@@ -111,6 +111,7 @@ const form = reactive({
   fullDescription: '',
   category: '',
   customCategory: '',
+  language: 'English',
   level: 'beginner',
   isFree: false,
   price: null as number | null,
@@ -136,6 +137,7 @@ async function loadCourseForEdit(id: string) {
   form.description = course.description || ''
   form.fullDescription = course.fullDescription || ''
   form.level = course.level || 'beginner'
+  form.language = course.language || 'English'
   form.isFree = course.isFree || false
   form.price = course.price ?? null
   form.originalPrice = course.originalPrice ?? null

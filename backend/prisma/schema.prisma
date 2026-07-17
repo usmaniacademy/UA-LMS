@@ -103,6 +103,7 @@ model Course {
   fullDescription String?      // long description shown in the course overview
   thumbnailUrl    String?
   category       String?
+  language       String       @default("English")
   level          CourseLevel  @default(beginner)
   isFree         Boolean      @default(false)
   price          Int?         // instructor-set monthly price (USD)

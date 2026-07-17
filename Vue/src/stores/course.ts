@@ -9,12 +9,14 @@ export interface Course {
   description?: string
   thumbnailUrl?: string
   category?: string
+  language?: string
   level: 'beginner' | 'intermediate' | 'advanced'
   isFree: boolean
   price?: number
   status: 'draft' | 'published' | 'archived'
   isPublished: boolean
   totalStudents: number
+  totalDuration?: number
   ratingAvg?: number
   instructor?: { id: string; firstName: string; lastName: string; avatarUrl?: string }
   sections?: Section[]
