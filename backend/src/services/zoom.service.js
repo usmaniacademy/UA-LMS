@@ -160,7 +160,25 @@ export async function getInstructorStartUrl(meetingId, instructorId) {
   const meeting = await prisma.zoomMeeting.findUnique({ where: { id: meetingId } })
   if (!meeting) throw ApiError.notFound('Meeting not found')
   if (meeting.instructorId !== instructorId) throw ApiError.forbidden()
-  return { startUrl: meeting.startUrl, topic: meeting.topic, startTime: meeting.startTime }
+
+  // Zoom's start_url embeds a host token that expires ~2 hours after it's
+  // generated, so the copy saved at creation time is dead for any class
+  // scheduled further ahead. Re-fetch the meeting to get a fresh start_url
+  // with a valid token every time the instructor starts the class.
+  let startUrl = meeting.startUrl
+  try {
+    const fresh = await zoomApi('GET', `/meetings/${meeting.zoomMeetingId}`)
+    if (fresh?.start_url) {
+      startUrl = fresh.start_url
+      if (fresh.start_url !== meeting.startUrl) {
+        await prisma.zoomMeeting.update({ where: { id: meeting.id }, data: { startUrl: fresh.start_url } })
+      }
+    }
+  } catch {
+    // Zoom unreachable — fall back to the stored URL rather than blocking the host
+  }
+
+  return { startUrl, topic: meeting.topic, startTime: meeting.startTime }
 }
 
 // ─── Webhook event handling ───────────────────────────────────────────────────
