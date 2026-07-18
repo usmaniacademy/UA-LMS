@@ -1,5 +1,5 @@
 import type { MenuItemType } from '@/helpers/menu';
-import { BIconGridFill, BIconBasketFill, BIconFileEarmarkPlusFill, BIconFileCheckFill, BIconQuestionDiamond, BIconCartCheckFill, BIconStarFill, BIconCardChecklist, BIconCreditCard2FrontFill, BIconHouse, BIconBasket, BIconUiChecksGrid, BIconGraphUp, BIconPeople, BIconFolderCheck, BIconStar, BIconPencilSquare, BIconWallet2, BIconGear, BIconTrash, BIconCreditCard2Front, BIconCartCheck, BIconJournals, BIconSpeedometer2, BIconWallet, BIconMortarboardFill, BIconFileEarmarkText, BIconPersonFillGear, BIconGearFill, BIconTrashFill, BIconPersonFill, BIconBoxArrowRight } from 'bootstrap-icons-vue';
+import { BIconGridFill, BIconBasketFill, BIconFileEarmarkPlusFill, BIconFileCheckFill, BIconQuestionDiamond, BIconCartCheckFill, BIconStarFill, BIconCardChecklist, BIconCreditCard2FrontFill, BIconHouse, BIconBasket, BIconUiChecksGrid, BIconGraphUp, BIconPeople, BIconFolderCheck, BIconStar, BIconPencilSquare, BIconWallet2, BIconGear, BIconTrash, BIconCreditCard2Front, BIconCartCheck, BIconJournals, BIconSpeedometer2, BIconWallet, BIconMortarboardFill, BIconFileEarmarkText, BIconPersonFillGear, BIconGearFill, BIconTrashFill, BIconPersonFill, BIconBoxArrowRight, BIconCameraVideoFill } from 'bootstrap-icons-vue';
 import { faUserGraduate, faUserCog, faUserTie, faLock, faHouse, faBasketShopping, faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import { faCommentDots, faChartBar } from '@fortawesome/free-regular-svg-icons';
 
@@ -664,6 +664,11 @@ export const INSTRUCTOR_MENU_ITEMS = [
     title: 'My Courses',
     route: { name: 'instructor.course' },
     icon: BIconBasket
+  },
+  {
+    title: 'Zoom Classes',
+    route: { name: 'instructor.zoom' },
+    icon: BIconCameraVideoFill
   },
   {
     title: 'Quiz',
