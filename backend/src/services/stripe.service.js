@@ -2,6 +2,7 @@ import Stripe from 'stripe'
 import prisma from '../config/prisma.js'
 import { env } from '../config/env.js'
 import { ApiError } from '../utils/ApiError.js'
+import { sendEnrollmentEmail } from './email.service.js'
 
 const stripe = new Stripe(env.stripe.secretKey || 'sk_test_placeholder', {
   apiVersion: '2024-12-18.acacia'
@@ -149,6 +150,38 @@ async function handleCheckoutCompleted(session) {
       update: { accessExpiresAt: periodEnd }
     })
   ])
+
+  sendEnrollmentEmailAfterTransaction(userId, courseId)
+}
+
+async function sendEnrollmentEmailAfterTransaction(userId, courseId) {
+  try {
+    const [user, course] = await Promise.all([
+      prisma.user.findUnique({ where: { id: userId }, select: { email: true, firstName: true } }),
+      prisma.course.findUnique({
+        where: { id: courseId },
+        include: { instructor: { select: { firstName: true, lastName: true } } }
+      })
+    ])
+    if (!user || !course) return
+
+    const enrollment = await prisma.enrollment.findUnique({
+      where: { studentId_courseId: { studentId: userId, courseId } }
+    })
+
+    await sendEnrollmentEmail({
+      email: user.email,
+      firstName: user.firstName,
+      courseName: course.title,
+      instructorName: course.instructor
+        ? `${course.instructor.firstName} ${course.instructor.lastName}`
+        : null,
+      courseSlug: course.slug,
+      enrolledAt: enrollment?.enrolledAt || new Date()
+    })
+  } catch (err) {
+    console.error(`Failed to send enrollment email (user: ${userId}, course: ${courseId}):`, err.message)
+  }
 }
 
 async function handlePaymentSucceeded(invoice) {

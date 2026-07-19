@@ -24,5 +24,14 @@ export const updateProfileSchema = z.object({
   firstName: z.string().min(1).optional(),
   lastName: z.string().min(1).optional(),
   bio: z.string().max(2000).optional().or(z.literal('')),
-  avatarUrl: z.string().optional() // URL or base64 data URI
+  avatarUrl: z.string().optional()
+})
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email('Invalid email address')
+})
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'Token is required'),
+  password: z.string().min(8, 'Password must be at least 8 characters')
 })

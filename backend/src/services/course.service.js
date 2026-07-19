@@ -1,6 +1,7 @@
 import prisma from '../config/prisma.js'
 import { ApiError } from '../utils/ApiError.js'
 import { sanitizeContent } from '../utils/sanitizeContent.js'
+import { sendEnrollmentEmail } from './email.service.js'
 
 function slugify(title) {
   return title
@@ -305,7 +306,10 @@ export async function getCourseForEdit(courseId, userId, isAdmin = false) {
 // ─── Student enrollment ───────────────────────────────────────────────────────
 
 export async function enrollFree(courseId, studentId) {
-  const course = await prisma.course.findUnique({ where: { id: courseId } })
+  const course = await prisma.course.findUnique({
+    where: { id: courseId },
+    include: { instructor: { select: { firstName: true, lastName: true } } }
+  })
   if (!course) throw ApiError.notFound('Course not found')
   if (!course.isFree) throw ApiError.badRequest('This course requires a subscription')
 
@@ -314,7 +318,23 @@ export async function enrollFree(courseId, studentId) {
   })
   if (existing) return existing
 
-  return prisma.enrollment.create({ data: { studentId, courseId } })
+  const enrollment = await prisma.enrollment.create({
+    data: { studentId, courseId },
+    include: { student: { select: { email: true, firstName: true } } }
+  })
+
+  sendEnrollmentEmail({
+    email: enrollment.student.email,
+    firstName: enrollment.student.firstName,
+    courseName: course.title,
+    instructorName: course.instructor
+      ? `${course.instructor.firstName} ${course.instructor.lastName}`
+      : null,
+    courseSlug: course.slug,
+    enrolledAt: enrollment.enrolledAt
+  }).catch(() => {})
+
+  return enrollment
 }
 
 export async function getStudentCourses(studentId) {

@@ -1,6 +1,7 @@
 <template>
-	<TopBar8 />
-	<main>
+	<div class="d-flex flex-column min-vh-100">
+		<TopBar8 />
+		<main class="flex-grow-1">
 		<section class="pt-0">
 			<b-container fluid class="px-0">
 				<b-card no-body class="h-100px h-md-200px rounded-0"
@@ -96,9 +97,10 @@
 				</b-row>
 			</b-container>
 		</section>
-	</main>
-	<div class="account-footer-bg">
-		<Footer1 />
+		</main>
+		<div class="account-footer-bg mt-auto">
+			<Footer1 />
+		</div>
 	</div>
 </template>
 <script setup lang="ts">

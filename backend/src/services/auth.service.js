@@ -1,8 +1,10 @@
+import crypto from 'node:crypto'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import prisma from '../config/prisma.js'
 import { env } from '../config/env.js'
 import { ApiError } from '../utils/ApiError.js'
+import { sendPasswordResetEmail } from './email.service.js'
 
 const SALT_ROUNDS = 12
 
@@ -101,6 +103,63 @@ export async function getMe(userId) {
   })
   if (!user) throw ApiError.notFound('User not found')
   return user
+}
+
+export async function requestPasswordReset(email) {
+  const user = await prisma.user.findUnique({ where: { email } })
+  // Don't reveal whether the email exists
+  if (!user) return
+
+  // Invalidate any existing unused tokens for this user
+  await prisma.passwordResetToken.updateMany({
+    where: { userId: user.id, usedAt: null, expiresAt: { gt: new Date() } },
+    data: { expiresAt: new Date(0) }
+  })
+
+  const rawToken = crypto.randomBytes(32).toString('hex')
+  const tokenHash = await bcrypt.hash(rawToken, 8)
+
+  await prisma.passwordResetToken.create({
+    data: {
+      userId: user.id,
+      tokenHash,
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000) // 1 hour
+    }
+  })
+
+  const resetLink = `${env.frontendUrl}/auth/reset-password?token=${rawToken}`
+  await sendPasswordResetEmail(email, resetLink)
+}
+
+export async function resetPassword(token, newPassword) {
+  const tokens = await prisma.passwordResetToken.findMany({
+    where: { usedAt: null, expiresAt: { gt: new Date() } },
+    include: { user: true }
+  })
+
+  let matched = null
+  for (const t of tokens) {
+    const valid = await bcrypt.compare(token, t.tokenHash)
+    if (valid) {
+      matched = t
+      break
+    }
+  }
+
+  if (!matched) throw ApiError.badRequest('Invalid or expired reset token')
+
+  const passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS)
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: matched.userId },
+      data: { passwordHash }
+    }),
+    prisma.passwordResetToken.update({
+      where: { id: matched.id },
+      data: { usedAt: new Date() }
+    })
+  ])
 }
 
 export async function updateProfile(userId, data) {

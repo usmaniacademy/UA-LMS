@@ -7,16 +7,16 @@ const setTitle = (pageName?: string) => {
 const demoRoutes = [
   {
     path: '/',
-    redirect: { name: 'demos.default' },
-    name: 'index'
+    name: 'home',
+    meta: {
+      title: setTitle()
+    },
+    component: () => import('@/views/demos/default/index.vue')
   },
   {
     path: '/demos/default',
-    name: 'demos.default',
-    meta: {
-      title: setTitle('Default')
-    },
-    component: () => import('@/views/demos/default/index.vue')
+    redirect: { name: 'home' },
+    name: 'demos.default'
   },
 ];
 
@@ -92,6 +92,14 @@ const pagesRoutes = [
       title: setTitle("Forgot Password")
     },
     component: () => import("@/views/pages/auth/forgot-password.vue"),
+  },
+  {
+    path: "/auth/reset-password",
+    name: "auth.reset-password",
+    meta: {
+      title: setTitle("Reset Password")
+    },
+    component: () => import("@/views/pages/auth/reset-password.vue"),
   },
 
   // Specialty
