@@ -36,27 +36,11 @@
   </section>
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import CylinderCarousel from '@/components/CylinderCarousel.vue';
 import { BIconArrowRight } from 'bootstrap-icons-vue';
 
-// Liquid text reveal: play as the splash curtain lifts. If there's no splash
-// (e.g. navigating to Home from another page), just play shortly after mount.
-const revealed = ref(false);
-onMounted(() => {
-  if (document.getElementById('splash-screen')) {
-    // Start the reveal the instant the splash door begins to open (it stays
-    // covering the screen for ~0.95s while sliding away), so the heading is
-    // already visible/settled by the time the door has cleared — instead of
-    // the viewer watching it animate in well after the splash is gone.
-    window.addEventListener('ua-splash-reveal', () => {
-      setTimeout(() => { revealed.value = true; }, 100);
-    }, { once: true });
-    setTimeout(() => { revealed.value = true; }, 4000); // fallback if the event is missed
-  } else {
-    setTimeout(() => { revealed.value = true; }, 120);
-  }
-});
+const revealed = ref(true);
 
 // Usmani Academy photos (bg/3by4). Add/replace files there and update this list.
 import p1 from '@/assets/images/bg/3by4/optimized-1.webp';

@@ -15,7 +15,6 @@ import 'bs-stepper/dist/css/bs-stepper.min.css';
 import 'quill/dist/quill.snow.css';
 import 'choices.js/src/styles/choices.scss';
 import 'overlayscrollbars/styles/overlayscrollbars.css';
-import 'aos/dist/aos.css';
 import 'plyr/dist/plyr.css';
 
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';

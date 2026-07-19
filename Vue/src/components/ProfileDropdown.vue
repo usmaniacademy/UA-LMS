@@ -25,15 +25,22 @@
       <li>
         <hr class="dropdown-divider">
       </li>
-      <li><router-link class="dropdown-item" :to="{ name: dashboardRoute }">
-          <BIconSpeedometer2 class="fa-fw me-2" />Dashboard
-        </router-link></li>
-      <li v-if="editProfileRoute"><router-link class="dropdown-item" :to="{ name: editProfileRoute }">
-          <BIconPerson class="fa-fw me-2" />Edit Profile
-        </router-link></li>
-      <li><a class="dropdown-item bg-danger-soft-hover" href="#" @click.prevent="handleSignOut">
-          <BIconPower class="fa-fw me-2" />Sign Out
-        </a></li>
+      <template v-if="auth.isAuthenticated()">
+        <li><router-link class="dropdown-item" :to="{ name: dashboardRoute }">
+            <BIconSpeedometer2 class="fa-fw me-2" />Dashboard
+          </router-link></li>
+        <li v-if="editProfileRoute"><router-link class="dropdown-item" :to="{ name: editProfileRoute }">
+            <BIconPerson class="fa-fw me-2" />Edit Profile
+          </router-link></li>
+        <li><a class="dropdown-item bg-danger-soft-hover" href="#" @click.prevent="handleSignOut">
+            <BIconPower class="fa-fw me-2" />Sign Out
+          </a></li>
+      </template>
+      <template v-else>
+        <li><router-link class="dropdown-item" :to="{ name: 'auth.sign-in' }">
+            <BIconPower class="fa-fw me-2" />Sign In
+          </router-link></li>
+      </template>
       <li>
         <hr class="dropdown-divider">
       </li>
