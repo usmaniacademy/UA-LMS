@@ -332,7 +332,7 @@ export async function enrollFree(courseId, studentId) {
       : null,
     courseSlug: course.slug,
     enrolledAt: enrollment.enrolledAt
-  }).catch(() => {})
+  }).catch(err => console.error('[enroll] email failed:', err))
 
   return enrollment
 }

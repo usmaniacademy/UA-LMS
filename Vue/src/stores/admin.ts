@@ -160,11 +160,34 @@ export const useAdminStore = defineStore('admin_store', () => {
     finally { loading.value = false }
   }
 
+  async function removeUser(userId: string) {
+    await api.delete(`/admin/users/${userId}`)
+    users.value = users.value.filter(u => u.id !== userId)
+    usersPagination.value.total = Math.max(0, usersPagination.value.total - 1)
+  }
+
+  async function exportStudentsCSV() {
+    const base = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+    const auth = JSON.parse(localStorage.getItem('UA_AUTH') || '{}')
+    const res = await fetch(`${base}/admin/users/export.csv`, {
+      headers: { Authorization: `Bearer ${auth?.accessToken || ''}` }
+    })
+    if (!res.ok) throw new Error('Failed to export CSV')
+    const blob = await res.blob()
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'students.csv'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   return {
     stats, users, instructors, courses, revenue, loading, error,
     usersPagination, coursesPagination,
     fetchStats, fetchUsers, toggleUserActive, fetchUserDetail,
     fetchCourses, fetchCourseForAdmin, approveCourse, rejectCourse, fetchRevenue,
-    fetchInstructors, createInstructor, createCourse, deleteCourse
+    fetchInstructors, createInstructor, createContentWriter, createCourse, deleteCourse,
+    removeUser, exportStudentsCSV
   }
 })

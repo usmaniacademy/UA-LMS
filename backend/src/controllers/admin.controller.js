@@ -94,3 +94,19 @@ export async function getRevenue(req, res, next) {
     res.json(data)
   } catch (e) { next(e) }
 }
+
+export async function removeUser(req, res, next) {
+  try {
+    const data = await adminService.deleteUser(req.params.userId)
+    res.json(data)
+  } catch (e) { next(e) }
+}
+
+export async function exportUsersCSV(req, res, next) {
+  try {
+    const csv = await adminService.exportStudentsCSV()
+    res.setHeader('Content-Type', 'text/csv')
+    res.setHeader('Content-Disposition', 'attachment; filename="students.csv"')
+    res.send(csv)
+  } catch (e) { next(e) }
+}

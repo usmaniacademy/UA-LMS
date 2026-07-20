@@ -162,6 +162,20 @@ export async function resetPassword(token, newPassword) {
   ])
 }
 
+export async function changePassword(userId, currentPassword, newPassword) {
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { passwordHash: true } })
+  if (!user) throw ApiError.notFound('User not found')
+
+  const valid = await bcrypt.compare(currentPassword, user.passwordHash)
+  if (!valid) throw ApiError.unauthorized('Current password is incorrect')
+
+  const passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS)
+  await prisma.user.update({
+    where: { id: userId },
+    data: { passwordHash }
+  })
+}
+
 export async function updateProfile(userId, data) {
   const allowed = {}
   if (data.firstName !== undefined) allowed.firstName = data.firstName

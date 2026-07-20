@@ -67,7 +67,7 @@
                 <th scope="col" class="border-0">Email</th>
                 <th scope="col" class="border-0">Students</th>
                 <th scope="col" class="border-0">Status</th>
-                <th scope="col" class="border-0 rounded-end">Joined</th>
+                <th scope="col" class="border-0 rounded-end">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -96,6 +96,13 @@
                   </span>
                 </td>
                 <td>{{ formatDate(user.createdAt) }}</td>
+                <td>
+                  <b-button variant="danger-soft" class="btn-round mb-0" size="sm"
+                    v-b-tooltip.hover.top="'Remove Instructor'"
+                    @click="removeUser(user.id)">
+                    <BIconTrash />
+                  </b-button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -109,6 +116,7 @@ import { computed, onMounted, reactive, ref } from 'vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { useAdminStore } from '@/stores/admin';
 import type { AdminUser } from '@/stores/admin';
+import { BIconTrash } from 'bootstrap-icons-vue'
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const admin = useAdminStore();
@@ -171,6 +179,15 @@ function formatDate(iso: string) {
 
 function search() {
   admin.fetchUsers({ role: 'instructor', search: query.value || undefined });
+}
+
+async function removeUser(id: string) {
+  if (!confirm('Are you sure you want to permanently delete this instructor?')) return
+  try {
+    await admin.removeUser(id)
+  } catch (e: any) {
+    alert(e.message || 'Failed to remove instructor')
+  }
 }
 
 onMounted(() => admin.fetchUsers({ role: 'instructor' }));

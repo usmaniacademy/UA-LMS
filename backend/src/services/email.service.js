@@ -47,7 +47,7 @@ function baseLayout(bodyContent) {
             <td align="center" style="padding-bottom: 8px;">
               <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td align="center" style="font-size: 28px; font-weight: 800; color: #0d6efd; letter-spacing: -0.5px;">
+                  <td align="center" style="font-size: 28px; font-weight: 800; color: #0F766E; letter-spacing: -0.5px;">
                     Usmani Academy
                   </td>
                 </tr>
@@ -76,7 +76,7 @@ function baseLayout(bodyContent) {
               <p style="margin: 0; font-size: 12px; color: #6c757d; line-height: 1.6;">
                 Usmani Academy &mdash; Teaching and Learning for Understanding.<br>
                 Need help? Contact us at
-                <a href="mailto:support@usmaniacademy.com" style="color: #0d6efd; text-decoration: none;">support@usmaniacademy.com</a>
+                <a href="mailto:support@usmaniacademy.com" style="color: #0F766E; text-decoration: none;">support@usmaniacademy.com</a>
               </p>
               <p style="margin: 8px 0 0; font-size: 11px; color: #adb5bd;">
                 &copy; ${new Date().getFullYear()} Usmani Academy. All rights reserved.
@@ -110,7 +110,7 @@ function divider() {
 function button(url, text) {
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin: 24px 0;">
     <tr>
-      <td align="center" style="border-radius: 8px; background-color: #0d6efd;">
+      <td align="center" style="border-radius: 8px; background-color: #0F766E;">
         <a href="${url}" target="_blank"
            style="display: inline-block; padding: 14px 36px; font-size: 15px; font-weight: 600; color: #ffffff; text-decoration: none; border-radius: 8px; letter-spacing: 0.3px;">
           ${text}

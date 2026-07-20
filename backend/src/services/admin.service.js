@@ -178,6 +178,61 @@ export async function rejectCourse(courseId) {
   })
 }
 
+export async function deleteUser(userId) {
+  const user = await prisma.user.findUnique({ where: { id: userId } })
+  if (!user) throw Object.assign(new Error('User not found'), { status: 404 })
+  if (user.role === 'admin') throw Object.assign(new Error('Cannot delete admin accounts'), { status: 403 })
+
+  // Archive courses they taught
+  const courseIds = (await prisma.course.findMany({
+    where: { instructorId: userId },
+    select: { id: true }
+  })).map(c => c.id)
+
+  await prisma.$transaction([
+    prisma.passwordResetToken.deleteMany({ where: { userId } }),
+    prisma.notification.deleteMany({ where: { userId } }),
+    prisma.quizAttempt.deleteMany({ where: { studentId: userId } }),
+    prisma.review.deleteMany({ where: { studentId: userId } }),
+    prisma.enrollment.deleteMany({ where: { studentId: userId } }),
+    prisma.subscription.deleteMany({ where: { studentId: userId } }),
+    prisma.zoomMeeting.deleteMany({ where: { instructorId: userId } }),
+    prisma.blogPost.deleteMany({ where: { authorId: userId } }),
+    ...(courseIds.length ? [
+      prisma.enrollment.deleteMany({ where: { courseId: { in: courseIds } } }),
+      prisma.subscription.deleteMany({ where: { courseId: { in: courseIds } } }),
+      prisma.course.deleteMany({ where: { id: { in: courseIds } } })
+    ] : []),
+    prisma.user.delete({ where: { id: userId } })
+  ])
+
+  return { message: 'User deleted successfully' }
+}
+
+export async function exportStudentsCSV() {
+  const students = await prisma.user.findMany({
+    where: { role: 'student' },
+    include: {
+      _count: { select: { enrollments: true } },
+      enrollments: {
+        include: {
+          course: { select: { title: true, instructor: { select: { firstName: true, lastName: true } } } }
+        }
+      }
+    },
+    orderBy: { createdAt: 'desc' }
+  })
+
+  const header = 'Name,Email,Joined,Status,Enrolled Courses,Total Enrollments\n'
+  const rows = students.map(s => {
+    const name = `"${s.firstName} ${s.lastName}"`
+    const courses = s.enrollments.map(e => e.course.title).join('; ')
+    return `${name},${s.email},${s.createdAt.toISOString().split('T')[0]},${s.isActive ? 'Active' : 'Blocked'},"${courses}",${s._count.enrollments}`
+  }).join('\n')
+
+  return header + rows
+}
+
 export async function getRevenue() {
   const subs = await prisma.subscription.findMany({
     where: { status: { in: ['active', 'cancelled'] } },

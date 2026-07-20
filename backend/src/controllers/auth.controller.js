@@ -31,6 +31,11 @@ export const updateProfile = asyncHandler(async (req, res) => {
   res.json({ user })
 })
 
+export const changePassword = asyncHandler(async (req, res) => {
+  await AuthService.changePassword(req.user.id, req.body.currentPassword, req.body.newPassword)
+  res.json({ message: 'Password changed successfully' })
+})
+
 export const forgotPassword = asyncHandler(async (req, res) => {
   await AuthService.requestPasswordReset(req.body.email)
   res.json({ message: 'If an account with that email exists, a reset link has been sent.' })

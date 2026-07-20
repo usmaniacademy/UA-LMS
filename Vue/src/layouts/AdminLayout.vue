@@ -3,7 +3,7 @@
     <nav class="navbar sidebar navbar-expand-xl navbar-dark bg-dark">
       <div class="d-flex align-items-center">
         <router-link class="navbar-brand" :to="{ name: 'demos.default' }">
-          <img :src="uaLogo" alt="Usmani Academy" style="height:44px;max-width:100%;object-fit:contain">
+          <img :src="uaLogo" alt="Usmani Academy" style="height:110px;max-width:100%;object-fit:contain;padding:8px 0">
         </router-link>
       </div>
 

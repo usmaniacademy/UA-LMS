@@ -47,7 +47,7 @@
         </b-col>
 
         <p class="mb-0"><b>In your app set all redirect URL like:</b> <u
-            class="text-primary">https://app.eduport.abc/google/callback</u></p>
+            class="text-primary">{{ frontendUrl }}/auth/social/callback</u></p>
 
         <div class="d-flex justify-content-end">
           <b-button type="button" variant="primary" class="mb-0">Update</b-button>
@@ -58,4 +58,6 @@
 </template>
 <script setup lang="ts">
 import { faFacebook } from '@fortawesome/free-brands-svg-icons';
+
+const frontendUrl = import.meta.env.VITE_FRONTEND_URL || window.location.origin
 </script>

@@ -119,6 +119,17 @@ export const useAuthStore = defineStore('auth_store', () => {
     router.push({ name: 'auth.sign-in' })
   }
 
+  async function changePassword(currentPassword: string, newPassword: string) {
+    const token = await getValidToken()
+    const res = await fetch(`${API}/auth/change-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ currentPassword, newPassword })
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'Failed to change password')
+  }
+
   async function updateProfile(payload: {
     firstName?: string
     lastName?: string
@@ -165,6 +176,7 @@ export const useAuthStore = defineStore('auth_store', () => {
     refreshToken,
     fetchMe,
     updateProfile,
+    changePassword,
     // Legacy compat for template components that use saveSession/removeSession
     saveSession: (u: AuthUser, token: string) => _setState({ user: u, accessToken: token }),
     removeSession: logout

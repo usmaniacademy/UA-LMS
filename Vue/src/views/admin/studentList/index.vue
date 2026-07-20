@@ -17,6 +17,11 @@
               </button>
             </b-form>
           </b-col>
+          <b-col md="auto">
+            <b-button variant="outline-primary" size="sm" class="mb-0" @click="exportCSV">
+              <font-awesome-icon :icon="faDownload" class="me-1" />Export CSV
+            </b-button>
+          </b-col>
         </b-row>
       </b-card-header>
 
@@ -70,12 +75,19 @@
                 <td>{{ user._count.enrollments }}</td>
                 <td class="small text-muted">{{ formatDate(user.createdAt) }}</td>
                 <td>
-                  <b-button variant="light" class="btn-round mb-0" size="sm"
-                    v-b-tooltip.hover.top="user.isActive ? 'Block User' : 'Activate User'"
-                    @click="toggle(user.id)" :disabled="acting === user.id">
-                    <span v-if="acting === user.id" class="spinner-border spinner-border-sm" />
-                    <font-awesome-icon v-else :icon="user.isActive ? faBan : faCheck" />
-                  </b-button>
+                  <div class="d-flex gap-1">
+                    <b-button variant="light" class="btn-round mb-0" size="sm"
+                      v-b-tooltip.hover.top="user.isActive ? 'Block User' : 'Activate User'"
+                      @click="toggle(user.id)" :disabled="acting === user.id">
+                      <span v-if="acting === user.id" class="spinner-border spinner-border-sm" />
+                      <font-awesome-icon v-else :icon="user.isActive ? faBan : faCheck" />
+                    </b-button>
+                    <b-button variant="danger-soft" class="btn-round mb-0" size="sm"
+                      v-b-tooltip.hover.top="'Remove User'"
+                      @click="removeUser(user.id)">
+                      <BIconTrash />
+                    </b-button>
+                  </div>
                 </td>
               </tr>
               <tr v-if="!adminStore.users.length">
@@ -109,7 +121,8 @@
 import { ref, onMounted } from 'vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useAdminStore } from '@/stores/admin'
-import { faSearch, faBan, faCheck, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
+import { faSearch, faBan, faCheck, faDownload, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
+import { BIconTrash } from 'bootstrap-icons-vue'
 
 const adminStore = useAdminStore()
 
@@ -134,6 +147,23 @@ function changePage(p: number) { page.value = p; load() }
 async function toggle(id: string) {
   acting.value = id
   try { await adminStore.toggleUserActive(id) } catch (e: any) { alert(e.message) } finally { acting.value = null }
+}
+
+async function removeUser(id: string) {
+  if (!confirm('Are you sure you want to permanently delete this user?')) return
+  try {
+    await adminStore.removeUser(id)
+  } catch (e: any) {
+    alert(e.message || 'Failed to remove user')
+  }
+}
+
+async function exportCSV() {
+  try {
+    await adminStore.exportStudentsCSV()
+  } catch (e: any) {
+    alert(e.message || 'Failed to export CSV')
+  }
 }
 
 onMounted(load)

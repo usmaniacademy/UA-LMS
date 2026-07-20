@@ -34,10 +34,16 @@
         <b-col lg="3">
           <h5 class="mb-2 mb-md-4">Contact</h5>
           <p class="mb-2">
-            Toll free:<span class="h6 fw-light ms-2">+1234 568 963</span>
-            <span class="d-block small">(9:AM to 8:PM IST)</span>
+            Phone:<span class="h6 fw-light ms-2">+1 (316) 235-6743</span>
           </p>
-          <p class="mb-0">Email:<span class="h6 fw-light ms-2">info@usmaniacademy.com</span></p>
+          <p class="mb-2">
+            Email:<span class="h6 fw-light ms-2">info@usmaniacademy.com</span>
+          </p>
+          <p class="mb-0">
+            <span class="h6 fw-light">Usmani Academy<br>
+            555 N. Woodlawn St. Suite - 220<br>
+            Wichita, KS 67208</span>
+          </p>
         </b-col>
       </b-row>
 
