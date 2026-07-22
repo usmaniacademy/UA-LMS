@@ -12,6 +12,7 @@ export interface Course {
   language?: string
   level: 'beginner' | 'intermediate' | 'advanced'
   isFree: boolean
+  paymentType?: 'monthly' | 'one_time'
   price?: number
   originalPrice?: number
   status: 'draft' | 'published' | 'archived'

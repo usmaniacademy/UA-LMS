@@ -43,38 +43,37 @@ export async function createCheckoutSession(userId, courseId) {
 
   if (!user) throw ApiError.notFound('User not found')
   if (!course) throw ApiError.notFound('Course not found')
-  if (course.isFree) throw ApiError.badRequest('This course is free — no subscription needed')
+  if (course.isFree) throw ApiError.badRequest('This course is free — no payment needed')
   if (!course.price || course.price <= 0) throw ApiError.badRequest('This course does not have a price set yet')
 
-  // Check for existing active subscription
-  const existing = await prisma.subscription.findFirst({
-    where: { studentId: userId, courseId, status: 'active' }
-  })
-  if (existing) throw ApiError.conflict('You already have an active subscription to this course')
+  const { hasAccess } = await checkCourseAccess(userId, courseId)
+  if (hasAccess) throw ApiError.conflict('You already have access to this course')
 
   const customerId = await getOrCreateCustomer(user)
+  const isOneTime = course.paymentType === 'one_time'
 
-  const session = await stripe.checkout.sessions.create({
+  const priceData = {
+    currency: 'usd',
+    unit_amount: Math.round(course.price * 100), // dollars -> cents
+    product_data: { name: course.title }
+  }
+  if (!isOneTime) priceData.recurring = { interval: 'month' }
+
+  const sessionParams = {
     customer: customerId,
-    mode: 'subscription',
+    mode: isOneTime ? 'payment' : 'subscription',
     payment_method_types: ['card'],
-    // Inline pricing: Stripe bills the course's monthly price directly, so we
-    // never have to pre-create a Product/Price in the Stripe Dashboard per course.
-    // Stripe auto-creates the Product/Price behind the scenes from these values.
-    line_items: [{
-      price_data: {
-        currency: 'usd',
-        unit_amount: Math.round(course.price * 100), // dollars -> cents
-        recurring: { interval: 'month' },
-        product_data: { name: course.title }
-      },
-      quantity: 1
-    }],
+    line_items: [{ price_data: priceData, quantity: 1 }],
     success_url: `${env.frontendUrl}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${env.frontendUrl}/courses/${course.slug}`,
-    metadata: { userId, courseId },
-    subscription_data: { metadata: { userId, courseId } }
-  })
+    metadata: { userId, courseId, paymentType: course.paymentType }
+  }
+
+  if (!isOneTime) {
+    sessionParams.subscription_data = { metadata: { userId, courseId } }
+  }
+
+  const session = await stripe.checkout.sessions.create(sessionParams)
 
   return { checkoutUrl: session.url, sessionId: session.id }
 }
@@ -124,32 +123,55 @@ async function handleCheckoutCompleted(session) {
   const { userId, courseId } = session.metadata || {}
   if (!userId || !courseId) return
 
-  const subscription = await stripe.subscriptions.retrieve(session.subscription)
+  if (session.mode === 'payment') {
+    await prisma.$transaction([
+      prisma.purchase.upsert({
+        where: { stripeCheckoutSessionId: session.id },
+        create: {
+          studentId: userId,
+          courseId,
+          stripeCheckoutSessionId: session.id,
+          stripePaymentIntentId: typeof session.payment_intent === 'string'
+            ? session.payment_intent
+            : session.payment_intent?.id || null,
+          amount: session.amount_total || 0
+        },
+        update: {}
+      }),
+      prisma.enrollment.upsert({
+        where: { studentId_courseId: { studentId: userId, courseId } },
+        create: { studentId: userId, courseId, accessExpiresAt: null },
+        update: { accessExpiresAt: null }
+      })
+    ])
+  } else {
+    const subscription = await stripe.subscriptions.retrieve(session.subscription)
 
-  const periodStart = new Date(subscription.current_period_start * 1000)
-  const periodEnd = new Date(subscription.current_period_end * 1000)
+    const periodStart = new Date(subscription.current_period_start * 1000)
+    const periodEnd = new Date(subscription.current_period_end * 1000)
 
-  await prisma.$transaction([
-    prisma.subscription.upsert({
-      where: { stripeSubscriptionId: subscription.id },
-      create: {
-        studentId: userId,
-        courseId,
-        stripeCustomerId: session.customer,
-        stripeSubscriptionId: subscription.id,
-        stripePriceId: subscription.items.data[0]?.price.id || '',
-        status: 'active',
-        currentPeriodStart: periodStart,
-        currentPeriodEnd: periodEnd
-      },
-      update: { status: 'active', currentPeriodStart: periodStart, currentPeriodEnd: periodEnd }
-    }),
-    prisma.enrollment.upsert({
-      where: { studentId_courseId: { studentId: userId, courseId } },
-      create: { studentId: userId, courseId, accessExpiresAt: periodEnd },
-      update: { accessExpiresAt: periodEnd }
-    })
-  ])
+    await prisma.$transaction([
+      prisma.subscription.upsert({
+        where: { stripeSubscriptionId: subscription.id },
+        create: {
+          studentId: userId,
+          courseId,
+          stripeCustomerId: session.customer,
+          stripeSubscriptionId: subscription.id,
+          stripePriceId: subscription.items.data[0]?.price.id || '',
+          status: 'active',
+          currentPeriodStart: periodStart,
+          currentPeriodEnd: periodEnd
+        },
+        update: { status: 'active', currentPeriodStart: periodStart, currentPeriodEnd: periodEnd }
+      }),
+      prisma.enrollment.upsert({
+        where: { studentId_courseId: { studentId: userId, courseId } },
+        create: { studentId: userId, courseId, accessExpiresAt: periodEnd },
+        update: { accessExpiresAt: periodEnd }
+      })
+    ])
+  }
 
   sendEnrollmentEmailAfterTransaction(userId, courseId)
 }
@@ -279,21 +301,24 @@ export async function cancelSubscription(subscriptionId, studentId) {
 }
 
 export async function checkCourseAccess(studentId, courseId) {
-  const [enrollment, subscription] = await Promise.all([
+  const [enrollment, subscription, purchase] = await Promise.all([
     prisma.enrollment.findUnique({
       where: { studentId_courseId: { studentId, courseId } }
     }),
     prisma.subscription.findFirst({
       where: { studentId, courseId, status: 'active' }
+    }),
+    prisma.purchase.findUnique({
+      where: { studentId_courseId: { studentId, courseId } }
     })
   ])
 
-  const hasAccess = !!(
+  const hasAccess = !!purchase || !!(
     enrollment && (
       !enrollment.accessExpiresAt ||
       enrollment.accessExpiresAt > new Date()
     )
   )
 
-  return { hasAccess, enrollment, subscription }
+  return { hasAccess, enrollment, subscription, purchase }
 }

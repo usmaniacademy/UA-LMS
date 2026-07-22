@@ -13,7 +13,7 @@
           </p>
           <ul class="list-inline mb-0 mt-3 d-flex gap-1">
             <li class="list-inline-item" v-for="(link, idx) in socialLink" :key="idx">
-              <a :class="`btn btn-white btn-sm shadow px-2 ${link.class}`" href="#">
+              <a :class="`btn btn-white btn-sm shadow px-2 ${link.class}`" :href="link.url" target="_blank" rel="noopener noreferrer">
                 <font-awesome-icon :icon="link.icon" class="fa-fw" />
               </a>
             </li>
@@ -67,7 +67,7 @@
 </template>
 <script setup lang="ts">
 import { currentYear } from '@/helpers/constants';
-import { faFacebookF, faInstagram, faTwitter, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
+import { faFacebookF, faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 
 import logo from '@/assets/images/ua-logo-dark.png.png';
 import logolight from '@/assets/images/ua-logo-light.png.png';
@@ -94,10 +94,9 @@ const footerLinks = [
 ];
 
 const socialLink = [
-  { icon: faFacebookF, class: 'text-facebook' },
-  { icon: faInstagram, class: 'text-instagram' },
-  { icon: faTwitter, class: 'text-twitter' },
-  { icon: faLinkedinIn, class: 'text-linkedin' },
+  { icon: faFacebookF, class: 'text-facebook', url: 'https://www.facebook.com/usmaniacademyusa/' },
+  { icon: faInstagram, class: 'text-instagram', url: 'https://www.instagram.com/usmani_academy/' },
+  { icon: faLinkedinIn, class: 'text-linkedin', url: 'https://www.linkedin.com/company/usmani-academy-llc/' },
 ];
 </script>
 <style scoped>

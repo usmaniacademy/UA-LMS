@@ -53,6 +53,11 @@ enum SubscriptionStatus {
   trialing
 }
 
+enum PaymentType {
+  monthly
+  one_time
+}
+
 enum NotificationType {
   zoom_starting
   payment_failed
@@ -83,6 +88,7 @@ model User {
   courses       Course[]       @relation("InstructorCourses")
   enrollments   Enrollment[]
   subscriptions Subscription[]
+  purchases     Purchase[]
   zoomMeetings  ZoomMeeting[]
   quizAttempts  QuizAttempt[]
   reviews       Review[]
@@ -107,7 +113,8 @@ model Course {
   language       String       @default("English")
   level          CourseLevel  @default(beginner)
   isFree         Boolean      @default(false)
-  price          Int?         // instructor-set monthly price (USD)
+  paymentType    PaymentType  @default(monthly)
+  price          Int?         // instructor-set price (USD)
   originalPrice  Int?         // "compare at" price shown struck through for a discount
   discountEndsAt DateTime?    // when the discounted price ends ("X days left at this price")
   promoVideoUrl  String?
@@ -125,6 +132,7 @@ model Course {
   sections      CourseSection[]
   enrollments   Enrollment[]
   subscriptions Subscription[]
+  purchases     Purchase[]
   zoomMeetings  ZoomMeeting[]
   quizzes       Quiz[]
   reviews       Review[]
@@ -227,6 +235,25 @@ model Subscription {
   course  Course @relation(fields: [courseId], references: [id])
 
   @@map("subscriptions")
+}
+
+// ─── One-time Purchases ───────────────────────────────────────────────────────
+
+model Purchase {
+  id                      String   @id @default(uuid())
+  studentId               String
+  courseId                String
+  stripeCheckoutSessionId String   @unique
+  stripePaymentIntentId   String?
+  amount                  Int      // cents
+  currency                String   @default("usd")
+  purchasedAt             DateTime @default(now())
+
+  student User   @relation(fields: [studentId], references: [id])
+  course  Course @relation(fields: [courseId], references: [id])
+
+  @@unique([studentId, courseId])
+  @@map("purchases")
 }
 
 // ─── Quizzes ─────────────────────────────────────────────────────────────────

@@ -30,7 +30,7 @@
           <span v-if="course.isFree" class="course-price fw-bold text-success">Free</span>
           <template v-else>
             <span class="course-price fw-bold text-primary">
-              ${{ course.price || 26 }}<span class="course-price-unit text-muted fw-normal">/mo</span>
+              ${{ course.price || 26 }}<span v-if="priceUnit" class="course-price-unit text-muted fw-normal">{{ priceUnit }}</span>
             </span>
             <span v-if="hasDiscount" class="course-price-old text-muted text-decoration-line-through">
               ${{ course.originalPrice }}
@@ -85,6 +85,8 @@ import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons'
 const props = defineProps<{ course: Course }>()
 
 const { isSaved, toggle } = useWishlist()
+
+const priceUnit = computed(() => (props.course.paymentType === 'one_time' ? '' : '/mo'))
 
 const instructorInitials = computed(() => {
   const i = props.course.instructor

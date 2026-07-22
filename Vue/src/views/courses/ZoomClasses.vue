@@ -12,50 +12,51 @@
 
     <div v-else class="d-flex flex-column gap-3">
       <div v-for="meeting in meetings" :key="meeting.id"
-        class="border rounded-3 p-4"
+        class="border rounded-3 p-3 p-md-4"
         :class="{
           'border-success bg-success bg-opacity-10': meeting.status === 'live',
           'border-secondary bg-light': meeting.status === 'completed'
         }">
 
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
-          <div>
-            <div class="d-flex align-items-center gap-2 mb-1">
-              <span v-if="meeting.status === 'live'" class="badge bg-success">🔴 LIVE NOW</span>
-              <span v-else-if="meeting.status === 'completed'" class="badge bg-secondary">Completed</span>
-              <span v-else class="badge bg-primary">Upcoming</span>
-              <h6 class="mb-0 fw-bold">{{ meeting.topic }}</h6>
+        <div class="d-flex flex-column gap-3">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+            <div class="flex-grow-1 min-w-0">
+              <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                <span v-if="meeting.status === 'live'" class="badge bg-success text-nowrap">LIVE NOW</span>
+                <span v-else-if="meeting.status === 'completed'" class="badge bg-secondary text-nowrap">Completed</span>
+                <span v-else class="badge bg-primary text-nowrap">Upcoming</span>
+                <h6 class="mb-0 fw-bold text-break">{{ meeting.topic }}</h6>
+              </div>
+
+              <div class="text-muted small d-flex flex-wrap align-items-center gap-1">
+                <span>{{ formatDate(meeting.startTime) }}</span>
+                <span class="mx-1">·</span>
+                <span>{{ meeting.duration }} min</span>
+              </div>
+
+              <div v-if="meeting.agenda" class="text-muted small mt-1 text-break">{{ meeting.agenda }}</div>
             </div>
 
-            <div class="text-muted small">
-              📅 {{ formatDate(meeting.startTime) }} &nbsp;·&nbsp;
-              ⏱ {{ meeting.duration }} min
-            </div>
+            <div class="d-grid d-md-flex gap-2 align-items-center flex-shrink-0">
+              <template v-if="meeting.status === 'live' || canJoin(meeting.startTime)">
+                <b-button v-if="isEnrolled" variant="success" @click="joinClass(meeting.id)" :disabled="joining === meeting.id">
+                  <span v-if="joining === meeting.id" class="spinner-border spinner-border-sm me-1" />
+                  Join Class
+                </b-button>
+                <div v-else class="text-muted small">Enroll to join</div>
+              </template>
 
-            <div v-if="meeting.agenda" class="text-muted small mt-1">{{ meeting.agenda }}</div>
-
-            <!-- Countdown for upcoming -->
-            <div v-if="meeting.status === 'scheduled'" class="mt-2">
-              <CountdownTimer :targetTime="meeting.startTime" />
+              <a v-if="meeting.status === 'completed' && meeting.recordingUrl && isEnrolled"
+                :href="meeting.recordingUrl" target="_blank"
+                class="btn btn-sm btn-outline-primary">
+                Watch Recording
+              </a>
             </div>
           </div>
 
-          <div class="d-flex gap-2 align-items-center">
-            <!-- Join button (appears 10 min before) -->
-            <template v-if="meeting.status === 'live' || canJoin(meeting.startTime)">
-              <b-button v-if="isEnrolled" variant="success" @click="joinClass(meeting.id)" :disabled="joining === meeting.id">
-                <span v-if="joining === meeting.id" class="spinner-border spinner-border-sm me-1" />
-                Join Class
-              </b-button>
-              <div v-else class="text-muted small">Enroll to join</div>
-            </template>
-
-            <!-- Recording link for completed -->
-            <a v-if="meeting.status === 'completed' && meeting.recordingUrl && isEnrolled"
-              :href="meeting.recordingUrl" target="_blank"
-              class="btn btn-sm btn-outline-primary">
-              🎬 Watch Recording
-            </a>
+          <!-- Countdown for upcoming -->
+          <div v-if="meeting.status === 'scheduled'" class="text-center text-md-start">
+            <CountdownTimer :targetTime="meeting.startTime" />
           </div>
         </div>
       </div>

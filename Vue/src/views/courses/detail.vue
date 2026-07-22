@@ -190,7 +190,7 @@
                         <h3 class="fw-bold mb-0 text-success">Free</h3>
                       </div>
                       <div v-else class="d-flex align-items-center flex-wrap gap-2">
-                        <h3 class="fw-bold mb-0">${{ monthlyPrice }}<span class="fs-6 fw-normal text-body">/month</span></h3>
+                        <h3 class="fw-bold mb-0">${{ displayPrice }}<span v-if="priceSuffix" class="fs-6 fw-normal text-body">{{ priceSuffix }}</span></h3>
                         <span v-if="hasDiscount" class="text-decoration-line-through text-muted">${{ course.originalPrice }}</span>
                         <span v-if="hasDiscount" class="badge text-bg-orange mb-0">{{ discountPercent }}% off</span>
                       </div>
@@ -299,7 +299,9 @@ const tab = ref(1)
 const enrolling = ref(false)
 const subscribing = ref(false)
 
-const monthlyPrice = computed(() => course.value?.price || 26)
+const displayPrice = computed(() => course.value?.price || 26)
+const isOneTime = computed(() => course.value?.paymentType === 'one_time')
+const priceSuffix = computed(() => (isOneTime.value ? '' : '/month'))
 const learningPoints = computed<string[]>(() =>
   Array.isArray(course.value?.learningPoints) ? course.value.learningPoints.filter((p: string) => p && p.trim()) : []
 )
@@ -319,12 +321,12 @@ const instructorInitials = computed(() => {
 // ─── Discount ────────────────────────────────────────────────────────────────
 const hasDiscount = computed(() => {
   const o = course.value?.originalPrice
-  return !course.value?.isFree && o && o > monthlyPrice.value
+  return !course.value?.isFree && o && o > displayPrice.value
 })
 const discountPercent = computed(() => {
   if (!hasDiscount.value) return 0
   const o = course.value.originalPrice
-  return Math.round(((o - monthlyPrice.value) / o) * 100)
+  return Math.round(((o - displayPrice.value) / o) * 100)
 })
 const daysLeft = computed(() => {
   const end = course.value?.discountEndsAt

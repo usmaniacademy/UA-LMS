@@ -14,8 +14,28 @@
 
       <!-- Paid pricing fields -->
       <template v-if="!form.isFree">
+        <b-col cols="12">
+          <b-form-group label="Payment type *">
+            <div class="d-flex flex-wrap gap-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="paymentMonthly" value="monthly" v-model="form.paymentType">
+                <label class="form-check-label" for="paymentMonthly">Monthly subscription</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="paymentOneTime" value="one_time" v-model="form.paymentType">
+                <label class="form-check-label" for="paymentOneTime">One-time payment</label>
+              </div>
+            </div>
+            <div class="form-text">
+              {{ form.paymentType === 'one_time'
+                ? 'Students pay once and get lifetime access to the course.'
+                : 'Students are billed monthly via Stripe until they cancel.' }}
+            </div>
+          </b-form-group>
+        </b-col>
+
         <b-col md="4">
-          <b-form-group label="Monthly price (USD) *">
+          <b-form-group :label="form.paymentType === 'one_time' ? 'Course price (USD) *' : 'Monthly price (USD) *'">
             <b-input-group prepend="$">
               <b-form-input
                 v-model.number="form.price"
@@ -25,7 +45,11 @@
                 placeholder="e.g. 49"
               />
             </b-input-group>
-            <div class="form-text">Students will be billed this amount per month via Stripe.</div>
+            <div class="form-text">
+              {{ form.paymentType === 'one_time'
+                ? 'Students will pay this amount once via Stripe.'
+                : 'Students will be billed this amount per month via Stripe.' }}
+            </div>
           </b-form-group>
         </b-col>
 
@@ -61,7 +85,7 @@
               <tr><td class="text-muted">Title</td><td class="fw-semibold">{{ form.title || '—' }}</td></tr>
               <tr><td class="text-muted">Category</td><td>{{ form.category === 'Other' ? form.customCategory : form.category || '—' }}</td></tr>
               <tr><td class="text-muted">Level</td><td class="text-capitalize">{{ form.level }}</td></tr>
-              <tr><td class="text-muted">Pricing</td><td>{{ form.isFree ? 'Free' : form.price ? `$${form.price}/month` : 'Set price above' }}</td></tr>
+              <tr><td class="text-muted">Pricing</td><td>{{ pricingSummary }}</td></tr>
             </tbody>
           </table>
         </div>
@@ -120,6 +144,14 @@ const discountPercent = computed(() => {
   return Math.round(((o - p) / o) * 100)
 })
 
+const pricingSummary = computed(() => {
+  if (props.form.isFree) return 'Free'
+  if (!props.form.price) return 'Set price above'
+  return props.form.paymentType === 'one_time'
+    ? `$${props.form.price} one-time`
+    : `$${props.form.price}/month`
+})
+
 async function saveCourse(publish: boolean) {
   error.value = ''
   success.value = ''
@@ -136,6 +168,7 @@ async function saveCourse(publish: boolean) {
       language: props.form.language || 'English',
       level: props.form.level,
       isFree: props.form.isFree,
+      paymentType: props.form.isFree ? undefined : (props.form.paymentType || 'monthly'),
       price: props.form.isFree ? undefined : (props.form.price || undefined),
       originalPrice: props.form.isFree ? undefined : (props.form.originalPrice || undefined),
       discountEndsAt: props.form.isFree || !props.form.discountEndsAt

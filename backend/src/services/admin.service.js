@@ -27,7 +27,7 @@ export async function getStats() {
   const [totalStudents, totalInstructors, totalCourses, publishedCourses, draftCourses, activeSubs] = await Promise.all([
     prisma.user.count({ where: { role: 'student' } }),
     prisma.user.count({ where: { role: 'instructor' } }),
-    prisma.course.count(),
+    prisma.course.count({ where: { status: { not: 'archived' } } }),
     prisma.course.count({ where: { status: 'published' } }),
     prisma.course.count({ where: { status: 'draft' } }),
     prisma.subscription.count({ where: { status: 'active' } })

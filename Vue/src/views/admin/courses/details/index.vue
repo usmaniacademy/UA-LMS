@@ -139,7 +139,9 @@ const instructorInitials = computed(() =>
 const priceLabel = computed(() => {
   if (!course.value) return '';
   if (course.value.isFree) return 'Free';
-  return course.value.price ? `${currency}${course.value.price}/mo` : 'Paid';
+  return course.value.price
+    ? `${currency}${course.value.price}${course.value.paymentType === 'one_time' ? '' : '/mo'}`
+    : 'Paid';
 });
 
 const metrics = computed(() => course.value ? [

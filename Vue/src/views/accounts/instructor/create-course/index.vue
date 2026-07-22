@@ -114,6 +114,7 @@ const form = reactive({
   language: 'English',
   level: 'beginner',
   isFree: false,
+  paymentType: 'monthly' as 'monthly' | 'one_time',
   price: null as number | null,
   originalPrice: null as number | null,
   discountEndsAt: '',
@@ -139,6 +140,7 @@ async function loadCourseForEdit(id: string) {
   form.level = course.level || 'beginner'
   form.language = course.language || 'English'
   form.isFree = course.isFree || false
+  form.paymentType = course.paymentType || 'monthly'
   form.price = course.price ?? null
   form.originalPrice = course.originalPrice ?? null
   form.discountEndsAt = course.discountEndsAt ? new Date(course.discountEndsAt).toISOString().slice(0, 10) : ''

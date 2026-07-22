@@ -8,6 +8,7 @@ export const createCourseSchema = z.object({
   language: z.enum(['English', 'Urdu', 'Arabic']).optional(),
   level: z.enum(['beginner', 'intermediate', 'advanced']).default('beginner'),
   isFree: z.boolean().default(false),
+  paymentType: z.enum(['monthly', 'one_time']).default('monthly'),
   price: z.number().int().positive().optional(),
   originalPrice: z.number().int().positive().optional(),
   discountEndsAt: z.coerce.date().optional(),

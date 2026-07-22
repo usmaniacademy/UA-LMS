@@ -88,12 +88,13 @@
           <!-- ZOOM -->
           <div v-else-if="selected.contentType === 'zoom'">
             <div v-if="zoomMeeting" class="zoom-card p-4 rounded-3">
-              <div class="row align-items-center g-4">
-                <div class="col-md-5">
-                  <p class="text-muted small mb-2">Class starts in</p>
-                  <ZoomCountdown :targetTime="zoomMeeting.startTime" :compact="false" />
-                </div>
-                <div class="col-md-7">
+              <div class="text-center mb-4">
+                <p class="text-muted small mb-2">Class starts in</p>
+                <ZoomCountdown :targetTime="zoomMeeting.startTime" :compact="false" />
+              </div>
+
+              <div class="row justify-content-center">
+                <div class="col-lg-10">
                   <table class="table table-borderless mb-3">
                     <tbody>
                       <tr>
@@ -128,7 +129,7 @@
                     </tbody>
                   </table>
 
-                  <div class="d-flex gap-2 flex-wrap">
+                  <div class="d-flex gap-2 flex-wrap justify-content-center justify-content-md-start">
                     <b-button variant="outline-primary" @click="join('browser')" :disabled="joining">
                       Join In Browser
                     </b-button>
