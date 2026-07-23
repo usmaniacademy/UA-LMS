@@ -10,7 +10,9 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
   const apiUrl = env.VITE_API_URL || 'http://localhost:5000/api';
-  const target = apiUrl.replace(/\/api$/, '');
+  const target = apiUrl.startsWith('http')
+    ? apiUrl.replace(/\/api$/, '')
+    : 'http://localhost:5000';
 
   return {
     base: '/',
