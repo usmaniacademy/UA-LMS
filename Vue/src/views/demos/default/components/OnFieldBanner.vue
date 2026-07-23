@@ -23,7 +23,7 @@
                   <div class="w-100 my-auto">
                     <b-row class="justify-content-center">
                       <b-col cols="11" lg="8">
-                        <h1 class="text-white display-5 mb-0">{{ slide.title }}</h1>
+                        <h1 class="text-white display-5 mb-0 onfield-title">{{ slide.title }}</h1>
                       </b-col>
                     </b-row>
                   </div>
@@ -76,5 +76,9 @@ const settings: TinySliderSettings = {
 @media (max-width: 991.98px) {
   :deep(.arrow-hover [data-controls='prev']) { left: 0 !important; }
   :deep(.arrow-hover [data-controls='next']) { right: 0 !important; }
+}
+
+.onfield-title {
+  font-size: clamp(1.25rem, 5vw, 3rem);
 }
 </style>
