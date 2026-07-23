@@ -1,4 +1,4 @@
-import prisma from '../config/db.js';
+import prisma from '../config/prisma.js';
 
 export const getSettings = async (req, res, next) => {
   try {
