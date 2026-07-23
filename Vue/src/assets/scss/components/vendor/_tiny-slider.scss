@@ -215,12 +215,11 @@
 }
 
 .trending-slider .tns-nav{
-  position: relative;
+  position: absolute;
+  bottom: 0;
   top: auto;
-  bottom: auto;
-  left: auto;
-  transform: none;
-  margin-top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 // Dots primary
