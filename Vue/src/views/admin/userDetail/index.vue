@@ -107,7 +107,7 @@
     </b-row>
 
     <!-- Enroll Modal -->
-    <b-modal id="enrollModal" title="Enroll Student in Course" hide-footer @show="loadCourses">
+    <b-modal id="enrollModal" v-model="showEnrollModal" title="Enroll Student in Course" hide-footer @show="loadCourses">
       <b-form @submit.prevent="submitEnroll">
         <b-form-group label="Select Course">
           <b-form-select v-model="selectedCourseId" :options="courseOptions" required>
@@ -117,7 +117,7 @@
           </b-form-select>
         </b-form-group>
         <div class="d-flex justify-content-end gap-2 mt-4">
-          <b-button type="button" variant="secondary" @click="$bvModal.hide('enrollModal')">Cancel</b-button>
+          <b-button type="button" variant="secondary" @click="showEnrollModal = false">Cancel</b-button>
           <b-button type="submit" variant="primary" :disabled="enrolling || !selectedCourseId">
             <span v-if="enrolling" class="spinner-border spinner-border-sm me-2"></span>
             Enroll Student
@@ -133,7 +133,6 @@ import { useRoute } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useAdminStore } from '@/stores/admin'
 import { faAngleLeft, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { useBModal } from 'bootstrap-vue-next'
 
 const route = useRoute()
 const adminStore = useAdminStore()
@@ -175,7 +174,7 @@ async function load() {
   }
 }
 
-const modal = useBModal()
+const showEnrollModal = ref(false)
 const selectedCourseId = ref<string | null>(null)
 const enrolling = ref(false)
 
@@ -195,7 +194,7 @@ async function submitEnroll() {
   enrolling.value = true
   try {
     await adminStore.manualEnroll({ studentId: user.value.id, courseId: selectedCourseId.value })
-    modal.hide('enrollModal')
+    showEnrollModal.value = false
     await load() // refresh user details
   } catch (e: any) {
     alert(e.message || 'Failed to enroll student')

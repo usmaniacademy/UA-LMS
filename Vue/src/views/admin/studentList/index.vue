@@ -120,7 +120,7 @@
     </b-card>
 
     <!-- Create Student Modal -->
-    <b-modal id="createStudentModal" title="Create New Student" hide-footer @hidden="resetForm">
+    <b-modal id="createStudentModal" v-model="showCreateStudentModal" title="Create New Student" hide-footer @hidden="resetForm">
       <b-form @submit.prevent="submitCreateStudent">
         <b-row class="g-3">
           <b-col md="6">
@@ -144,7 +144,7 @@
             </b-form-group>
           </b-col>
           <b-col cols="12" class="d-flex justify-content-end gap-2 mt-4">
-            <b-button type="button" variant="secondary" @click="$bvModal.hide('createStudentModal')">Cancel</b-button>
+            <b-button type="button" variant="secondary" @click="showCreateStudentModal = false">Cancel</b-button>
             <b-button type="submit" variant="primary" :disabled="creating">
               <span v-if="creating" class="spinner-border spinner-border-sm me-2"></span>
               Create Student
@@ -161,7 +161,6 @@ import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useAdminStore } from '@/stores/admin'
 import { faSearch, faBan, faCheck, faDownload, faAngleLeft, faAngleRight, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { BIconTrash } from 'bootstrap-icons-vue'
-import { useBModal } from 'bootstrap-vue-next'
 
 const adminStore = useAdminStore()
 
@@ -178,7 +177,7 @@ function formatDate(iso: string) {
 
 const form = reactive({ firstName: '', lastName: '', email: '', password: '' })
 const creating = ref(false)
-const modal = useBModal()
+const showCreateStudentModal = ref(false)
 
 function resetForm() {
   form.firstName = ''
@@ -191,7 +190,7 @@ async function submitCreateStudent() {
   creating.value = true
   try {
     await adminStore.createStudent({ ...form })
-    modal.hide('createStudentModal')
+    showCreateStudentModal.value = false
     load()
   } catch (e: any) {
     alert(e.message || 'Failed to create student')
