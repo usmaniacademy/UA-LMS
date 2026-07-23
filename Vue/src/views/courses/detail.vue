@@ -246,6 +246,10 @@
                 <h4 class="mb-3">This course includes</h4>
                 <ul class="list-group list-group-borderless">
                   <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="h6 fw-light mb-0"><font-awesome-icon :icon="faClock" class="fa-fw text-primary" /> Duration</span>
+                    <span>{{ course.duration || 'Self-paced' }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="h6 fw-light mb-0"><font-awesome-icon :icon="faBookOpen" class="fa-fw text-primary" /> Lectures</span>
                     <span>{{ totalLectures }}</span>
                   </li>
@@ -282,7 +286,7 @@ import { useAuthStore } from '@/stores/auth'
 import { api } from '@/helpers/api'
 import CustomGLightbox from '@/components/CustomGLightbox.vue'
 import { BIconPatchCheckFill, BIconCameraVideoFill } from 'bootstrap-icons-vue'
-import { faStar, faSignal, faGlobe, faPlay, faLock, faBookOpen, faStopwatch, faShareAlt, faCopy, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faSignal, faGlobe, faPlay, faLock, faClock, faBookOpen, faStopwatch, faShareAlt, faCopy, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons'
 import { faTwitterSquare, faFacebookSquare, faLinkedinIn } from '@fortawesome/free-brands-svg-icons'
 import defaultThumb from '@/assets/images/courses/4by3/08.jpg'

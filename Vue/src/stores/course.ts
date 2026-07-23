@@ -8,6 +8,7 @@ export interface Course {
   slug: string
   description?: string
   thumbnailUrl?: string
+  duration?: string
   category?: string
   language?: string
   level: 'beginner' | 'intermediate' | 'advanced'

@@ -4,6 +4,7 @@ export const createCourseSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
   description: z.string().optional(),
   fullDescription: z.string().optional(),
+  duration: z.string().optional(),
   category: z.string().optional(),
   language: z.enum(['English', 'Urdu', 'Arabic']).optional(),
   level: z.enum(['beginner', 'intermediate', 'advanced']).default('beginner'),

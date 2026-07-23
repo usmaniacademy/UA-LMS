@@ -118,6 +118,7 @@ const form = reactive({
   price: null as number | null,
   originalPrice: null as number | null,
   discountEndsAt: '',
+  duration: '',
   thumbnailUrl: '',
   promoVideoUrl: '',
   learningPoints: ['', ''],
@@ -144,6 +145,7 @@ async function loadCourseForEdit(id: string) {
   form.price = course.price ?? null
   form.originalPrice = course.originalPrice ?? null
   form.discountEndsAt = course.discountEndsAt ? new Date(course.discountEndsAt).toISOString().slice(0, 10) : ''
+  form.duration = course.duration || ''
   form.promoVideoUrl = course.promoVideoUrl || ''
   form.thumbnailUrl = course.thumbnailUrl || ''
   form.instructorId = course.instructor?.id || ''

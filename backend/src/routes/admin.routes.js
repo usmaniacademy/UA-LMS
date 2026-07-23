@@ -21,5 +21,6 @@ router.patch('/users/:userId/role', ctrl.changeUserRole)
 router.get('/courses', ctrl.listCourses)
 router.patch('/courses/:courseId/approve', ctrl.approveCourse)
 router.patch('/courses/:courseId/reject', ctrl.rejectCourse)
+router.patch('/categories/rename', ctrl.renameCategory)
 
 export default router

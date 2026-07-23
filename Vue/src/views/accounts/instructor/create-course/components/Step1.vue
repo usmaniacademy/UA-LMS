@@ -20,9 +20,7 @@
         <b-form-group label="Category *">
           <b-form-select v-model="form.category" size="lg">
             <option value="">Select category</option>
-            <option value="Islamic Studies">Islamic Studies</option>
-            <option value="Astronomy">Astronomy</option>
-            <option value="Technology">Technology</option>
+            <option v-for="cat in dynamicCategories" :key="cat" :value="cat">{{ cat }}</option>
             <option value="Other">Other</option>
           </b-form-select>
         </b-form-group>
@@ -48,6 +46,13 @@
             <option value="Urdu">Urdu</option>
             <option value="Arabic">Arabic</option>
           </b-form-select>
+        </b-form-group>
+      </b-col>
+
+      <b-col md="6">
+        <b-form-group label="Course Duration">
+          <b-form-input v-model="form.duration" size="lg" placeholder="e.g. 12 Weeks, 3 Months" />
+          <div class="form-text">How long will this course take?</div>
         </b-form-group>
       </b-col>
 
@@ -114,13 +119,20 @@ import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useAdminStore } from '@/stores/admin'
 import { useCourseStore } from '@/stores/course'
+import { useSettingsStore } from '@/stores/settings'
 
 const props = defineProps<{ form: any; nextPage: () => void }>()
 
 const auth = useAuthStore()
 const adminStore = useAdminStore()
 const courseStore = useCourseStore()
+const settings = useSettingsStore()
 const isAdmin = computed(() => auth.getUser()?.role === 'admin')
+
+const dynamicCategories = computed(() => {
+  const cats = settings.config.courseCategories
+  return Array.isArray(cats) ? cats : ['Islamic Studies', 'Astronomy', 'Technology']
+})
 
 // ─── Thumbnail upload ─────────────────────────────────────────────────────────
 const thumbInput = ref<HTMLInputElement | null>(null)
@@ -155,6 +167,7 @@ async function onThumbSelected(e: Event) {
 
 onMounted(() => {
   if (isAdmin.value && !adminStore.instructors.length) adminStore.fetchInstructors()
+  settings.fetchSettings()
 })
 
 const canProceed = computed(() =>

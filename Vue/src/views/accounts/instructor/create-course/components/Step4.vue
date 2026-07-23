@@ -84,6 +84,7 @@
             <tbody>
               <tr><td class="text-muted">Title</td><td class="fw-semibold">{{ form.title || '—' }}</td></tr>
               <tr><td class="text-muted">Category</td><td>{{ form.category === 'Other' ? form.customCategory : form.category || '—' }}</td></tr>
+              <tr><td class="text-muted">Duration</td><td>{{ form.duration || '—' }}</td></tr>
               <tr><td class="text-muted">Level</td><td class="text-capitalize">{{ form.level }}</td></tr>
               <tr><td class="text-muted">Pricing</td><td>{{ pricingSummary }}</td></tr>
             </tbody>
@@ -164,6 +165,7 @@ async function saveCourse(publish: boolean) {
       title: props.form.title,
       description: props.form.description,
       fullDescription: props.form.fullDescription || undefined,
+      duration: props.form.duration || undefined,
       category: props.form.category === 'Other' ? props.form.customCategory : props.form.category,
       language: props.form.language || 'English',
       level: props.form.level,

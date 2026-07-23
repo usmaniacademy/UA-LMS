@@ -107,7 +107,9 @@
     </b-row>
 
     <!-- Enroll Modal -->
-    <b-modal id="enrollModal" v-model="showEnrollModal" title="Enroll Student in Course" hide-footer @show="loadCourses">
+    <b-modal id="enrollModal" v-model="showEnrollModal" title="Enroll Student in Course" @show="loadCourses"
+      ok-title="Enroll Student" cancel-title="Cancel" :ok-disabled="!selectedCourseId || enrolling"
+      @ok.prevent="submitEnroll">
       <b-form @submit.prevent="submitEnroll">
         <b-form-group label="Select Course">
           <b-form-select v-model="selectedCourseId" :options="courseOptions" required>
@@ -116,13 +118,6 @@
             </template>
           </b-form-select>
         </b-form-group>
-        <div class="d-flex justify-content-end gap-2 mt-4">
-          <b-button type="button" variant="secondary" @click="showEnrollModal = false">Cancel</b-button>
-          <b-button type="submit" variant="primary" :disabled="enrolling || !selectedCourseId">
-            <span v-if="enrolling" class="spinner-border spinner-border-sm me-2"></span>
-            Enroll Student
-          </b-button>
-        </div>
       </b-form>
     </b-modal>
   </AdminLayout>

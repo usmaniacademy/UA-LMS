@@ -120,7 +120,8 @@
     </b-card>
 
     <!-- Create Student Modal -->
-    <b-modal id="createStudentModal" v-model="showCreateStudentModal" title="Create New Student" hide-footer @hidden="resetForm">
+    <b-modal id="createStudentModal" v-model="showCreateStudentModal" title="Create New Student" @hidden="resetForm"
+      ok-title="Create Student" cancel-title="Cancel" @ok.prevent="submitCreateStudent">
       <b-form @submit.prevent="submitCreateStudent">
         <b-row class="g-3">
           <b-col md="6">
@@ -140,15 +141,19 @@
           </b-col>
           <b-col cols="12">
             <b-form-group label="Password">
-              <b-form-input v-model="form.password" type="password" required minlength="8" />
+              <div class="input-group">
+                <b-form-input v-model="form.password" :type="showPassword ? 'text' : 'password'" required minlength="8" />
+                <b-button variant="outline-secondary" @click="showPassword = !showPassword">
+                  <font-awesome-icon :icon="showPassword ? faEyeSlash : faEye" />
+                </b-button>
+                <b-button variant="outline-secondary" @click="generatePassword">
+                  <font-awesome-icon :icon="faKey" /> Generate
+                </b-button>
+                <b-button variant="outline-secondary" @click="copyPassword">
+                  <font-awesome-icon :icon="faCopy" />
+                </b-button>
+              </div>
             </b-form-group>
-          </b-col>
-          <b-col cols="12" class="d-flex justify-content-end gap-2 mt-4">
-            <b-button type="button" variant="secondary" @click="showCreateStudentModal = false">Cancel</b-button>
-            <b-button type="submit" variant="primary" :disabled="creating">
-              <span v-if="creating" class="spinner-border spinner-border-sm me-2"></span>
-              Create Student
-            </b-button>
           </b-col>
         </b-row>
       </b-form>
@@ -159,7 +164,7 @@
 import { ref, onMounted, reactive } from 'vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useAdminStore } from '@/stores/admin'
-import { faSearch, faBan, faCheck, faDownload, faAngleLeft, faAngleRight, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faSearch, faBan, faCheck, faDownload, faAngleLeft, faAngleRight, faPlus, faKey, faCopy, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { BIconTrash } from 'bootstrap-icons-vue'
 
 const adminStore = useAdminStore()
@@ -178,6 +183,40 @@ function formatDate(iso: string) {
 const form = reactive({ firstName: '', lastName: '', email: '', password: '' })
 const creating = ref(false)
 const showCreateStudentModal = ref(false)
+const showPassword = ref(false)
+
+function generatePassword() {
+  const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  const lower = 'abcdefghijklmnopqrstuvwxyz'
+  const digits = '0123456789'
+  const special = '!@#$%^&*()_+-=[]{}|;:,.<>?'
+  const all = upper + lower + digits + special
+  let pw = ''
+  pw += upper[Math.floor(Math.random() * upper.length)]
+  pw += lower[Math.floor(Math.random() * lower.length)]
+  pw += digits[Math.floor(Math.random() * digits.length)]
+  pw += special[Math.floor(Math.random() * special.length)]
+  for (let i = 0; i < 8; i++) {
+    pw += all[Math.floor(Math.random() * all.length)]
+  }
+  form.password = pw.split('').sort(() => Math.random() - 0.5).join('')
+}
+
+async function copyPassword() {
+  if (!form.password) return
+  try {
+    await navigator.clipboard.writeText(form.password)
+  } catch {
+    const ta = document.createElement('textarea')
+    ta.value = form.password
+    ta.style.position = 'fixed'
+    ta.style.left = '-9999px'
+    document.body.appendChild(ta)
+    ta.select()
+    document.execCommand('copy')
+    document.body.removeChild(ta)
+  }
+}
 
 function resetForm() {
   form.firstName = ''

@@ -254,6 +254,27 @@ export async function exportStudentsCSV() {
   return header + rows
 }
 
+export async function renameCategory({ oldName, newName }) {
+  if (!oldName || !newName) throw Object.assign(new Error('oldName and newName are required'), { status: 400 })
+
+  const setting = await prisma.setting.findUnique({ where: { key: 'courseCategories' } })
+  if (setting) {
+    const categories = setting.value || []
+    if (Array.isArray(categories)) {
+      const updated = categories.map((c) => (c === oldName ? newName : c))
+      await prisma.setting.update({
+        where: { key: 'courseCategories' },
+        data: { value: updated }
+      })
+    }
+  }
+
+  await prisma.course.updateMany({ where: { category: oldName }, data: { category: newName } })
+  await prisma.blogPost.updateMany({ where: { category: oldName }, data: { category: newName } })
+
+  return { message: 'Category renamed', oldName, newName }
+}
+
 export async function getRevenue() {
   const subs = await prisma.subscription.findMany({
     where: { status: { in: ['active', 'cancelled'] } },

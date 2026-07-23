@@ -94,15 +94,7 @@ const instructorInitials = computed(() => {
   return [(i.firstName || '')[0], (i.lastName || '')[0]].filter(Boolean).join('').toUpperCase()
 })
 
-const durationLabel = computed(() => {
-  const secs = props.course.totalDuration || 0
-  if (!secs) return ''
-  const mins = Math.round(secs / 60)
-  if (mins < 60) return `${mins} min`
-  const h = Math.floor(mins / 60)
-  const m = mins % 60
-  return m ? `${h}h ${m}m` : `${h}h`
-})
+const durationLabel = computed(() => props.course.duration || '')
 
 const hasDiscount = computed(() => {
   const p = props.course.price || 0

@@ -110,6 +110,14 @@ export async function rejectCourse(req, res, next) {
   } catch (e) { next(e) }
 }
 
+export async function renameCategory(req, res, next) {
+  try {
+    const { oldName, newName } = req.body
+    const data = await adminService.renameCategory({ oldName, newName })
+    res.json(data)
+  } catch (e) { next(e) }
+}
+
 export async function getRevenue(req, res, next) {
   try {
     const data = await adminService.getRevenue()

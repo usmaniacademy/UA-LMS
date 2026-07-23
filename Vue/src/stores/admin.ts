@@ -178,6 +178,10 @@ export const useAdminStore = defineStore('admin_store', () => {
     usersPagination.value.total = Math.max(0, usersPagination.value.total - 1)
   }
 
+  async function renameCategory(oldName: string, newName: string) {
+    return api.patch('/admin/categories/rename', { oldName, newName })
+  }
+
   async function exportStudentsCSV() {
     const base = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
     const auth = JSON.parse(localStorage.getItem('UA_AUTH') || '{}')
@@ -200,6 +204,6 @@ export const useAdminStore = defineStore('admin_store', () => {
     fetchStats, fetchUsers, toggleUserActive, fetchUserDetail,
     fetchCourses, fetchCourseForAdmin, approveCourse, rejectCourse, fetchRevenue,
     fetchInstructors, createInstructor, createContentWriter, createStudent, createCourse, deleteCourse,
-    removeUser, exportStudentsCSV, manualEnroll
+    removeUser, exportStudentsCSV, manualEnroll, renameCategory
   }
 })
