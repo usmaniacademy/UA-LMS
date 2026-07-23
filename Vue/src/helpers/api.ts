@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/stores/auth'
 
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+const BASE = import.meta.env.VITE_API_URL || '/api'
 
 async function request(method: string, path: string, body?: unknown) {
   const auth = useAuthStore()

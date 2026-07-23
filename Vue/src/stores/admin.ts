@@ -183,7 +183,7 @@ export const useAdminStore = defineStore('admin_store', () => {
   }
 
   async function exportStudentsCSV() {
-    const base = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+    const base = import.meta.env.VITE_API_URL || '/api'
     const auth = JSON.parse(localStorage.getItem('UA_AUTH') || '{}')
     const res = await fetch(`${base}/admin/users/export.csv`, {
       headers: { Authorization: `Bearer ${auth?.accessToken || ''}` }
