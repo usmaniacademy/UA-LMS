@@ -214,6 +214,15 @@
   padding-bottom: 20px;
 }
 
+.trending-slider .tns-nav{
+  position: relative;
+  top: auto;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  margin-top: 8px;
+}
+
 // Dots primary
 .dots-primary .tns-nav{
   [data-nav] {

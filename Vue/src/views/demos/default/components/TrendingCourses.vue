@@ -21,7 +21,7 @@
         </b-row>
 
         <!-- More than 3: slider, same arrow/dot treatment as the other carousels -->
-        <div v-else class="arrow-blur arrow-hover dots-inside dots-primary rounded-3 overflow-hidden pb-2">
+        <div v-else class="arrow-blur arrow-hover dots-primary rounded-3 position-relative pb-5 trending-slider">
           <CustomTinySlider :settings="settings" id="trending-courses-slider">
             <div v-for="course in store.courses" :key="course.id" class="px-2">
               <CourseCard :course="course" />
