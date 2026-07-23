@@ -23,6 +23,27 @@ export async function createContentWriter({ email, password, firstName, lastName
   return createStaffAccount({ email, password, firstName, lastName, role: 'content_writer' })
 }
 
+export async function createStudent({ email, password, firstName, lastName }) {
+  return createStaffAccount({ email, password, firstName, lastName, role: 'student' })
+}
+
+export async function manualEnroll({ studentId, courseId }) {
+  const course = await prisma.course.findUnique({ where: { id: courseId } })
+  if (!course) throw Object.assign(new Error('Course not found'), { status: 404 })
+
+  const student = await prisma.user.findUnique({ where: { id: studentId } })
+  if (!student) throw Object.assign(new Error('Student not found'), { status: 404 })
+
+  const existing = await prisma.enrollment.findUnique({
+    where: { studentId_courseId: { studentId, courseId } }
+  })
+  if (existing) throw Object.assign(new Error('Student is already enrolled in this course'), { status: 400 })
+
+  return prisma.enrollment.create({
+    data: { studentId, courseId }
+  })
+}
+
 export async function getStats() {
   const [totalStudents, totalInstructors, totalCourses, publishedCourses, draftCourses, activeSubs] = await Promise.all([
     prisma.user.count({ where: { role: 'student' } }),

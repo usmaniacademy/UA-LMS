@@ -375,3 +375,13 @@ model Notification {
 
   @@map("notifications")
 }
+
+// ─── Settings ─────────────────────────────────────────────────────────────────
+
+model Setting {
+  id    String @id @default("global")
+  key   String @unique
+  value Json
+
+  @@map("settings")
+}

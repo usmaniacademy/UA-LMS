@@ -73,6 +73,7 @@ declare module 'vue' {
     StickyHeader: typeof import('./src/components/StickyHeader.vue')['default']
   }
   export interface GlobalDirectives {
+    vBModal: typeof import('bootstrap-vue-next/directives/BModal')['vBModal']
     vBToggle: typeof import('bootstrap-vue-next/directives/BToggle')['vBToggle']
     vBTooltip: typeof import('bootstrap-vue-next/directives/BTooltip')['vBTooltip']
   }

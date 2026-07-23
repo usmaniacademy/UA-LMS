@@ -145,10 +145,14 @@ const pagesRoutes = [
     component: () => import('@/views/blog/index.vue')
   },
   {
-    path: '/blog/:slug',
+    path: '/:slug',
     name: 'blog.detail',
     meta: { title: setTitle('Blog') },
     component: () => import('@/views/blog/detail.vue')
+  },
+  {
+    path: '/blog/:slug',
+    redirect: to => ({ path: `/${to.params.slug}` })
   }
 ];
 

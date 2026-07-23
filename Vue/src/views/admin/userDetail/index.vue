@@ -1,11 +1,18 @@
 <template>
   <AdminLayout>
     <b-row class="mb-3">
-      <b-col>
-        <router-link :to="{ name: backRoute }" class="btn btn-sm btn-light mb-2">
-          <font-awesome-icon :icon="faAngleLeft" class="me-1" /> Back
-        </router-link>
-        <h1 class="h3 mb-0">{{ fullName || 'User' }}</h1>
+      <b-col class="d-flex justify-content-between align-items-center">
+        <div>
+          <router-link :to="{ name: backRoute }" class="btn btn-sm btn-light mb-2">
+            <font-awesome-icon :icon="faAngleLeft" class="me-1" /> Back
+          </router-link>
+          <h1 class="h3 mb-0">{{ fullName || 'User' }}</h1>
+        </div>
+        <div v-if="user?.role === 'student'">
+          <b-button variant="primary" size="sm" v-b-modal.enrollModal>
+            <font-awesome-icon :icon="faPlus" class="me-1" />Enroll in Course
+          </b-button>
+        </div>
       </b-col>
     </b-row>
 
@@ -98,6 +105,26 @@
         </b-card>
       </b-col>
     </b-row>
+
+    <!-- Enroll Modal -->
+    <b-modal id="enrollModal" title="Enroll Student in Course" hide-footer @show="loadCourses">
+      <b-form @submit.prevent="submitEnroll">
+        <b-form-group label="Select Course">
+          <b-form-select v-model="selectedCourseId" :options="courseOptions" required>
+            <template #first>
+              <b-form-select-option :value="null" disabled>-- Please select a course --</b-form-select-option>
+            </template>
+          </b-form-select>
+        </b-form-group>
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <b-button type="button" variant="secondary" @click="$bvModal.hide('enrollModal')">Cancel</b-button>
+          <b-button type="submit" variant="primary" :disabled="enrolling || !selectedCourseId">
+            <span v-if="enrolling" class="spinner-border spinner-border-sm me-2"></span>
+            Enroll Student
+          </b-button>
+        </div>
+      </b-form>
+    </b-modal>
   </AdminLayout>
 </template>
 <script setup lang="ts">
@@ -105,7 +132,8 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useAdminStore } from '@/stores/admin'
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { useBModal } from 'bootstrap-vue-next'
 
 const route = useRoute()
 const adminStore = useAdminStore()
@@ -144,6 +172,35 @@ async function load() {
     error.value = e.message || 'Failed to load user'
   } finally {
     loading.value = false
+  }
+}
+
+const modal = useBModal()
+const selectedCourseId = ref<string | null>(null)
+const enrolling = ref(false)
+
+const courseOptions = computed(() => {
+  return adminStore.courses.map(c => ({ value: c.id, text: c.title }))
+})
+
+async function loadCourses() {
+  if (!adminStore.courses.length) {
+    await adminStore.fetchCourses({ limit: 100 } as any)
+  }
+  selectedCourseId.value = null
+}
+
+async function submitEnroll() {
+  if (!selectedCourseId.value || !user.value) return
+  enrolling.value = true
+  try {
+    await adminStore.manualEnroll({ studentId: user.value.id, courseId: selectedCourseId.value })
+    modal.hide('enrollModal')
+    await load() // refresh user details
+  } catch (e: any) {
+    alert(e.message || 'Failed to enroll student')
+  } finally {
+    enrolling.value = false
   }
 }
 

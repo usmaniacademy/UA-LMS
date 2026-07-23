@@ -17,9 +17,12 @@
               </button>
             </b-form>
           </b-col>
-          <b-col md="auto">
+          <b-col md="auto" class="d-flex gap-2">
             <b-button variant="outline-primary" size="sm" class="mb-0" @click="exportCSV">
               <font-awesome-icon :icon="faDownload" class="me-1" />Export CSV
+            </b-button>
+            <b-button variant="primary" size="sm" class="mb-0" v-b-modal.createStudentModal>
+              <font-awesome-icon :icon="faPlus" class="me-1" />Add Student
             </b-button>
           </b-col>
         </b-row>
@@ -115,14 +118,50 @@
         </div>
       </b-card-footer>
     </b-card>
+
+    <!-- Create Student Modal -->
+    <b-modal id="createStudentModal" title="Create New Student" hide-footer @hidden="resetForm">
+      <b-form @submit.prevent="submitCreateStudent">
+        <b-row class="g-3">
+          <b-col md="6">
+            <b-form-group label="First Name">
+              <b-form-input v-model="form.firstName" required />
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Last Name">
+              <b-form-input v-model="form.lastName" required />
+            </b-form-group>
+          </b-col>
+          <b-col cols="12">
+            <b-form-group label="Email">
+              <b-form-input v-model="form.email" type="email" required />
+            </b-form-group>
+          </b-col>
+          <b-col cols="12">
+            <b-form-group label="Password">
+              <b-form-input v-model="form.password" type="password" required minlength="8" />
+            </b-form-group>
+          </b-col>
+          <b-col cols="12" class="d-flex justify-content-end gap-2 mt-4">
+            <b-button type="button" variant="secondary" @click="$bvModal.hide('createStudentModal')">Cancel</b-button>
+            <b-button type="submit" variant="primary" :disabled="creating">
+              <span v-if="creating" class="spinner-border spinner-border-sm me-2"></span>
+              Create Student
+            </b-button>
+          </b-col>
+        </b-row>
+      </b-form>
+    </b-modal>
   </AdminLayout>
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useAdminStore } from '@/stores/admin'
-import { faSearch, faBan, faCheck, faDownload, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
+import { faSearch, faBan, faCheck, faDownload, faAngleLeft, faAngleRight, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { BIconTrash } from 'bootstrap-icons-vue'
+import { useBModal } from 'bootstrap-vue-next'
 
 const adminStore = useAdminStore()
 
@@ -135,6 +174,30 @@ const acting = ref<string | null>(null)
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+}
+
+const form = reactive({ firstName: '', lastName: '', email: '', password: '' })
+const creating = ref(false)
+const modal = useBModal()
+
+function resetForm() {
+  form.firstName = ''
+  form.lastName = ''
+  form.email = ''
+  form.password = ''
+}
+
+async function submitCreateStudent() {
+  creating.value = true
+  try {
+    await adminStore.createStudent({ ...form })
+    modal.hide('createStudentModal')
+    load()
+  } catch (e: any) {
+    alert(e.message || 'Failed to create student')
+  } finally {
+    creating.value = false
+  }
 }
 
 function load() {

@@ -55,6 +55,28 @@ export async function createContentWriter(req, res, next) {
   } catch (e) { next(e) }
 }
 
+export async function createStudent(req, res, next) {
+  try {
+    const { email, password, firstName, lastName } = req.body
+    if (!email || !password || password.length < 8 || !firstName || !lastName) {
+      return res.status(400).json({ error: 'Name, email, and a password of at least 8 characters are required' })
+    }
+    const user = await adminService.createStudent({ email, password, firstName, lastName })
+    res.status(201).json({ user })
+  } catch (e) { next(e) }
+}
+
+export async function manualEnroll(req, res, next) {
+  try {
+    const { studentId, courseId } = req.body
+    if (!studentId || !courseId) {
+       return res.status(400).json({ error: 'studentId and courseId are required' })
+    }
+    const enrollment = await adminService.manualEnroll({ studentId, courseId })
+    res.status(201).json({ enrollment })
+  } catch (e) { next(e) }
+}
+
 export async function changeUserRole(req, res, next) {
   try {
     const data = await adminService.changeUserRole(req.params.userId, req.body.role)

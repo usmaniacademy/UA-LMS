@@ -68,6 +68,18 @@ export const useAdminStore = defineStore('admin_store', () => {
     return data.user
   }
 
+  // Admin creates a student account manually
+  async function createStudent(payload: { firstName: string; lastName: string; email: string; password: string }) {
+    const data = await api.post('/admin/students', payload)
+    return data.user
+  }
+
+  // Admin manually enrolls a student in a course
+  async function manualEnroll(payload: { studentId: string; courseId: string }) {
+    const data = await api.post('/admin/enrollments', payload)
+    return data.enrollment
+  }
+
   // Instructors for the "assign course" dropdown (kept separate from `users`)
   async function fetchInstructors() {
     try {
@@ -187,7 +199,7 @@ export const useAdminStore = defineStore('admin_store', () => {
     usersPagination, coursesPagination,
     fetchStats, fetchUsers, toggleUserActive, fetchUserDetail,
     fetchCourses, fetchCourseForAdmin, approveCourse, rejectCourse, fetchRevenue,
-    fetchInstructors, createInstructor, createContentWriter, createCourse, deleteCourse,
-    removeUser, exportStudentsCSV
+    fetchInstructors, createInstructor, createContentWriter, createStudent, createCourse, deleteCourse,
+    removeUser, exportStudentsCSV, manualEnroll
   }
 })
