@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://ua-lms-backend.vercel.app/api/$1" },
+    { "source": "/api/:path*", "destination": "/api/proxy?__path=/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
